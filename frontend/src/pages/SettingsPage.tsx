@@ -1,7 +1,7 @@
 import { BowArrow, ClipboardList, Users } from "lucide-react";
 import { useState } from "react";
 import { GamesSettings } from "./settings/GamesSettings";
-import { MatchesSettings } from "./settings/MatchesSettings";
+import { MatchesSettingsSimple } from "./settings/MatchesSettingsSimple";
 import { TeamsSettings } from "./settings/TeamsSettings";
 
 type Tab = "teams" | "games" | "matches";
@@ -46,7 +46,7 @@ export function SettingsPage() {
       {/* Tab content */}
       {activeTab === "teams" && <TeamsSettings />}
       {activeTab === "games" && <GamesSettings />}
-      {activeTab === "matches" && <MatchesSettings />}
+      {activeTab === "matches" && <MatchesSettingsSimple />}
     </div>
   );
 }

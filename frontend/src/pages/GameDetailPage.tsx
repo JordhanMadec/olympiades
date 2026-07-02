@@ -1,9 +1,9 @@
 import { ArrowLeft, Medal } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ErrorMessage, Loading } from "../components";
+import { BracketViewer, ErrorMessage, Loading } from "../components";
 import { gamesService, matchesService, rankingsService, teamsService } from "../services";
-import { Game, GameRanking, GameType, Match, MatchStatus, Team } from "../types";
+import { Game, GameFormat, GameRanking, GameType, Match, MatchStatus, Team } from "../types";
 
 export function GameDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -142,6 +142,10 @@ export function GameDetailPage() {
         {matches.length === 0 ? (
           <div className="bg-surface-100 border border-surface-border rounded-2xl p-10 text-center">
             <p className="text-zinc-500 text-sm">Aucune rencontre</p>
+          </div>
+        ) : game.gameFormat === GameFormat.ELIMINATION ? (
+          <div className="bg-surface-100 border border-surface-border rounded-2xl p-6">
+            <BracketViewer matches={matches} teams={teams} />
           </div>
         ) : (
           <div className="space-y-3 pr-1">

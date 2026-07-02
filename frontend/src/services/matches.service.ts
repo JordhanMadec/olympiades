@@ -31,4 +31,13 @@ export const matchesService = {
   async delete(id: number): Promise<void> {
     await api.delete(`/matches/${id}`);
   },
+
+  async generateAll(): Promise<{ created: number }> {
+    const response = await api.post<{ created: number }>('/matches/generate-all');
+    return response.data;
+  },
+
+  async deleteAll(): Promise<void> {
+    await api.delete('/matches/all');
+  },
 };

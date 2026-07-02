@@ -46,4 +46,16 @@ export class MatchesController {
   async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
     await this.matchesService.remove(id);
   }
+
+  @Post('generate-all')
+  @HttpCode(HttpStatus.CREATED)
+  async generateAll(): Promise<{ created: number }> {
+    return this.matchesService.generateAllMatches();
+  }
+
+  @Delete('all')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async removeAll(): Promise<void> {
+    await this.matchesService.removeAll();
+  }
 }

@@ -17,10 +17,8 @@ export function ProgrammePage() {
   }, []);
 
   useEffect(() => {
-    if (games.length > 0 || teams.length > 0) {
-      loadMatches();
-    }
-  }, [selectedGameId]);
+    loadMatches();
+  }, [selectedGameId, games.length, teams.length]);
 
   const loadInitialData = async () => {
     try {
