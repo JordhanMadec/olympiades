@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Dark mode base */
+html, body {
+  background-color: #0d0d16;
+  color: #e4e4f0;
+}
+
 /* Animation for slideshow */
 @keyframes fade-in {
   from {
@@ -18,23 +24,23 @@
   animation: fade-in 0.6s ease-out;
 }
 
-/* Custom scrollbar */
+/* Custom dark scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: #0d0d16;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #888;
+  background: #2a2a3f;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: #38384f;
 }
 
 body {

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { rankingsService, gamesService } from '../services';
 import { GameRanking, Game } from '../types';
-import { Loading, ErrorMessage, Select } from '../components';
+import { Loading, ErrorMessage } from '../components';
 
 export function RankingsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -20,6 +20,8 @@ export function RankingsPage() {
     const gameId = searchParams.get('gameId');
     if (gameId) {
       setSelectedGameId(parseInt(gameId));
+    } else {
+      setSelectedGameId(null);
     }
   }, [searchParams]);
 
@@ -54,20 +56,17 @@ export function RankingsPage() {
 
   const handleGameChange = (gameId: string) => {
     if (gameId === 'all') {
-      setSelectedGameId(null);
       setSearchParams({});
     } else {
-      const id = parseInt(gameId);
-      setSelectedGameId(id);
-      setSearchParams({ gameId: id.toString() });
+      setSearchParams({ gameId });
     }
   };
 
-  const getRankMedal = (index: number) => {
-    if (index === 0) return '🥇';
-    if (index === 1) return '🥈';
-    if (index === 2) return '🥉';
-    return `${index + 1}`;
+  const getRankBadge = (index: number) => {
+    if (index === 0) return { emoji: '🥇', color: 'text-yellow-400', bg: 'bg-yellow-400/10 border-yellow-400/30' };
+    if (index === 1) return { emoji: '🥈', color: 'text-zinc-300', bg: 'bg-zinc-400/10 border-zinc-400/20' };
+    if (index === 2) return { emoji: '🥉', color: 'text-orange-600', bg: 'bg-orange-700/10 border-orange-700/20' };
+    return { emoji: null, color: 'text-zinc-500', bg: '' };
   };
 
   if (loading) return <Loading />;
@@ -75,88 +74,111 @@ export function RankingsPage() {
 
   return (
     <div>
+      {/* Header */}
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-bold">Classements</h1>
-        <div className="w-64">
-          <Select
-            value={selectedGameId?.toString() || 'all'}
-            onChange={(e) => handleGameChange(e.target.value)}
+        <div>
+          <h1 className="text-2xl font-bold text-white">Classement</h1>
+          <p className="text-zinc-500 text-sm mt-1">
+            {selectedGameId
+              ? games.find((g) => g.id === selectedGameId)?.name || 'Par épreuve'
+              : 'Classement général'}
+          </p>
+        </div>
+
+        {/* Filter tabs */}
+        <div className="flex items-center gap-2 bg-surface-200 border border-surface-border rounded-xl p-1">
+          <button
+            onClick={() => handleGameChange('all')}
+            className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all ${
+              !selectedGameId
+                ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/20'
+                : 'text-zinc-400 hover:text-white'
+            }`}
           >
-            <option value="all">Classement général</option>
-            {games.map((game) => (
-              <option key={game.id} value={game.id}>
-                {game.name}
-              </option>
-            ))}
-          </Select>
+            Général
+          </button>
+          {games.map((game) => (
+            <button
+              key={game.id}
+              onClick={() => handleGameChange(game.id.toString())}
+              className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all ${
+                selectedGameId === game.id
+                  ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/20'
+                  : 'text-zinc-400 hover:text-white'
+              }`}
+            >
+              {game.name}
+            </button>
+          ))}
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow">
+      {/* Ranking table */}
+      <div className="bg-surface-200 border border-surface-border rounded-2xl overflow-hidden">
         {!ranking || ranking.entries.length === 0 ? (
-          <div className="p-12 text-center">
-            <p className="text-gray-500">Aucun résultat pour le moment</p>
+          <div className="p-16 text-center">
+            <div className="text-4xl mb-4">🏆</div>
+            <p className="text-zinc-500">Aucun résultat pour le moment</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Rang
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Équipe
-                  </th>
-                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Points
-                  </th>
-                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Matchs joués
-                  </th>
-                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Moyenne
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {ranking.entries.map((entry, index) => (
-                  <tr
+          <>
+            {/* Table header */}
+            <div className="grid grid-cols-12 gap-4 px-6 py-3 border-b border-surface-border text-xs font-medium text-zinc-500 uppercase tracking-wider">
+              <div className="col-span-1">Rang</div>
+              <div className="col-span-5">Équipe</div>
+              <div className="col-span-2 text-right">Points</div>
+              <div className="col-span-2 text-right">Matchs</div>
+              <div className="col-span-2 text-right">Moyenne</div>
+            </div>
+
+            {/* Rows */}
+            <div className="divide-y divide-surface-border">
+              {ranking.entries.map((entry, index) => {
+                const badge = getRankBadge(index);
+                return (
+                  <div
                     key={entry.teamId}
-                    className={`${
-                      index < 3 ? 'bg-yellow-50' : ''
-                    } hover:bg-gray-50 transition`}
+                    className={`grid grid-cols-12 gap-4 px-6 py-4 items-center hover:bg-surface-300 transition-colors ${
+                      index < 3 ? 'border-l-2 border-primary-500/40' : ''
+                    }`}
                   >
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="text-2xl font-bold">{getRankMedal(index)}</span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center">
-                        <div
-                          className="w-4 h-4 rounded-full mr-3"
-                          style={{ backgroundColor: entry.teamColor }}
-                        ></div>
-                        <span className="font-semibold">{entry.teamName}</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-center">
-                      <span className="text-xl font-bold text-blue-600">
-                        {entry.totalPoints}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-center text-gray-600">
-                      {entry.matchesPlayed}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-center text-gray-600">
+                    {/* Rank */}
+                    <div className="col-span-1">
+                      {badge.emoji ? (
+                        <span className="text-xl">{badge.emoji}</span>
+                      ) : (
+                        <span className="text-zinc-500 font-bold text-sm">{index + 1}</span>
+                      )}
+                    </div>
+
+                    {/* Team */}
+                    <div className="col-span-5 flex items-center gap-3">
+                      <div
+                        className="w-3 h-3 rounded-full flex-shrink-0"
+                        style={{ backgroundColor: entry.teamColor }}
+                      />
+                      <span className="font-medium text-white">{entry.teamName}</span>
+                    </div>
+
+                    {/* Points */}
+                    <div className="col-span-2 text-right">
+                      <span className="text-primary-400 font-bold text-lg">{entry.totalPoints}</span>
+                    </div>
+
+                    {/* Matches */}
+                    <div className="col-span-2 text-right text-zinc-400 text-sm">{entry.matchesPlayed}</div>
+
+                    {/* Average */}
+                    <div className="col-span-2 text-right text-zinc-400 text-sm">
                       {entry.matchesPlayed > 0
                         ? (entry.totalPoints / entry.matchesPlayed).toFixed(1)
-                        : '0.0'}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                        : '—'}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </>
         )}
       </div>
     </div>
