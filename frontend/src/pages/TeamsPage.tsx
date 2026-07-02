@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Users } from 'lucide-react';
-import { teamsService } from '../services';
-import { Team } from '../types';
-import { Loading, ErrorMessage } from '../components';
+import { ArrowRight, Users } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { ErrorMessage, Loading } from "../components";
+import { teamsService } from "../services";
+import { Team } from "../types";
 
 export function TeamsPage() {
   const [teams, setTeams] = useState<Team[]>([]);
@@ -21,7 +21,7 @@ export function TeamsPage() {
       setTeams(data);
       setError(null);
     } catch (err) {
-      setError('Erreur lors du chargement des équipes');
+      setError("Erreur lors du chargement des équipes");
       console.error(err);
     } finally {
       setLoading(false);
@@ -36,7 +36,9 @@ export function TeamsPage() {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-2xl font-bold text-white">Équipes</h1>
-          <p className="text-zinc-500 text-sm mt-1">{teams.length} équipe{teams.length !== 1 ? 's' : ''}</p>
+          <p className="text-zinc-500 text-sm mt-1">
+            {teams.length} équipe{teams.length !== 1 ? "s" : ""}
+          </p>
         </div>
       </div>
 
@@ -47,28 +49,26 @@ export function TeamsPage() {
           <p className="text-zinc-600 text-sm mt-1">Créez des équipes dans les paramètres</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-4">
           {teams.map((team) => (
             <Link
               key={team.id}
               to={`/teams/${team.id}`}
-              className="bg-surface-100 border border-surface-border rounded-2xl p-5 hover:border-surface-border-light hover:bg-surface-300 transition-all group"
+              className="bg-surface-100 border border-surface-border rounded-2xl p-5 hover:border-surface-border-light hover:bg-surface-200 transition-all group"
             >
               <div className="flex items-center gap-4">
                 <div
-                  className="w-10 h-10 rounded-full flex-shrink-0 border-2"
-                  style={{ backgroundColor: team.color + '30', borderColor: team.color }}
+                  className="w-8 h-8 rounded-full flex-shrink-0 border-2"
+                  style={{ backgroundColor: team.color + "30", borderColor: team.color }}
                 />
+
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-white font-semibold truncate group-hover:text-primary-400 transition-colors">
+                  <div className="text-white font-semibold truncate group-hover:text-primary-400 transition-colors">
                     {team.name}
-                  </h3>
-                  <p className="text-zinc-600 text-xs mt-0.5">Voir les résultats →</p>
+                  </div>
                 </div>
-                <div
-                  className="w-3 h-3 rounded-full flex-shrink-0"
-                  style={{ backgroundColor: team.color }}
-                />
+
+                <ArrowRight className="w-4 h-4 text-zinc-500 group-hover:text-primary-400 transition-colors" />
               </div>
             </Link>
           ))}

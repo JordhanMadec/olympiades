@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
-import { teamsService } from '../../services';
-import { Team, CreateTeamDto } from '../../types';
-import { Loading, ErrorMessage, Button, Input, Modal } from '../../components';
+import { useEffect, useState } from "react";
+import { Button, ErrorMessage, Input, Loading, Modal } from "../../components";
+import { teamsService } from "../../services";
+import { CreateTeamDto, Team } from "../../types";
 
 export function TeamsSettings() {
   const [teams, setTeams] = useState<Team[]>([]);
@@ -10,9 +10,11 @@ export function TeamsSettings() {
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTeam, setEditingTeam] = useState<Team | null>(null);
-  const [formData, setFormData] = useState<CreateTeamDto>({ name: '', color: '#f97316' });
+  const [formData, setFormData] = useState<CreateTeamDto>({ name: "", color: "#f97316" });
 
-  useEffect(() => { loadTeams(); }, []);
+  useEffect(() => {
+    loadTeams();
+  }, []);
 
   const loadTeams = async () => {
     try {
@@ -21,7 +23,7 @@ export function TeamsSettings() {
       setTeams(data);
       setError(null);
     } catch (err) {
-      setError('Erreur lors du chargement des équipes');
+      setError("Erreur lors du chargement des équipes");
     } finally {
       setLoading(false);
     }
@@ -40,21 +42,21 @@ export function TeamsSettings() {
       await loadTeams();
       handleCloseModal();
     } catch (err: any) {
-      alert(err.response?.data?.message || 'Erreur lors de la sauvegarde');
+      alert(err.response?.data?.message || "Erreur lors de la sauvegarde");
     } finally {
       setSaving(false);
     }
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm('Êtes-vous sûr de vouloir supprimer cette équipe ?')) return;
+    if (!confirm("Êtes-vous sûr de vouloir supprimer cette équipe ?")) return;
     if (saving) return;
     try {
       setSaving(true);
       await teamsService.delete(id);
       await loadTeams();
     } catch (err: any) {
-      alert(err.response?.data?.message || 'Erreur lors de la suppression');
+      alert(err.response?.data?.message || "Erreur lors de la suppression");
     } finally {
       setSaving(false);
     }
@@ -66,7 +68,7 @@ export function TeamsSettings() {
       setFormData({ name: team.name, color: team.color });
     } else {
       setEditingTeam(null);
-      setFormData({ name: '', color: '#f97316' });
+      setFormData({ name: "", color: "#f97316" });
     }
     setIsModalOpen(true);
   };
@@ -74,7 +76,7 @@ export function TeamsSettings() {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setEditingTeam(null);
-    setFormData({ name: '', color: '#f97316' });
+    setFormData({ name: "", color: "#f97316" });
   };
 
   if (loading) return <Loading />;
@@ -83,7 +85,9 @@ export function TeamsSettings() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <p className="text-zinc-400 text-sm">{teams.length} équipe{teams.length !== 1 ? 's' : ''}</p>
+        <p className="text-zinc-400 text-sm">
+          {teams.length} équipe{teams.length !== 1 ? "s" : ""}
+        </p>
         <Button onClick={() => handleOpenModal()}>+ Nouvelle équipe</Button>
       </div>
 
@@ -92,13 +96,20 @@ export function TeamsSettings() {
           <p className="text-zinc-500">Aucune équipe pour le moment</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="bg-surface-100 border border-surface-border rounded-xl flex flex-col">
           {teams.map((team) => (
-            <div key={team.id} className="bg-surface-100 border border-surface-border rounded-xl p-5">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-8 h-8 rounded-full flex-shrink-0" style={{ backgroundColor: team.color }} />
-                <h3 className="text-white font-medium">{team.name}</h3>
+            <div key={team.id} className="p-4 flex gap-2 items-center">
+              <div
+                className="w-8 h-8 rounded-full flex-shrink-0 border-2"
+                style={{ backgroundColor: team.color + "30", borderColor: team.color }}
+              />
+
+              <div className="flex-1 min-w-0">
+                <div className="text-white font-semibold truncate group-hover:text-primary-400 transition-colors">
+                  {team.name}
+                </div>
               </div>
+
               <div className="flex gap-2">
                 <Button variant="secondary" onClick={() => handleOpenModal(team)} className="flex-1 text-xs">
                   Modifier
@@ -112,7 +123,11 @@ export function TeamsSettings() {
         </div>
       )}
 
-      <Modal isOpen={isModalOpen} onClose={handleCloseModal} title={editingTeam ? "Modifier l'équipe" : 'Nouvelle équipe'}>
+      <Modal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        title={editingTeam ? "Modifier l'équipe" : "Nouvelle équipe"}
+      >
         <form onSubmit={handleSubmit}>
           <Input
             label="Nom de l'équipe"
@@ -142,7 +157,7 @@ export function TeamsSettings() {
           </div>
           <div className="flex gap-3 mt-6">
             <Button type="submit" className="flex-1" disabled={saving}>
-              {saving ? 'Enregistrement...' : editingTeam ? 'Mettre à jour' : 'Créer'}
+              {saving ? "Enregistrement..." : editingTeam ? "Mettre à jour" : "Créer"}
             </Button>
             <Button type="button" variant="secondary" onClick={handleCloseModal} className="flex-1" disabled={saving}>
               Annuler
