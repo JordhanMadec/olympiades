@@ -1,12 +1,12 @@
+import { GamesSettings } from "@/pages/admin/GamesSettings";
+import { MatchesSettingsSimple } from "@/pages/admin/MatchesSettingsSimple";
+import { TeamsSettings } from "@/pages/admin/TeamsSettings";
 import { BowArrow, ClipboardList, Users } from "lucide-react";
 import { useState } from "react";
-import { GamesSettings } from "./settings/GamesSettings";
-import { MatchesSettingsSimple } from "./settings/MatchesSettingsSimple";
-import { TeamsSettings } from "./settings/TeamsSettings";
 
 type Tab = "teams" | "games" | "matches";
 
-export function SettingsPage() {
+export function AdminPage() {
   const [activeTab, setActiveTab] = useState<Tab>("teams");
 
   const tabs: { id: Tab; label: string; Icon: any }[] = [

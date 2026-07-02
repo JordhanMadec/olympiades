@@ -1,4 +1,4 @@
-import { BowArrow, Calendar, LucideIcon, Settings, Trophy, Users } from "lucide-react";
+import { BowArrow, Calendar, LucideIcon, ShieldCog, Trophy, Users } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 interface NavItem {
@@ -12,8 +12,9 @@ const navItems: NavItem[] = [
   { path: "/teams", label: "Équipes", icon: Users },
   { path: "/games", label: "Épreuves", icon: BowArrow },
   { path: "/programme", label: "Programme", icon: Calendar },
-  { path: "/settings", label: "Paramètres", icon: Settings },
 ];
+
+const adminItems: NavItem[] = [{ path: "/admin", label: "Admin", icon: ShieldCog }];
 
 export function Sidebar() {
   const location = useLocation();
@@ -38,8 +39,28 @@ export function Sidebar() {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-3 py-4 space-y-1">
+      <nav className="flex-1 flex flex-col px-2 py-2 gap-1">
         {navItems.map(({ path, label, icon: Icon }) => {
+          const active = isActive(path);
+          return (
+            <Link
+              key={path}
+              to={path}
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 ${
+                active
+                  ? "bg-primary-500 text-white shadow-lg shadow-primary-500/20"
+                  : "text-zinc-400 hover:text-white hover:bg-surface-200"
+              }`}
+            >
+              <Icon className="w-4 h-4" />
+              {label}
+            </Link>
+          );
+        })}
+
+        <div className="flex-1"></div>
+
+        {adminItems.map(({ path, label, icon: Icon }) => {
           const active = isActive(path);
           return (
             <Link

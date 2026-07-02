@@ -1,4 +1,4 @@
-import { RefreshCw, Plus, Trash2 } from "lucide-react";
+import { Dices, Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button, ErrorMessage, Input, Loading, Modal, Select } from "../../components";
 import { gamesService, matchesService, teamsService } from "../../services";
@@ -77,14 +77,14 @@ export function MatchesSettingsSimple() {
 
     try {
       setSaving(true);
-      const maxMatchNumber = Math.max(0, ...matches.filter(m => m.gameId === createGameId).map(m => m.matchNumber));
-      
+      const maxMatchNumber = Math.max(0, ...matches.filter((m) => m.gameId === createGameId).map((m) => m.matchNumber));
+
       await matchesService.create({
         gameId: createGameId,
         matchNumber: maxMatchNumber + 1,
         teamIds: createTeamIds,
       });
-      
+
       setShowCreateModal(false);
       setCreateGameId(null);
       setCreateTeamIds([]);
@@ -98,7 +98,7 @@ export function MatchesSettingsSimple() {
 
   const handleDeleteMatch = async (id: number) => {
     if (!confirm("Supprimer cette rencontre ?")) return;
-    
+
     try {
       setSaving(true);
       await matchesService.delete(id);
@@ -122,7 +122,7 @@ export function MatchesSettingsSimple() {
   const handleSubmitScores = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!scoringMatch || saving) return;
-    
+
     try {
       setSaving(true);
       const dto: UpdateScoresDto = {
@@ -143,9 +143,7 @@ export function MatchesSettingsSimple() {
   };
 
   const toggleTeam = (teamId: number) => {
-    setCreateTeamIds(prev => 
-      prev.includes(teamId) ? prev.filter(id => id !== teamId) : [...prev, teamId]
-    );
+    setCreateTeamIds((prev) => (prev.includes(teamId) ? prev.filter((id) => id !== teamId) : [...prev, teamId]));
   };
 
   const getTeamName = (teamId: number) => teams.find((t) => t.id === teamId)?.name || "Équipe inconnue";
@@ -170,8 +168,8 @@ export function MatchesSettingsSimple() {
       {/* Action buttons */}
       <div className="flex items-center gap-3 mb-6">
         <Button onClick={handleGenerateAll} disabled={saving} className="flex items-center gap-2">
-          <RefreshCw className={`h-4 w-4 ${saving ? "animate-spin" : ""}`} />
-          {saving ? "Génération..." : "Générer toutes les rencontres"}
+          <Dices className={`h-4 w-4 ${saving ? "animate-spin" : ""}`} />
+          {saving ? "Génération..." : "Générer les rencontres"}
         </Button>
         <Button variant="secondary" onClick={() => setShowCreateModal(true)} className="flex items-center gap-2">
           <Plus className="h-4 w-4" />
@@ -236,11 +234,7 @@ export function MatchesSettingsSimple() {
 
       {/* Create Manual Match Modal */}
       {showCreateModal && (
-        <Modal
-          isOpen={true}
-          onClose={() => setShowCreateModal(false)}
-          title="Créer une rencontre manuellement"
-        >
+        <Modal isOpen={true} onClose={() => setShowCreateModal(false)} title="Créer une rencontre manuellement">
           <form onSubmit={handleCreateManual}>
             <div className="space-y-4 mb-6">
               <Select
@@ -277,7 +271,10 @@ export function MatchesSettingsSimple() {
                             : "border-surface-border text-zinc-400 hover:border-surface-border-light hover:text-white"
                         }`}
                       >
-                        <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: team.color }} />
+                        <div
+                          className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                          style={{ backgroundColor: team.color }}
+                        />
                         <span className="truncate">{team.name}</span>
                       </button>
                     ))}
