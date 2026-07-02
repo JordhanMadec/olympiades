@@ -104,7 +104,7 @@ export function GameDetailPage() {
             <BracketViewer matches={matches} teams={teams} />
           </Card>
         ) : (
-          <div className="space-y-3">
+          <div className="flex flex-col gap-3">
             {matches.map((match) => (
               <MatchCard key={match.id} match={match} teams={teams} />
             ))}

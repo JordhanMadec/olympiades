@@ -87,10 +87,14 @@ export function TeamDetailPage() {
             <p className="text-zinc-500 text-sm">Aucune rencontre</p>
           </Card>
         ) : (
-          <div className="space-y-3">
+          <div className="flex flex-col gap-3">
             {matches.map((match) => {
               const game = games.find((g) => g.id === match.gameId);
-              return <MatchCard key={match.id} match={match} teams={[team]} gameName={game?.name} showGameName />;
+              return (
+                <Link to={`/games/${match.gameId}`}>
+                  <MatchCard key={match.id} match={match} teams={[team]} gameName={game?.name} showGameName hover />
+                </Link>
+              );
             })}
           </div>
         )}

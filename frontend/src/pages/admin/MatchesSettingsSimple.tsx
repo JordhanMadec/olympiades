@@ -1,6 +1,6 @@
 import { Dices, Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Button, ErrorMessage, Input, Loading, Modal, Select } from "../../components";
+import { Button, ErrorMessage, Input, Loading, MatchCard, Modal, Select } from "../../components";
 import { gamesService, matchesService, teamsService } from "../../services";
 import { Game, Match, MatchStatus, Team, UpdateScoresDto } from "../../types";
 
@@ -150,16 +150,6 @@ export function MatchesSettingsSimple() {
   const getTeamColor = (teamId: number) => teams.find((t) => t.id === teamId)?.color || "#888";
   const getGameName = (gameId: number) => games.find((g) => g.id === gameId)?.name || "Jeu inconnu";
 
-  const getStatusBadge = (status: MatchStatus) => {
-    const map = {
-      [MatchStatus.PENDING]: { label: "En attente", cls: "bg-zinc-500/20 text-zinc-400" },
-      [MatchStatus.IN_PROGRESS]: { label: "En cours", cls: "bg-blue-500/20 text-blue-400" },
-      [MatchStatus.COMPLETED]: { label: "Terminé", cls: "bg-emerald-500/20 text-emerald-400" },
-    };
-    const { label, cls } = map[status];
-    return <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${cls}`}>{label}</span>;
-  };
-
   if (loading) return <Loading />;
   if (error) return <ErrorMessage message={error} onRetry={loadData} />;
 
@@ -193,45 +183,23 @@ export function MatchesSettingsSimple() {
           <p className="text-zinc-600 text-sm mt-2">Cliquez sur "Générer toutes les rencontres" pour commencer</p>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="flex flex-col gap-3">
           {matches.map((match) => (
-            <div key={match.id} className="bg-surface-100 border border-surface-border rounded-xl p-4">
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-3">
-                  <span className="text-white font-medium text-sm">
-                    {getGameName(match.gameId)} — Match #{match.matchNumber}
-                  </span>
-                  {match.round && <span className="text-zinc-600 text-xs">Tour {match.round}</span>}
-                  {getStatusBadge(match.status)}
-                </div>
+            <MatchCard
+              key={match.id}
+              match={match}
+              teams={teams}
+              actions={
                 <div className="flex gap-2">
-                  <Button variant="primary" onClick={() => handleOpenScoring(match)}>
+                  <Button variant="primary" size="small" onClick={() => handleOpenScoring(match)}>
                     {match.status === MatchStatus.COMPLETED ? "Scores" : "Saisir scores"}
                   </Button>
-                  <Button variant="danger" onClick={() => handleDeleteMatch(match.id)}>
+                  <Button variant="danger" size="small" onClick={() => handleDeleteMatch(match.id)}>
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {match.matchTeams
-                  .sort((a, b) => (a.rank || 999) - (b.rank || 999))
-                  .map((mt) => (
-                    <div
-                      key={mt.id}
-                      className={`flex items-center gap-2 rounded-lg px-2.5 py-1.5 border text-xs ${
-                        mt.rank === 1
-                          ? "bg-primary-500/10 border-primary-500/30"
-                          : "bg-surface-400 border-surface-border"
-                      }`}
-                    >
-                      <div className="w-2 h-2 rounded-full" style={{ backgroundColor: getTeamColor(mt.teamId) }} />
-                      <span className="text-zinc-300">{getTeamName(mt.teamId)}</span>
-                      {mt.rawScore != null && <span className="text-primary-400 font-bold">{mt.rawScore}</span>}
-                    </div>
-                  ))}
-              </div>
-            </div>
+              }
+            ></MatchCard>
           ))}
         </div>
       )}

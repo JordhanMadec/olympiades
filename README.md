@@ -156,12 +156,10 @@ frontend/
 │   └── types/          # Types synchronisés avec backend
 ```
 
-**7 Pages:**
-- `Dashboard` : Vue d'ensemble et statistiques
-- `TeamsPage` : Gestion équipes avec modales
-- `GamesPage` : Gestion jeux avec types/formats
-- `DrawsPage` : Interface de tirage au sort
-- `MatchesPage` : Liste matchs et saisie scores
+**4 Pages:**
+- `TeamsPage` : Liste des équipes
+- `AdminPage` : Gestion jeux, équipes et tirages
+- `MatchesPage` : Liste des rencontres
 - `RankingsPage` : Classements avec filtres
 
 ## 📊 Système de Scoring

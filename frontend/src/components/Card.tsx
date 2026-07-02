@@ -18,7 +18,7 @@ export function Card({ children, className = "", hover = false, padding = "md" }
   return (
     <div
       className={`bg-surface-100 border border-surface-border rounded-xl ${paddingClasses[padding]} ${
-        hover ? "hover:border-surface-border-light transition-colors" : ""
+        hover ? "hover:border-surface-border-light hover:bg-surface-200 transition-colors" : ""
       } ${className}`}
     >
       {children}

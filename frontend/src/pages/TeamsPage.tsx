@@ -53,7 +53,7 @@ export function TeamsPage() {
         <div className="grid grid-cols-1 gap-4">
           {teams.map((team) => (
             <Link key={team.id} to={`/teams/${team.id}`}>
-              <Card className=" hover:border-surface-border-light hover:bg-surface-200 transition-all group">
+              <Card hover>
                 <div className="flex items-center gap-2">
                   <TeamColorRing color={team.color} size="md" />
                   <div className="flex-1 min-w-0">

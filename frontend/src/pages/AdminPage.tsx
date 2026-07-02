@@ -17,7 +17,7 @@ export function AdminPage() {
 
   return (
     <div>
-      <div className="flex justify-between mb-6">
+      <div className="flex justify-between items-start mb-6">
         <div>
           <h1 className="text-2xl font-bold text-white">Admin</h1>
           <p className="text-zinc-500 text-sm mt-1">Gérer les équipes, les épreuves et les rencontres</p>

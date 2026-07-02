@@ -114,10 +114,15 @@ export function TeamsSettings() {
               </div>
 
               <div className="flex gap-2">
-                <Button variant="secondary" onClick={() => handleOpenModal(team)} className="flex-1 text-xs">
+                <Button
+                  variant="secondary"
+                  size="small"
+                  onClick={() => handleOpenModal(team)}
+                  className="flex-1 text-xs"
+                >
                   <Pen className="w-4 h-4" />
                 </Button>
-                <Button variant="danger" onClick={() => handleDelete(team.id)} className="flex-1 text-xs">
+                <Button variant="danger" size="small" onClick={() => handleDelete(team.id)} className="flex-1 text-xs">
                   <Trash2 className="h-4 w-4" />
                 </Button>
               </div>

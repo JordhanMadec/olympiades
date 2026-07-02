@@ -159,10 +159,10 @@ export function GamesSettings() {
                     </div>
                   </div>
                   <div className="flex gap-2 ml-4">
-                    <Button variant="secondary" onClick={() => handleOpenModal(game)} className="text-xs">
+                    <Button variant="secondary" size="small" onClick={() => handleOpenModal(game)} className="text-xs">
                       <Pen className="h-4 w-4" />
                     </Button>
-                    <Button variant="danger" onClick={() => handleDelete(game.id)} className="text-xs">
+                    <Button variant="danger" size="small" onClick={() => handleDelete(game.id)} className="text-xs">
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>

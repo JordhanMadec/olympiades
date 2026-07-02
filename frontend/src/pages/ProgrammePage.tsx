@@ -1,5 +1,6 @@
 import { Calendar } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { Card, ErrorMessage, Loading, MatchCard } from "../components";
 import { gamesService, matchesService, teamsService } from "../services";
 import { Game, Match, Team } from "../types";
@@ -113,10 +114,12 @@ export function ProgrammePage() {
             const gameMatches = matchesByGame[game.id] || [];
             return (
               <div key={game.id}>
-                <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-wider mb-3">{game.name}</h2>
-                <div className="space-y-3">
+                <h2 className="text-sm font-semibold text-zinc-400 mb-3">{game.name}</h2>
+                <div className="flex flex-col gap-3">
                   {gameMatches.map((match) => (
-                    <MatchCard key={match.id} match={match} teams={teams} />
+                    <Link to={`/games/${match.gameId}`}>
+                      <MatchCard key={match.id} match={match} teams={teams} hover />
+                    </Link>
                   ))}
                 </div>
               </div>

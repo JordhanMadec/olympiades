@@ -53,7 +53,7 @@ export function GamesPage() {
           {games.map((game) => {
             return (
               <Link key={game.id} to={`/games/${game.id}`}>
-                <Card className="hover:border-surface-border-light hover:bg-surface-200 transition-all group">
+                <Card hover>
                   <div className="flex items-center gap-4">
                     <div className="flex-1 min-w-0">
                       <div className="text-white font-semibold truncate transition-colors">{game.name}</div>
