@@ -1,5 +1,6 @@
+import { Pen, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Button, ErrorMessage, Input, Loading, Modal } from "../../components";
+import { Button, Card, ErrorMessage, Input, Loading, Modal } from "../../components";
 import { teamsService } from "../../services";
 import { CreateTeamDto, Team } from "../../types";
 
@@ -84,10 +85,14 @@ export function TeamsSettings() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <p className="text-zinc-400 text-sm">
-          {teams.length} équipe{teams.length !== 1 ? "s" : ""}
-        </p>
+      <div className="flex items-center justify-between gap-2 mb-4">
+        <div>
+          <div className="font-bold">Équipes</div>
+          <p className="text-zinc-400 text-sm">
+            {teams.length} équipe{teams.length !== 1 ? "s" : ""}
+          </p>
+        </div>
+
         <Button onClick={() => handleOpenModal()}>+ Nouvelle équipe</Button>
       </div>
 
@@ -96,31 +101,29 @@ export function TeamsSettings() {
           <p className="text-zinc-500">Aucune équipe pour le moment</p>
         </div>
       ) : (
-        <div className="bg-surface-100 border border-surface-border rounded-xl flex flex-col">
+        <Card className="divide-y divide-surface-border" padding="none">
           {teams.map((team) => (
-            <div key={team.id} className="p-4 flex gap-2 items-center">
+            <div key={team.id} className="p-4 flex gap-4 items-center">
               <div
                 className="w-4 h-4 rounded-full flex-shrink-0 border-2"
                 style={{ backgroundColor: team.color + "30", borderColor: team.color }}
               />
 
               <div className="flex-1 min-w-0">
-                <div className="text-white font-semibold truncate group-hover:text-primary-400 transition-colors">
-                  {team.name}
-                </div>
+                <div className="text-white font-semibold truncate">{team.name}</div>
               </div>
 
               <div className="flex gap-2">
                 <Button variant="secondary" onClick={() => handleOpenModal(team)} className="flex-1 text-xs">
-                  Modifier
+                  <Pen className="w-4 h-4" />
                 </Button>
                 <Button variant="danger" onClick={() => handleDelete(team.id)} className="flex-1 text-xs">
-                  Supprimer
+                  <Trash2 className="h-4 w-4" />
                 </Button>
               </div>
             </div>
           ))}
-        </div>
+        </Card>
       )}
 
       <Modal

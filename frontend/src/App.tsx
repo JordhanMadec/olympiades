@@ -1,24 +1,12 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { Layout } from "./components";
 import "./index.css";
-import {
-  AdminPage,
-  GameDetailPage,
-  GamesPage,
-  ProgrammePage,
-  RankingsPage,
-  SlideshowPage,
-  TeamDetailPage,
-  TeamsPage,
-} from "./pages";
+import { AdminPage, GameDetailPage, GamesPage, ProgrammePage, RankingsPage, TeamDetailPage, TeamsPage } from "./pages";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Slideshow without layout (fullscreen) */}
-        <Route path="/slideshow" element={<SlideshowPage />} />
-
         {/* Regular pages with sidebar layout */}
         <Route path="/" element={<Navigate to="/rankings" replace />} />
         <Route

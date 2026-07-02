@@ -163,7 +163,6 @@ frontend/
 - `DrawsPage` : Interface de tirage au sort
 - `MatchesPage` : Liste matchs et saisie scores
 - `RankingsPage` : Classements avec filtres
-- `SlideshowPage` : Mode diaporama fullscreen
 
 ## 📊 Système de Scoring
 

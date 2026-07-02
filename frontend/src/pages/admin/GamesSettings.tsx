@@ -1,6 +1,6 @@
-import { Target, Timer } from "lucide-react";
+import { Pen, Target, Timer, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Button, ErrorMessage, Input, Loading, Modal, Select, Textarea } from "../../components";
+import { Button, Card, ErrorMessage, Input, Loading, Modal, Select, Textarea } from "../../components";
 import { gamesService } from "../../services";
 import { CreateGameDto, Game, GameFormat, GameType, ScoringDirection } from "../../types";
 
@@ -120,24 +120,27 @@ export function GamesSettings() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <p className="text-zinc-400 text-sm">
-          {games.length} épreuve{games.length !== 1 ? "s" : ""}
-        </p>
+      <div className="flex items-center justify-between gap-2 mb-4">
+        <div>
+          <div className="font-bold">Épreuves</div>
+          <p className="text-zinc-400 text-sm">
+            {games.length} épreuve{games.length !== 1 ? "s" : ""}
+          </p>
+        </div>
         <Button onClick={() => handleOpenModal()}>+ Nouvelle épreuve</Button>
       </div>
 
       {games.length === 0 ? (
-        <div className="bg-surface-100 border border-surface-border rounded-2xl p-12 text-center">
+        <Card className="p-12 text-center">
           <p className="text-zinc-500">Aucune épreuve pour le moment</p>
-        </div>
+        </Card>
       ) : (
         <div className="space-y-3">
           {games.map((game) => {
             const typeInfo = getTypeLabel(game.gameType);
             const IconComponent = typeInfo.Icon;
             return (
-              <div key={game.id} className="bg-surface-100 border border-surface-border rounded-xl p-4">
+              <Card key={game.id}>
                 <div className="flex items-start justify-between">
                   <div className="flex-1 min-w-0">
                     <h3 className="text-white font-medium mb-1">{game.name}</h3>
@@ -157,14 +160,14 @@ export function GamesSettings() {
                   </div>
                   <div className="flex gap-2 ml-4">
                     <Button variant="secondary" onClick={() => handleOpenModal(game)} className="text-xs">
-                      Modifier
+                      <Pen className="h-4 w-4" />
                     </Button>
                     <Button variant="danger" onClick={() => handleDelete(game.id)} className="text-xs">
-                      Supprimer
+                      <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
                 </div>
-              </div>
+              </Card>
             );
           })}
         </div>

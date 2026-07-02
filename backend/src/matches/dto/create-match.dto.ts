@@ -7,7 +7,8 @@ export class CreateMatchDto {
 
   @IsInt()
   @Min(1)
-  matchNumber: number;
+  @IsOptional()
+  matchNumber?: number;
 
   @IsInt()
   @IsOptional()

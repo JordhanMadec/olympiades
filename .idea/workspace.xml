@@ -2,13 +2,40 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0801f446-6e67-4e0d-8457-b5199c0ae79b" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/Card.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/GameBadges.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/MatchCard.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/MatchTeamBadge.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/RankingTable.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/StatCard.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/StatusBadge.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/TeamBadge.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/TeamColorDot.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/TeamColorRing.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/matches/dto/create-match.dto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/matches/dto/create-match.dto.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/matches/matches.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/matches/matches.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/Sidebar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Sidebar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/AdminPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/AdminPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Dashboard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Dashboard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/DrawsPage.tsx" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/pages/GameDetailPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/GameDetailPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/GamesPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/GamesPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/MatchesPage.tsx" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/pages/ProgrammePage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/ProgrammePage.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/pages/RankingsPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/RankingsPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/SlideshowPage.tsx" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/pages/TeamDetailPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/TeamDetailPage.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/pages/TeamsPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/TeamsPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/admin/GamesSettings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/admin/GamesSettings.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/admin/MatchesSettings.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/admin/MatchesSettingsSimple.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/admin/MatchesSettingsSimple.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/pages/admin/TeamsSettings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/admin/TeamsSettings.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/types/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/types/index.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,7 +112,7 @@
     "codeWithMe.voiceChat.enabledByDefault": "false",
     "git-widget-placeholder": "main",
     "javascript.preferred.runtime.type.id": "node",
-    "last_opened_file_path": "/Users/jordhan/dev/olympiades/frontend",
+    "last_opened_file_path": "/Users/jordhan/dev/olympiades/frontend/src/components",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
@@ -97,6 +124,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/frontend/src/components" />
       <recent name="$PROJECT_DIR$/frontend" />
     </key>
   </component>

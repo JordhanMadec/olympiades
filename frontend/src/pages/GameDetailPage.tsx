@@ -1,9 +1,18 @@
-import { ArrowLeft, Medal } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { BracketViewer, ErrorMessage, Loading } from "../components";
+import {
+  BracketViewer,
+  Card,
+  ErrorMessage,
+  GameFormatBadge,
+  GameTypeBadge,
+  Loading,
+  MatchCard,
+  RankingTable,
+} from "../components";
 import { gamesService, matchesService, rankingsService, teamsService } from "../services";
-import { Game, GameFormat, GameRanking, GameType, Match, MatchStatus, Team } from "../types";
+import { Game, GameFormat, GameRanking, Match, Team } from "../types";
 
 export function GameDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -47,24 +56,6 @@ export function GameDetailPage() {
     }
   };
 
-  const getTeamName = (teamId: number) => teams.find((t) => t.id === teamId)?.name || "Équipe inconnue";
-  const getTeamColor = (teamId: number) => teams.find((t) => t.id === teamId)?.color || "#888";
-
-  const getStatusBadge = (status: MatchStatus) => {
-    const map = {
-      [MatchStatus.PENDING]: { label: "En attente", cls: "bg-zinc-500/20 text-zinc-400" },
-      [MatchStatus.IN_PROGRESS]: { label: "En cours", cls: "bg-blue-500/20 text-blue-400" },
-      [MatchStatus.COMPLETED]: { label: "Terminé", cls: "bg-emerald-500/20 text-emerald-400" },
-    };
-    const { label, cls } = map[status];
-    return <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${cls}`}>{label}</span>;
-  };
-
-  const getTypeLabel = (type: GameType) => {
-    const map = { [GameType.TIME]: "Temps", [GameType.SCORE]: "Score", [GameType.POINTS]: "Points" };
-    return map[type];
-  };
-
   if (loading) return <Loading />;
   if (error) return <ErrorMessage message={error} />;
   if (!game) return null;
@@ -84,12 +75,8 @@ export function GameDetailPage() {
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-white">{game.name}</h1>
         <div className="flex items-center gap-3 mt-2">
-          <span className="px-2.5 py-1 bg-primary-500/15 text-primary-400 rounded-lg text-xs font-medium border border-primary-500/20">
-            {getTypeLabel(game.gameType)}
-          </span>
-          <span className="px-2.5 py-1 bg-surface-300 text-zinc-400 rounded-lg text-xs font-medium border border-surface-border">
-            {game.gameFormat === "ROUND_ROBIN" ? "Round-Robin" : "Élimination"}
-          </span>
+          <GameTypeBadge type={game.gameType} />
+          <GameFormatBadge format={game.gameFormat} />
           <span className="px-2.5 py-1 bg-surface-300 text-zinc-400 rounded-lg text-xs font-medium border border-surface-border">
             {game.teamsPerMatch} équipes/match
           </span>
@@ -100,80 +87,26 @@ export function GameDetailPage() {
       {/* Ranking */}
       <div className="mb-8">
         <h2 className="text-base font-semibold text-white mb-4">Classement</h2>
-        <div className="bg-surface-100 border border-surface-border rounded-2xl overflow-hidden">
-          {!ranking || ranking.entries.length === 0 ? (
-            <div className="p-10 text-center">
-              <p className="text-zinc-500 text-sm">Aucun résultat</p>
-            </div>
-          ) : (
-            <div className="divide-y divide-surface-border">
-              {ranking.entries.map((entry, index) => (
-                <div
-                  key={entry.teamId}
-                  className="flex items-center gap-6 px-5 py-3 hover:bg-surface-200 transition-colors"
-                >
-                  <div className="w-7 flex justify-center">
-                    {index < 3 ? (
-                      <Medal
-                        className={`h-5 w-5 ${
-                          index === 0 ? "text-yellow-400" : index === 1 ? "text-gray-300" : "text-orange-500"
-                        }`}
-                      />
-                    ) : (
-                      <span className="text-zinc-500 text-sm font-bold">{index + 1}</span>
-                    )}
-                  </div>
-                  <div className="flex-1 flex items-center gap-2">
-                    <div
-                      className="w-4 h-4 rounded-full flex-shrink-0 border-2"
-                      style={{ backgroundColor: entry.teamColor + "30", borderColor: entry.teamColor }}
-                    />
-                    <span className="text-white font-bold flex-1">{entry.teamName}</span>
-                  </div>
-                  <span className=" text-gray-500">{entry.totalPoints} pts</span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        <Card padding="none" className="overflow-hidden">
+          <RankingTable entries={ranking?.entries || []} emptyMessage="Aucun résultat" />
+        </Card>
       </div>
 
       {/* Matches */}
       <div>
         <h2 className="text-base font-semibold text-white mb-4">Rencontres ({matches.length})</h2>
         {matches.length === 0 ? (
-          <div className="bg-surface-100 border border-surface-border rounded-2xl p-10 text-center">
+          <Card className="p-10 text-center">
             <p className="text-zinc-500 text-sm">Aucune rencontre</p>
-          </div>
+          </Card>
         ) : game.gameFormat === GameFormat.ELIMINATION ? (
-          <div className="bg-surface-100 border border-surface-border rounded-2xl p-6">
+          <Card className="p-6">
             <BracketViewer matches={matches} teams={teams} />
-          </div>
+          </Card>
         ) : (
-          <div className="space-y-3 pr-1">
+          <div className="space-y-3">
             {matches.map((match) => (
-              <div
-                key={match.id}
-                className="bg-surface-100 border border-surface-border rounded-xl p-4 hover:border-surface-border-light transition-colors"
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-white text-sm font-medium">Match #{match.matchNumber}</span>
-                  {getStatusBadge(match.status)}
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {match.matchTeams
-                    .sort((a, b) => (a.rank || 999) - (b.rank || 999))
-                    .map((mt) => (
-                      <div key={mt.id} className="flex items-center gap-1.5 bg-surface-400 rounded-lg px-2.5 py-1.5">
-                        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: getTeamColor(mt.teamId) }} />
-                        <span className="text-zinc-300 text-xs">{getTeamName(mt.teamId)}</span>
-                        {mt.rawScore != null && (
-                          <span className="text-primary-400 text-xs font-bold ml-1">{mt.rawScore}</span>
-                        )}
-                      </div>
-                    ))}
-                </div>
-              </div>
+              <MatchCard key={match.id} match={match} teams={teams} />
             ))}
           </div>
         )}

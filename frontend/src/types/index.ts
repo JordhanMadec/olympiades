@@ -136,7 +136,7 @@ export interface UpdateGameDto {
 
 export interface CreateMatchDto {
   gameId: number;
-  matchNumber: number;
+  matchNumber?: number;
   teamIds: number[];
   round?: number;
   bracketPosition?: number;

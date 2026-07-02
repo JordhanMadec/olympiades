@@ -1,7 +1,8 @@
+import { TeamColorRing } from "@/components/TeamColorRing.tsx";
 import { ArrowRight, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ErrorMessage, Loading } from "../components";
+import { Card, ErrorMessage, Loading } from "../components";
 import { teamsService } from "../services";
 import { Team } from "../types";
 
@@ -51,25 +52,17 @@ export function TeamsPage() {
       ) : (
         <div className="grid grid-cols-1 gap-4">
           {teams.map((team) => (
-            <Link
-              key={team.id}
-              to={`/teams/${team.id}`}
-              className="bg-surface-100 border border-surface-border rounded-2xl p-4 hover:border-surface-border-light hover:bg-surface-200 transition-all group"
-            >
-              <div className="flex items-center gap-2">
-                <div
-                  className="w-4 h-4 rounded-full flex-shrink-0 border-2"
-                  style={{ backgroundColor: team.color + "30", borderColor: team.color }}
-                />
-
-                <div className="flex-1 min-w-0">
-                  <div className="text-white font-semibold truncate group-hover:text-primary-400 transition-colors">
-                    {team.name}
+            <Link key={team.id} to={`/teams/${team.id}`}>
+              <Card className=" hover:border-surface-border-light hover:bg-surface-200 transition-all group">
+                <div className="flex items-center gap-2">
+                  <TeamColorRing color={team.color} size="md" />
+                  <div className="flex-1 min-w-0">
+                    <div className="text-white font-semibold truncate transition-colors">{team.name}</div>
                   </div>
-                </div>
 
-                <ArrowRight className="w-4 h-4 text-zinc-500 group-hover:text-primary-400 transition-colors" />
-              </div>
+                  <ArrowRight className="w-4 h-4 text-zinc-500 group-hover:text-primary-400 transition-colors" />
+                </div>
+              </Card>
             </Link>
           ))}
         </div>

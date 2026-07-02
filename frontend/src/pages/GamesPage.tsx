@@ -1,7 +1,7 @@
 import { ArrowRight, BowArrow } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ErrorMessage, Loading } from "../components";
+import { Card, ErrorMessage, Loading } from "../components";
 import { gamesService } from "../services";
 import { Game } from "../types";
 
@@ -52,20 +52,16 @@ export function GamesPage() {
         <div className="grid grid-cols-1 gap-4">
           {games.map((game) => {
             return (
-              <Link
-                key={game.id}
-                to={`/games/${game.id}`}
-                className="bg-surface-100 border border-surface-border rounded-2xl p-4 hover:border-surface-border-light hover:bg-surface-200 transition-all group"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="flex-1 min-w-0">
-                    <div className="text-white font-semibold truncate group-hover:text-primary-400 transition-colors">
-                      {game.name}
+              <Link key={game.id} to={`/games/${game.id}`}>
+                <Card className="hover:border-surface-border-light hover:bg-surface-200 transition-all group">
+                  <div className="flex items-center gap-4">
+                    <div className="flex-1 min-w-0">
+                      <div className="text-white font-semibold truncate transition-colors">{game.name}</div>
                     </div>
-                  </div>
 
-                  <ArrowRight className="w-4 h-4 text-zinc-500 group-hover:text-primary-400 transition-colors" />
-                </div>
+                    <ArrowRight className="w-4 h-4 text-zinc-500 group-hover:text-primary-400 transition-colors" />
+                  </div>
+                </Card>
               </Link>
             );
           })}

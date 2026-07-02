@@ -69,9 +69,21 @@ export class MatchesService {
       throw new NotFoundException('One or more teams not found');
     }
 
+    // Auto-generate matchNumber if not provided
+    let matchNumber = matchData.matchNumber;
+    if (!matchNumber) {
+      const maxMatchNumber = await this.matchesRepository
+        .createQueryBuilder('match')
+        .select('MAX(match.matchNumber)', 'max')
+        .getRawOne();
+
+      matchNumber = (maxMatchNumber?.max || 0) + 1;
+    }
+
     // Create match
     const match = this.matchesRepository.create({
       ...matchData,
+      matchNumber,
       gameId,
       status: MatchStatus.PENDING,
     });

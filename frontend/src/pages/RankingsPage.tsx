@@ -1,7 +1,6 @@
-import { Medal, Trophy } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { ErrorMessage, Loading } from "../components";
+import { Card, ErrorMessage, Loading, RankingTable } from "../components";
 import { gamesService, rankingsService } from "../services";
 import { Game, GameRanking } from "../types";
 
@@ -63,13 +62,6 @@ export function RankingsPage() {
     }
   };
 
-  const getRankBadge = (index: number) => {
-    if (index === 0) return { color: "text-yellow-400" };
-    if (index === 1) return { color: "text-zinc-300" };
-    if (index === 2) return { color: "text-orange-600" };
-    return { color: "text-zinc-500" };
-  };
-
   if (loading) return <Loading />;
   if (error) return <ErrorMessage message={error} onRetry={loadRankings} />;
 
@@ -113,59 +105,9 @@ export function RankingsPage() {
       </div>
 
       {/* Ranking table */}
-      <div className="bg-surface-100 border border-surface-border rounded-2xl overflow-hidden">
-        {!ranking || ranking.entries.length === 0 ? (
-          <div className="p-16 text-center">
-            <Trophy className="h-16 w-16 mx-auto mb-4 text-zinc-500" />
-            <p className="text-zinc-500">Aucun résultat pour le moment</p>
-          </div>
-        ) : (
-          <>
-            {/* Table header */}
-            <div className="grid grid-cols-12 gap-4 px-6 py-3 border-b border-surface-border text-xs font-medium text-zinc-500 uppercase tracking-wider">
-              <div className="col-span-1">Rang</div>
-              <div className="col-span-10">Équipe</div>
-              <div className="col-span-1 text-right">Points</div>
-            </div>
-
-            {/* Rows */}
-            <div className="divide-y divide-surface-border">
-              {ranking.entries.map((entry, index) => {
-                const badge = getRankBadge(index);
-                return (
-                  <div
-                    key={entry.teamId}
-                    className={`grid grid-cols-12 gap-4 px-6 py-4 items-center hover:bg-surface-200 transition-colors`}
-                  >
-                    {/* Rank */}
-                    <div className="col-span-1">
-                      {index < 3 ? (
-                        <Medal className={`h-6 w-6 ${badge.color}`} />
-                      ) : (
-                        <span className="text-zinc-500 font-bold text-sm">{index + 1}</span>
-                      )}
-                    </div>
-
-                    {/* Team */}
-                    <div className="col-span-10 flex items-center gap-3">
-                      <div
-                        className="w-4 h-4 rounded-full flex-shrink-0 border-2"
-                        style={{ backgroundColor: entry.teamColor + "30", borderColor: entry.teamColor }}
-                      />
-                      <span className="font-bold text-white">{entry.teamName}</span>
-                    </div>
-
-                    {/* Points */}
-                    <div className="col-span-1 text-right">
-                      <span className="text-gray-500">{entry.totalPoints} pts</span>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </>
-        )}
-      </div>
+      <Card padding="none" className="overflow-hidden">
+        <RankingTable entries={ranking?.entries || []} />
+      </Card>
     </div>
   );
 }

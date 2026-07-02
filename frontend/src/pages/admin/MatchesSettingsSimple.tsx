@@ -166,20 +166,24 @@ export function MatchesSettingsSimple() {
   return (
     <div>
       {/* Action buttons */}
-      <div className="flex items-center gap-3 mb-6">
-        <Button onClick={handleGenerateAll} disabled={saving} className="flex items-center gap-2">
-          <Dices className={`h-4 w-4 ${saving ? "animate-spin" : ""}`} />
-          {saving ? "Génération..." : "Générer les rencontres"}
-        </Button>
-        <Button variant="secondary" onClick={() => setShowCreateModal(true)} className="flex items-center gap-2">
-          <Plus className="h-4 w-4" />
-          Créer une rencontre
-        </Button>
-        {matches.length > 0 && (
-          <span className="text-zinc-500 text-sm ml-auto">
+      <div className="flex justify-between items-center gap-2 mb-4">
+        <div>
+          <div className="font-bold">Programme</div>
+          <div className="text-zinc-500 text-sm">
             {matches.length} rencontre{matches.length > 1 ? "s" : ""}
-          </span>
-        )}
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Button variant="secondary" onClick={() => setShowCreateModal(true)} className="flex items-center gap-2">
+            <Plus className="h-4 w-4" />
+            Créer une rencontre
+          </Button>
+          <Button onClick={handleGenerateAll} disabled={saving} className="flex items-center gap-2">
+            <Dices className={`h-4 w-4 ${saving ? "animate-spin" : ""}`} />
+            {saving ? "Génération..." : "Générer les rencontres"}
+          </Button>
+        </div>
       </div>
 
       {/* Matches list */}
@@ -201,11 +205,11 @@ export function MatchesSettingsSimple() {
                   {getStatusBadge(match.status)}
                 </div>
                 <div className="flex gap-2">
-                  <Button variant="primary" onClick={() => handleOpenScoring(match)} className="text-xs">
+                  <Button variant="primary" onClick={() => handleOpenScoring(match)}>
                     {match.status === MatchStatus.COMPLETED ? "Scores" : "Saisir scores"}
                   </Button>
-                  <Button variant="danger" onClick={() => handleDeleteMatch(match.id)} className="text-xs">
-                    <Trash2 className="h-3 w-3" />
+                  <Button variant="danger" onClick={() => handleDeleteMatch(match.id)}>
+                    <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
               </div>
