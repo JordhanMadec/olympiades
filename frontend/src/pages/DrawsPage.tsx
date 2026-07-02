@@ -9,6 +9,8 @@ export function DrawsPage() {
   const [selectedGameId, setSelectedGameId] = useState<number | null>(null);
   const [selectedTeamIds, setSelectedTeamIds] = useState<number[]>([]);
   const [loading, setLoading] = useState(false);
+  const [generating, setGenerating] = useState(false);
+  const [creating, setCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
   // Round-robin params
@@ -51,7 +53,10 @@ export function DrawsPage() {
       return;
     }
 
+    if (generating) return;
+
     try {
+      setGenerating(true);
       setLoading(true);
       const draws = await drawsService.generateRoundRobin({
         gameId: selectedGameId,
@@ -66,6 +71,7 @@ export function DrawsPage() {
       setError(err.response?.data?.message || 'Erreur lors de la génération du tirage');
     } finally {
       setLoading(false);
+      setGenerating(false);
     }
   };
 
@@ -75,7 +81,10 @@ export function DrawsPage() {
       return;
     }
 
+    if (generating) return;
+
     try {
+      setGenerating(true);
       setLoading(true);
       const draws = await drawsService.generateBracket({
         gameId: selectedGameId,
@@ -89,6 +98,7 @@ export function DrawsPage() {
       setError(err.response?.data?.message || 'Erreur lors de la génération du bracket');
     } finally {
       setLoading(false);
+      setGenerating(false);
     }
   };
 
@@ -104,8 +114,10 @@ export function DrawsPage() {
     }
 
     if (!confirm(`Créer ${draws.length} matchs pour ce jeu ?`)) return;
+    if (creating) return;
 
     try {
+      setCreating(true);
       setLoading(true);
       
       for (const draw of draws) {
@@ -129,6 +141,7 @@ export function DrawsPage() {
       alert(err.response?.data?.message || 'Erreur lors de la création des matchs');
     } finally {
       setLoading(false);
+      setCreating(false);
     }
   };
 
@@ -206,15 +219,15 @@ export function DrawsPage() {
                 value={numberOfMatches}
                 onChange={(e) => setNumberOfMatches(parseInt(e.target.value))}
               />
-              <Button onClick={handleGenerateRoundRobin} disabled={loading}>
-                Générer le tirage Round-Robin
+              <Button onClick={handleGenerateRoundRobin} disabled={loading || generating}>
+                {generating ? 'Génération...' : 'Générer le tirage Round-Robin'}
               </Button>
             </div>
           ) : (
             <div className="bg-white rounded-lg shadow p-6 mb-6">
               <h2 className="text-xl font-semibold mb-4">3. Générer le bracket</h2>
-              <Button onClick={handleGenerateBracket} disabled={loading}>
-                Générer le bracket d'élimination
+              <Button onClick={handleGenerateBracket} disabled={loading || generating}>
+                {generating ? 'Génération...' : 'Générer le bracket d\'élimination'}
               </Button>
             </div>
           )}
@@ -229,8 +242,8 @@ export function DrawsPage() {
         <div className="bg-white rounded-lg shadow p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-semibold">Tirage généré ({roundRobinDraws.length} matchs)</h2>
-            <Button variant="success" onClick={handleCreateMatches}>
-              Créer les matchs
+            <Button variant="success" onClick={handleCreateMatches} disabled={creating}>
+              {creating ? 'Création...' : 'Créer les matchs'}
             </Button>
           </div>
 
@@ -265,8 +278,8 @@ export function DrawsPage() {
         <div className="bg-white rounded-lg shadow p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-semibold">Bracket généré ({bracketDraws.length} matchs)</h2>
-            <Button variant="success" onClick={handleCreateMatches}>
-              Créer les matchs
+            <Button variant="success" onClick={handleCreateMatches} disabled={creating}>
+              {creating ? 'Création...' : 'Créer les matchs'}
             </Button>
           </div>
 

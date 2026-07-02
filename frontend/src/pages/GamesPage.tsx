@@ -6,6 +6,7 @@ import { Loading, ErrorMessage, Button, Input, Select, Textarea, Modal } from '.
 export function GamesPage() {
   const [games, setGames] = useState<Game[]>([]);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingGame, setEditingGame] = useState<Game | null>(null);
@@ -39,7 +40,10 @@ export function GamesPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (saving) return;
+    
     try {
+      setSaving(true);
       if (editingGame) {
         await gamesService.update(editingGame.id, formData);
       } else {
@@ -49,16 +53,23 @@ export function GamesPage() {
       handleCloseModal();
     } catch (err: any) {
       alert(err.response?.data?.message || 'Erreur lors de la sauvegarde');
+    } finally {
+      setSaving(false);
     }
   };
 
   const handleDelete = async (id: number) => {
     if (!confirm('Êtes-vous sûr de vouloir supprimer ce jeu ?')) return;
+    if (saving) return;
+    
     try {
+      setSaving(true);
       await gamesService.delete(id);
       await loadGames();
     } catch (err: any) {
       alert(err.response?.data?.message || 'Erreur lors de la suppression');
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -257,14 +268,15 @@ export function GamesPage() {
           />
 
           <div className="flex space-x-3 mt-6">
-            <Button type="submit" className="flex-1">
-              {editingGame ? 'Mettre à jour' : 'Créer'}
+            <Button type="submit" className="flex-1" disabled={saving}>
+              {saving ? 'Enregistrement...' : editingGame ? 'Mettre à jour' : 'Créer'}
             </Button>
             <Button
               type="button"
               variant="secondary"
               onClick={handleCloseModal}
               className="flex-1"
+              disabled={saving}
             >
               Annuler
             </Button>

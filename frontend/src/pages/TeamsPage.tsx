@@ -6,6 +6,7 @@ import { Loading, ErrorMessage, Button, Input, Modal } from '../components';
 export function TeamsPage() {
   const [teams, setTeams] = useState<Team[]>([]);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTeam, setEditingTeam] = useState<Team | null>(null);
@@ -34,7 +35,10 @@ export function TeamsPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (saving) return; // Prevent double submission
+    
     try {
+      setSaving(true);
       if (editingTeam) {
         await teamsService.update(editingTeam.id, formData);
       } else {
@@ -44,16 +48,23 @@ export function TeamsPage() {
       handleCloseModal();
     } catch (err: any) {
       alert(err.response?.data?.message || 'Erreur lors de la sauvegarde');
+    } finally {
+      setSaving(false);
     }
   };
 
   const handleDelete = async (id: number) => {
     if (!confirm('Êtes-vous sûr de vouloir supprimer cette équipe ?')) return;
+    if (saving) return; // Prevent multiple deletions
+    
     try {
+      setSaving(true);
       await teamsService.delete(id);
       await loadTeams();
     } catch (err: any) {
       alert(err.response?.data?.message || 'Erreur lors de la suppression');
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -166,14 +177,15 @@ export function TeamsPage() {
           </div>
 
           <div className="flex space-x-3 mt-6">
-            <Button type="submit" className="flex-1">
-              {editingTeam ? 'Mettre à jour' : 'Créer'}
+            <Button type="submit" className="flex-1" disabled={saving}>
+              {saving ? 'Enregistrement...' : editingTeam ? 'Mettre à jour' : 'Créer'}
             </Button>
             <Button
               type="button"
               variant="secondary"
               onClick={handleCloseModal}
               className="flex-1"
+              disabled={saving}
             >
               Annuler
             </Button>

@@ -9,6 +9,7 @@ export function MatchesPage() {
   const [teams, setTeams] = useState<Team[]>([]);
   const [selectedGameId, setSelectedGameId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [scoringMatch, setScoringMatch] = useState<Match | null>(null);
   const [scores, setScores] = useState<{ [teamId: number]: string }>({});
@@ -57,11 +58,16 @@ export function MatchesPage() {
 
   const handleDeleteMatch = async (id: number) => {
     if (!confirm('Êtes-vous sûr de vouloir supprimer ce match ?')) return;
+    if (saving) return;
+    
     try {
+      setSaving(true);
       await matchesService.delete(id);
       await loadMatches();
     } catch (err: any) {
       alert(err.response?.data?.message || 'Erreur lors de la suppression');
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -76,9 +82,10 @@ export function MatchesPage() {
 
   const handleSubmitScores = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!scoringMatch) return;
+    if (!scoringMatch || saving) return;
 
     try {
+      setSaving(true);
       const dto: UpdateScoresDto = {
         scores: Object.entries(scores).map(([teamId, rawScore]) => ({
           teamId: parseInt(teamId),
@@ -92,6 +99,8 @@ export function MatchesPage() {
       setScores({});
     } catch (err: any) {
       alert(err.response?.data?.message || 'Erreur lors de la sauvegarde des scores');
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -255,8 +264,8 @@ export function MatchesPage() {
 
             <div className="flex space-x-3">
               {scoringMatch.status !== MatchStatus.COMPLETED && (
-                <Button type="submit" className="flex-1">
-                  Enregistrer
+                <Button type="submit" className="flex-1" disabled={saving}>
+                  {saving ? 'Enregistrement...' : 'Enregistrer'}
                 </Button>
               )}
               <Button
@@ -264,6 +273,7 @@ export function MatchesPage() {
                 variant="secondary"
                 onClick={() => setScoringMatch(null)}
                 className="flex-1"
+                disabled={saving}
               >
                 {scoringMatch.status === MatchStatus.COMPLETED ? 'Fermer' : 'Annuler'}
               </Button>

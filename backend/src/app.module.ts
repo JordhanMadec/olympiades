@@ -22,7 +22,7 @@ import { DrawsModule } from './draws/draws.module';
       database: 'olympiades.sqlite',
       entities: [Team, Game, Match, MatchTeam, TeamMatchHistory],
       synchronize: true, // Only for development
-      logging: true,
+      logging: false, // Disable SQL logging
     }),
     TeamsModule,
     GamesModule,
