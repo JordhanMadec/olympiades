@@ -35,6 +35,12 @@ export function Navbar() {
               Jeux
             </Link>
             <Link
+              to="/draws"
+              className={`px-4 py-2 rounded hover:bg-blue-700 transition ${isActive('/draws')}`}
+            >
+              Tirages
+            </Link>
+            <Link
               to="/matches"
               className={`px-4 py-2 rounded hover:bg-blue-700 transition ${isActive('/matches')}`}
             >
