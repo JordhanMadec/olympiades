@@ -1,18 +1,18 @@
-import { useState } from 'react';
-import { Users, Gamepad2, ClipboardList } from 'lucide-react';
-import { TeamsSettings } from './settings/TeamsSettings';
-import { GamesSettings } from './settings/GamesSettings';
-import { MatchesSettings } from './settings/MatchesSettings';
+import { BowArrow, ClipboardList, Users } from "lucide-react";
+import { useState } from "react";
+import { GamesSettings } from "./settings/GamesSettings";
+import { MatchesSettings } from "./settings/MatchesSettings";
+import { TeamsSettings } from "./settings/TeamsSettings";
 
-type Tab = 'teams' | 'games' | 'matches';
+type Tab = "teams" | "games" | "matches";
 
 export function SettingsPage() {
-  const [activeTab, setActiveTab] = useState<Tab>('teams');
+  const [activeTab, setActiveTab] = useState<Tab>("teams");
 
   const tabs: { id: Tab; label: string; Icon: any }[] = [
-    { id: 'teams', label: 'Équipes', Icon: Users },
-    { id: 'games', label: 'Épreuves', Icon: Gamepad2 },
-    { id: 'matches', label: 'Rencontres', Icon: ClipboardList },
+    { id: "teams", label: "Équipes", Icon: Users },
+    { id: "games", label: "Épreuves", Icon: BowArrow },
+    { id: "matches", label: "Rencontres", Icon: ClipboardList },
   ];
 
   return (
@@ -32,8 +32,8 @@ export function SettingsPage() {
               onClick={() => setActiveTab(tab.id)}
               className={`flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-medium transition-all ${
                 activeTab === tab.id
-                  ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/20'
-                  : 'text-zinc-400 hover:text-white'
+                  ? "bg-primary-500 text-white shadow-lg shadow-primary-500/20"
+                  : "text-zinc-400 hover:text-white"
               }`}
             >
               <IconComponent className="h-4 w-4" />
@@ -44,9 +44,9 @@ export function SettingsPage() {
       </div>
 
       {/* Tab content */}
-      {activeTab === 'teams' && <TeamsSettings />}
-      {activeTab === 'games' && <GamesSettings />}
-      {activeTab === 'matches' && <MatchesSettings />}
+      {activeTab === "teams" && <TeamsSettings />}
+      {activeTab === "games" && <GamesSettings />}
+      {activeTab === "matches" && <MatchesSettings />}
     </div>
   );
 }

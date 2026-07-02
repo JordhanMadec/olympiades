@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Users, Gamepad2, CheckCircle, Trophy, Medal } from 'lucide-react';
-import { teamsService, gamesService, rankingsService } from '../services';
-import { Team, Game, GameRanking } from '../types';
-import { Loading, ErrorMessage } from '../components';
+import { BowArrow, CheckCircle, Medal, Trophy, Users } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { ErrorMessage, Loading } from "../components";
+import { gamesService, rankingsService, teamsService } from "../services";
+import { Game, GameRanking, Team } from "../types";
 
 export function Dashboard() {
   const [teams, setTeams] = useState<Team[]>([]);
@@ -29,7 +29,7 @@ export function Dashboard() {
       setRanking(rankingData);
       setError(null);
     } catch (err) {
-      setError('Erreur lors du chargement des données');
+      setError("Erreur lors du chargement des données");
       console.error(err);
     } finally {
       setLoading(false);
@@ -64,7 +64,7 @@ export function Dashboard() {
               <p className="text-3xl font-bold text-green-600">{games.length}</p>
             </div>
             <div className="bg-green-100 rounded-full p-3">
-              <Gamepad2 className="h-8 w-8 text-green-600" />
+              <BowArrow className="h-8 w-8 text-green-600" />
             </div>
           </div>
         </div>
@@ -97,22 +97,19 @@ export function Dashboard() {
                 key={entry.teamId}
                 className={`flex items-center justify-between p-4 rounded-lg ${
                   index === 0
-                    ? 'bg-yellow-50 border-2 border-yellow-400'
+                    ? "bg-yellow-50 border-2 border-yellow-400"
                     : index === 1
-                    ? 'bg-gray-50 border-2 border-gray-400'
-                    : 'bg-orange-50 border-2 border-orange-400'
+                      ? "bg-gray-50 border-2 border-gray-400"
+                      : "bg-orange-50 border-2 border-orange-400"
                 }`}
               >
                 <div className="flex items-center space-x-4">
-                  <Medal 
+                  <Medal
                     className={`h-8 w-8 ${
-                      index === 0 ? 'text-yellow-500' : index === 1 ? 'text-gray-400' : 'text-orange-500'
+                      index === 0 ? "text-yellow-500" : index === 1 ? "text-gray-400" : "text-orange-500"
                     }`}
                   />
-                  <div
-                    className="w-4 h-4 rounded-full"
-                    style={{ backgroundColor: entry.teamColor }}
-                  ></div>
+                  <div className="w-4 h-4 rounded-full" style={{ backgroundColor: entry.teamColor }}></div>
                   <span className="font-semibold text-lg">{entry.teamName}</span>
                 </div>
                 <div className="text-right">
@@ -122,10 +119,7 @@ export function Dashboard() {
               </div>
             ))}
           </div>
-          <Link
-            to="/rankings"
-            className="block mt-4 text-center text-blue-600 hover:text-blue-800 font-medium"
-          >
+          <Link to="/rankings" className="block mt-4 text-center text-blue-600 hover:text-blue-800 font-medium">
             Voir le classement complet →
           </Link>
         </div>
@@ -133,34 +127,22 @@ export function Dashboard() {
 
       {/* Quick Actions */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Link
-          to="/teams"
-          className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition group"
-        >
+        <Link to="/teams" className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition group">
           <h3 className="text-lg font-semibold mb-2 group-hover:text-blue-600">Gérer les équipes</h3>
           <p className="text-gray-600">Ajouter, modifier ou supprimer des équipes</p>
         </Link>
 
-        <Link
-          to="/games"
-          className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition group"
-        >
+        <Link to="/games" className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition group">
           <h3 className="text-lg font-semibold mb-2 group-hover:text-blue-600">Gérer les jeux</h3>
           <p className="text-gray-600">Configurer les jeux et leurs règles</p>
         </Link>
 
-        <Link
-          to="/matches"
-          className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition group"
-        >
+        <Link to="/matches" className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition group">
           <h3 className="text-lg font-semibold mb-2 group-hover:text-blue-600">Rencontres</h3>
           <p className="text-gray-600">Gérer les matchs et enregistrer les scores</p>
         </Link>
 
-        <Link
-          to="/slideshow"
-          className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition group"
-        >
+        <Link to="/slideshow" className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition group">
           <h3 className="text-lg font-semibold mb-2 group-hover:text-blue-600">Mode diaporama</h3>
           <p className="text-gray-600">Afficher les classements sur grand écran</p>
         </Link>

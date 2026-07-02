@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Timer, Target, Gamepad2 } from 'lucide-react';
-import { gamesService } from '../services';
-import { Game, GameType, GameFormat } from '../types';
-import { Loading, ErrorMessage } from '../components';
+import { BowArrow, Target, Timer } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { ErrorMessage, Loading } from "../components";
+import { gamesService } from "../services";
+import { Game, GameFormat, GameType } from "../types";
 
 export function GamesPage() {
   const [games, setGames] = useState<Game[]>([]);
@@ -21,7 +21,7 @@ export function GamesPage() {
       setGames(data);
       setError(null);
     } catch (err) {
-      setError('Erreur lors du chargement des épreuves');
+      setError("Erreur lors du chargement des épreuves");
       console.error(err);
     } finally {
       setLoading(false);
@@ -30,15 +30,15 @@ export function GamesPage() {
 
   const getTypeLabel = (type: GameType) => {
     const map = {
-      [GameType.TIME]: { label: 'Temps', Icon: Timer },
-      [GameType.SCORE]: { label: 'Score', Icon: Target },
-      [GameType.POINTS]: { label: 'Points', Icon: Target },
+      [GameType.TIME]: { label: "Temps", Icon: Timer },
+      [GameType.SCORE]: { label: "Score", Icon: Target },
+      [GameType.POINTS]: { label: "Points", Icon: Target },
     };
     return map[type];
   };
 
   const getFormatLabel = (format: GameFormat) => {
-    return format === GameFormat.ROUND_ROBIN ? 'Round-Robin' : 'Élimination';
+    return format === GameFormat.ROUND_ROBIN ? "Round-Robin" : "Élimination";
   };
 
   if (loading) return <Loading />;
@@ -49,13 +49,15 @@ export function GamesPage() {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-2xl font-bold text-white">Épreuves</h1>
-          <p className="text-zinc-500 text-sm mt-1">{games.length} épreuve{games.length !== 1 ? 's' : ''}</p>
+          <p className="text-zinc-500 text-sm mt-1">
+            {games.length} épreuve{games.length !== 1 ? "s" : ""}
+          </p>
         </div>
       </div>
 
       {games.length === 0 ? (
         <div className="bg-surface-100 border border-surface-border rounded-2xl p-16 text-center">
-          <Gamepad2 className="h-16 w-16 mx-auto mb-4 text-zinc-500" />
+          <BowArrow className="h-16 w-16 mx-auto mb-4 text-zinc-500" />
           <p className="text-zinc-500">Aucune épreuve pour le moment</p>
           <p className="text-zinc-600 text-sm mt-1">Créez des épreuves dans les paramètres</p>
         </div>
@@ -68,7 +70,7 @@ export function GamesPage() {
               <Link
                 key={game.id}
                 to={`/games/${game.id}`}
-                className="bg-surface-100 border border-surface-border rounded-2xl p-6 hover:border-surface-border-light hover:bg-surface-300 transition-all group"
+                className="bg-surface-100 border border-surface-border rounded-2xl p-6 hover:border-surface-border-light hover:bg-surface-200 transition-all group"
               >
                 <div className="flex items-start justify-between mb-3">
                   <h3 className="text-white font-semibold text-lg group-hover:text-primary-400 transition-colors">
@@ -76,9 +78,7 @@ export function GamesPage() {
                   </h3>
                   <IconComponent className="h-6 w-6 text-primary-400" />
                 </div>
-                {game.description && (
-                  <p className="text-zinc-500 text-sm mb-4 line-clamp-2">{game.description}</p>
-                )}
+                {game.description && <p className="text-zinc-500 text-sm mb-4 line-clamp-2">{game.description}</p>}
                 <div className="flex flex-wrap gap-2">
                   <span className="px-2.5 py-1 bg-primary-500/10 text-primary-400 rounded-lg text-xs font-medium border border-primary-500/20">
                     {typeInfo.label}

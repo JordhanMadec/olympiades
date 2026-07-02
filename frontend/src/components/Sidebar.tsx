@@ -1,4 +1,4 @@
-import { Calendar, Gamepad2, LucideIcon, Settings, Trophy, Users } from "lucide-react";
+import { BowArrow, Calendar, LucideIcon, Settings, Trophy, Users } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 interface NavItem {
@@ -10,7 +10,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   { path: "/rankings", label: "Classement", icon: Trophy },
   { path: "/teams", label: "Équipes", icon: Users },
-  { path: "/games", label: "Épreuves", icon: Gamepad2 },
+  { path: "/games", label: "Épreuves", icon: BowArrow },
   { path: "/programme", label: "Programme", icon: Calendar },
   { path: "/settings", label: "Paramètres", icon: Settings },
 ];
@@ -48,7 +48,7 @@ export function Sidebar() {
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 ${
                 active
                   ? "bg-primary-500 text-white shadow-lg shadow-primary-500/20"
-                  : "text-zinc-400 hover:text-white hover:bg-surface-300"
+                  : "text-zinc-400 hover:text-white hover:bg-surface-200"
               }`}
             >
               <Icon className="w-4 h-4" />

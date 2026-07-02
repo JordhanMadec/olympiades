@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { Medal, Trophy } from 'lucide-react';
-import { rankingsService, gamesService } from '../services';
-import { GameRanking, Game } from '../types';
-import { Loading, ErrorMessage } from '../components';
+import { Medal, Trophy } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { ErrorMessage, Loading } from "../components";
+import { gamesService, rankingsService } from "../services";
+import { Game, GameRanking } from "../types";
 
 export function RankingsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -18,7 +18,7 @@ export function RankingsPage() {
   }, []);
 
   useEffect(() => {
-    const gameId = searchParams.get('gameId');
+    const gameId = searchParams.get("gameId");
     if (gameId) {
       setSelectedGameId(parseInt(gameId));
     } else {
@@ -35,7 +35,7 @@ export function RankingsPage() {
       const data = await gamesService.getAll();
       setGames(data);
     } catch (err) {
-      console.error('Erreur lors du chargement des jeux', err);
+      console.error("Erreur lors du chargement des jeux", err);
     }
   };
 
@@ -48,7 +48,7 @@ export function RankingsPage() {
       setRanking(data);
       setError(null);
     } catch (err) {
-      setError('Erreur lors du chargement du classement');
+      setError("Erreur lors du chargement du classement");
       console.error(err);
     } finally {
       setLoading(false);
@@ -56,7 +56,7 @@ export function RankingsPage() {
   };
 
   const handleGameChange = (gameId: string) => {
-    if (gameId === 'all') {
+    if (gameId === "all") {
       setSearchParams({});
     } else {
       setSearchParams({ gameId });
@@ -64,10 +64,10 @@ export function RankingsPage() {
   };
 
   const getRankBadge = (index: number) => {
-    if (index === 0) return { color: 'text-yellow-400', bg: 'bg-yellow-400/10 border-yellow-400/30' };
-    if (index === 1) return { color: 'text-zinc-300', bg: 'bg-zinc-400/10 border-zinc-400/20' };
-    if (index === 2) return { color: 'text-orange-600', bg: 'bg-orange-700/10 border-orange-700/20' };
-    return { color: 'text-zinc-500', bg: '' };
+    if (index === 0) return { color: "text-yellow-400", bg: "bg-yellow-400/10 border-yellow-400/30" };
+    if (index === 1) return { color: "text-zinc-300", bg: "bg-zinc-400/10 border-zinc-400/20" };
+    if (index === 2) return { color: "text-orange-600", bg: "bg-orange-700/10 border-orange-700/20" };
+    return { color: "text-zinc-500", bg: "" };
   };
 
   if (loading) return <Loading />;
@@ -80,20 +80,18 @@ export function RankingsPage() {
         <div>
           <h1 className="text-2xl font-bold text-white">Classement</h1>
           <p className="text-zinc-500 text-sm mt-1">
-            {selectedGameId
-              ? games.find((g) => g.id === selectedGameId)?.name || 'Par épreuve'
-              : 'Classement général'}
+            {selectedGameId ? games.find((g) => g.id === selectedGameId)?.name || "Par épreuve" : "Classement général"}
           </p>
         </div>
 
         {/* Filter tabs */}
         <div className="flex items-center gap-2 bg-surface-100 border border-surface-border rounded-xl p-1">
           <button
-            onClick={() => handleGameChange('all')}
+            onClick={() => handleGameChange("all")}
             className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all ${
               !selectedGameId
-                ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/20'
-                : 'text-zinc-400 hover:text-white'
+                ? "bg-primary-500 text-white shadow-lg shadow-primary-500/20"
+                : "text-zinc-400 hover:text-white"
             }`}
           >
             Général
@@ -104,8 +102,8 @@ export function RankingsPage() {
               onClick={() => handleGameChange(game.id.toString())}
               className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all ${
                 selectedGameId === game.id
-                  ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/20'
-                  : 'text-zinc-400 hover:text-white'
+                  ? "bg-primary-500 text-white shadow-lg shadow-primary-500/20"
+                  : "text-zinc-400 hover:text-white"
               }`}
             >
               {game.name}
@@ -139,8 +137,8 @@ export function RankingsPage() {
                 return (
                   <div
                     key={entry.teamId}
-                    className={`grid grid-cols-12 gap-4 px-6 py-4 items-center hover:bg-surface-300 transition-colors ${
-                      index < 3 ? 'border-l-2 border-primary-500/40' : ''
+                    className={`grid grid-cols-12 gap-4 px-6 py-4 items-center hover:bg-surface-200 transition-colors ${
+                      index < 3 ? "border-l-2 border-primary-500/40" : ""
                     }`}
                   >
                     {/* Rank */}
@@ -171,9 +169,7 @@ export function RankingsPage() {
 
                     {/* Average */}
                     <div className="col-span-2 text-right text-zinc-400 text-sm">
-                      {entry.matchesPlayed > 0
-                        ? (entry.totalPoints / entry.matchesPlayed).toFixed(1)
-                        : '—'}
+                      {entry.matchesPlayed > 0 ? (entry.totalPoints / entry.matchesPlayed).toFixed(1) : "—"}
                     </div>
                   </div>
                 );
