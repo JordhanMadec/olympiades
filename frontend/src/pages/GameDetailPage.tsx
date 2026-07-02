@@ -101,7 +101,7 @@ export function GameDetailPage() {
         {/* Ranking */}
         <div>
           <h2 className="text-base font-semibold text-white mb-4">Classement</h2>
-          <div className="bg-surface-200 border border-surface-border rounded-2xl overflow-hidden">
+          <div className="bg-surface-100 border border-surface-border rounded-2xl overflow-hidden">
             {!ranking || ranking.entries.length === 0 ? (
               <div className="p-10 text-center">
                 <p className="text-zinc-500 text-sm">Aucun résultat</p>
@@ -130,13 +130,13 @@ export function GameDetailPage() {
         <div>
           <h2 className="text-base font-semibold text-white mb-4">Rencontres ({matches.length})</h2>
           {matches.length === 0 ? (
-            <div className="bg-surface-200 border border-surface-border rounded-2xl p-10 text-center">
+            <div className="bg-surface-100 border border-surface-border rounded-2xl p-10 text-center">
               <p className="text-zinc-500 text-sm">Aucune rencontre</p>
             </div>
           ) : (
             <div className="space-y-3 max-h-[480px] overflow-y-auto pr-1">
               {matches.map((match) => (
-                <div key={match.id} className="bg-surface-200 border border-surface-border rounded-xl p-4 hover:border-surface-border-light transition-colors">
+                <div key={match.id} className="bg-surface-100 border border-surface-border rounded-xl p-4 hover:border-surface-border-light transition-colors">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-white text-sm font-medium">Match #{match.matchNumber}</span>
                     {getStatusBadge(match.status)}

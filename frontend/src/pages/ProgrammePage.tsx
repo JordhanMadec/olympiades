@@ -91,7 +91,7 @@ export function ProgrammePage() {
         </div>
 
         {/* Filter tabs */}
-        <div className="flex items-center gap-2 bg-surface-200 border border-surface-border rounded-xl p-1 flex-wrap max-w-lg justify-end">
+        <div className="flex items-center gap-2 bg-surface-100 border border-surface-border rounded-xl p-1 flex-wrap max-w-lg justify-end">
           <button
             onClick={() => setSelectedGameId(null)}
             className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
@@ -119,7 +119,7 @@ export function ProgrammePage() {
       </div>
 
       {matches.length === 0 ? (
-        <div className="bg-surface-200 border border-surface-border rounded-2xl p-16 text-center">
+        <div className="bg-surface-100 border border-surface-border rounded-2xl p-16 text-center">
           <div className="text-4xl mb-4">📅</div>
           <p className="text-zinc-500">Aucune rencontre pour le moment</p>
         </div>
@@ -136,7 +136,7 @@ export function ProgrammePage() {
                   {gameMatches.map((match) => (
                     <div
                       key={match.id}
-                      className="bg-surface-200 border border-surface-border rounded-xl p-5 hover:border-surface-border-light transition-colors"
+                      className="bg-surface-100 border border-surface-border rounded-xl p-5 hover:border-surface-border-light transition-colors"
                     >
                       <div className="flex items-center justify-between mb-3">
                         <span className="text-white font-medium">Match #{match.matchNumber}</span>

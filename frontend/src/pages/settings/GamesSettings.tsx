@@ -119,13 +119,13 @@ export function GamesSettings() {
       </div>
 
       {games.length === 0 ? (
-        <div className="bg-surface-200 border border-surface-border rounded-2xl p-12 text-center">
+        <div className="bg-surface-100 border border-surface-border rounded-2xl p-12 text-center">
           <p className="text-zinc-500">Aucune épreuve pour le moment</p>
         </div>
       ) : (
         <div className="space-y-3">
           {games.map((game) => (
-            <div key={game.id} className="bg-surface-200 border border-surface-border rounded-xl p-5">
+            <div key={game.id} className="bg-surface-100 border border-surface-border rounded-xl p-5">
               <div className="flex items-start justify-between">
                 <div className="flex-1 min-w-0">
                   <h3 className="text-white font-medium mb-1">{game.name}</h3>

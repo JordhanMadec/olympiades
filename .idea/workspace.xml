@@ -3,7 +3,19 @@
   <component name="ChangeListManager">
     <list default="true" id="0801f446-6e67-4e0d-8457-b5199c0ae79b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/Layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/Modal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Modal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/GameDetailPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/GameDetailPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/GamesPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/GamesPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/ProgrammePage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/ProgrammePage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/RankingsPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/RankingsPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/SettingsPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/SettingsPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/TeamDetailPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/TeamDetailPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/TeamsPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/TeamsPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/settings/GamesSettings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/settings/GamesSettings.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/settings/MatchesSettings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/settings/MatchesSettings.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/settings/TeamsSettings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/settings/TeamsSettings.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/tailwind.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/tailwind.config.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -13,11 +25,19 @@
   <component name="CopilotChats">
     <option name="panelChat">
       <chat>
-        <option name="activeSessionId" value="4f759d94-1d94-4a5e-824c-b071d9757cfe" />
+        <option name="activeSessionId" value="ddec2fe0-706d-4f4a-99a7-780ec5207645" />
         <option name="sessions">
           <session>
             <option name="chatType" value="PANEL" />
             <option name="id" value="4f759d94-1d94-4a5e-824c-b071d9757cfe" />
+            <option name="modeId" value="Agent" />
+            <option name="modelType" value="builtin_family" />
+            <option name="modelValue" value="claude-sonnet-4.6" />
+            <option name="targetType" value="LOCAL" />
+          </session>
+          <session>
+            <option name="chatType" value="PANEL" />
+            <option name="id" value="ddec2fe0-706d-4f4a-99a7-780ec5207645" />
             <option name="modeId" value="Agent" />
             <option name="modelType" value="builtin_family" />
             <option name="modelValue" value="claude-sonnet-4.6" />
@@ -31,27 +51,28 @@
   <component name="CopilotPersistence">
     <persistenceIdMap>
       <entry key="_/Users/jordhan/dev/copilot-worktrees/olympiades/jordhanmadec-super-dollop" value="3Fwg0sMguoOhEc6cpZ8fimyfugP" />
+      <entry key="_/Users/jordhan/dev/olympiades" value="3FxAnBbt7hPQxeoBREjDiXrZQ3p" />
     </persistenceIdMap>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "JordhanMadec"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;JordhanMadec&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/JordhanMadec/olympiades.git",
-    "accountId": "4c93ac82-3d67-4112-923e-9c3c96d6aee4"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/JordhanMadec/olympiades.git&quot;,
+    &quot;accountId&quot;: &quot;4c93ac82-3d67-4112-923e-9c3c96d6aee4&quot;
   }
-}]]></component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 3,
-  "fromUser": false
-}]]></component>
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3,
+  &quot;fromUser&quot;: false
+}</component>
   <component name="ProjectId" id="3Fwg0sMguoOhEc6cpZ8fimyfugP" />
   <component name="ProjectViewState">
     <option name="autoscrollFromSource" value="true" />
@@ -69,13 +90,13 @@
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
-    "git-widget-placeholder": "#2 on jordhanmadec-olympiades-web-app",
+    "git-widget-placeholder": "#4 on copilot/update-dashboard-design",
     "javascript.preferred.runtime.type.id": "node",
     "last_opened_file_path": "/Users/jordhan/dev/copilot-worktrees/olympiades/jordhanmadec-super-dollop",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "ts.external.directory.path": "/Users/jordhan/dev/copilot-worktrees/olympiades/jordhanmadec-super-dollop/backend/node_modules/typescript/lib",
+    "ts.external.directory.path": "/Users/jordhan/dev/olympiades/frontend/node_modules/typescript/lib",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -94,6 +115,7 @@
       <option name="presentableId" value="Default" />
       <updated>1782991325714</updated>
       <workItem from="1782991326739" duration="2994000" />
+      <workItem from="1783006511462" duration="1343000" />
     </task>
     <servers />
   </component>

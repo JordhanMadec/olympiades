@@ -86,7 +86,7 @@ export function RankingsPage() {
         </div>
 
         {/* Filter tabs */}
-        <div className="flex items-center gap-2 bg-surface-200 border border-surface-border rounded-xl p-1">
+        <div className="flex items-center gap-2 bg-surface-100 border border-surface-border rounded-xl p-1">
           <button
             onClick={() => handleGameChange('all')}
             className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all ${
@@ -114,7 +114,7 @@ export function RankingsPage() {
       </div>
 
       {/* Ranking table */}
-      <div className="bg-surface-200 border border-surface-border rounded-2xl overflow-hidden">
+      <div className="bg-surface-100 border border-surface-border rounded-2xl overflow-hidden">
         {!ranking || ranking.entries.length === 0 ? (
           <div className="p-16 text-center">
             <div className="text-4xl mb-4">🏆</div>

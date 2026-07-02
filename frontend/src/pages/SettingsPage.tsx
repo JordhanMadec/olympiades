@@ -22,7 +22,7 @@ export function SettingsPage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 bg-surface-200 border border-surface-border rounded-xl p-1 w-fit mb-8">
+      <div className="flex gap-1 bg-surface-100 border border-surface-border rounded-xl p-1 w-fit mb-8">
         {tabs.map((tab) => (
           <button
             key={tab.id}

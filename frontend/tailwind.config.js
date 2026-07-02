@@ -1,3 +1,5 @@
+const colors = require('tailwindcss/colors')
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -7,24 +9,19 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: {
-          400: '#fb923c',
-          500: '#f97316',
-          600: '#ea580c',
-          700: '#c2410c',
-        },
+        primary: colors.orange,
         surface: {
-          50:  '#07070d',
-          100: '#0d0d16',
-          200: '#13131e',
-          300: '#1a1a28',
-          400: '#222234',
-          500: '#2c2c40',
-          600: '#38384f',
+          50:  colors.slate["900"],
+          100: colors.slate["800"],
+          200: colors.slate["700"],
+          300: colors.slate["600"],
+          400: colors.slate["500"],
+          500:  colors.slate["400"],
+          600: colors.slate["300"],
         },
-        'surface-border': '#1f1f2e',
-        'surface-border-light': '#2a2a3f',
-        'text-muted': '#6b7280',
+        'surface-border': colors.slate["800"],
+        'surface-border-light': colors.slate["700"],
+        'text-muted': colors.gray["500"],
       },
     },
   },

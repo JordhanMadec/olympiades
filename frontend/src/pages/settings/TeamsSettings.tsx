@@ -88,13 +88,13 @@ export function TeamsSettings() {
       </div>
 
       {teams.length === 0 ? (
-        <div className="bg-surface-200 border border-surface-border rounded-2xl p-12 text-center">
+        <div className="bg-surface-100 border border-surface-border rounded-2xl p-12 text-center">
           <p className="text-zinc-500">Aucune équipe pour le moment</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {teams.map((team) => (
-            <div key={team.id} className="bg-surface-200 border border-surface-border rounded-xl p-5">
+            <div key={team.id} className="bg-surface-100 border border-surface-border rounded-xl p-5">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-8 h-8 rounded-full flex-shrink-0" style={{ backgroundColor: team.color }} />
                 <h3 className="text-white font-medium">{team.name}</h3>

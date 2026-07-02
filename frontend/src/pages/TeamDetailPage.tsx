@@ -94,7 +94,7 @@ export function TeamDetailPage() {
           { label: 'Total points', value: totalPoints },
           { label: 'Moy. points', value: completedMatches.length > 0 ? (totalPoints / completedMatches.length).toFixed(1) : '—' },
         ].map((stat) => (
-          <div key={stat.label} className="bg-surface-200 border border-surface-border rounded-xl p-5">
+          <div key={stat.label} className="bg-surface-100 border border-surface-border rounded-xl p-5">
             <p className="text-zinc-500 text-xs mb-1">{stat.label}</p>
             <p className="text-2xl font-bold text-primary-400">{stat.value}</p>
           </div>
@@ -104,7 +104,7 @@ export function TeamDetailPage() {
       {/* Matches */}
       <h2 className="text-base font-semibold text-white mb-4">Rencontres</h2>
       {matches.length === 0 ? (
-        <div className="bg-surface-200 border border-surface-border rounded-xl p-12 text-center">
+        <div className="bg-surface-100 border border-surface-border rounded-xl p-12 text-center">
           <p className="text-zinc-500">Aucune rencontre</p>
         </div>
       ) : (
@@ -113,7 +113,7 @@ export function TeamDetailPage() {
             const myTeamEntry = match.matchTeams.find((mt) => mt.teamId === teamId);
             const opponents = match.matchTeams.filter((mt) => mt.teamId !== teamId);
             return (
-              <div key={match.id} className="bg-surface-200 border border-surface-border rounded-xl p-5 hover:border-surface-border-light transition-colors">
+              <div key={match.id} className="bg-surface-100 border border-surface-border rounded-xl p-5 hover:border-surface-border-light transition-colors">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-3">
                     <span className="text-sm font-medium text-white">{getGameName(match.gameId)}</span>

@@ -223,7 +223,7 @@ export function MatchesSettings() {
 
       {/* Draw panel */}
       {showDrawPanel && (
-        <div className="bg-surface-200 border border-surface-border rounded-2xl p-6 mb-6">
+        <div className="bg-surface-100 border border-surface-border rounded-2xl p-6 mb-6">
           <h3 className="text-white font-semibold mb-4">Tirage au sort</h3>
 
           <div className="mb-4">
@@ -336,13 +336,13 @@ export function MatchesSettings() {
 
       {/* Matches list */}
       {matches.length === 0 ? (
-        <div className="bg-surface-200 border border-surface-border rounded-2xl p-12 text-center">
+        <div className="bg-surface-100 border border-surface-border rounded-2xl p-12 text-center">
           <p className="text-zinc-500">Aucun match pour le moment</p>
         </div>
       ) : (
         <div className="space-y-3">
           {matches.map((match) => (
-            <div key={match.id} className="bg-surface-200 border border-surface-border rounded-xl p-5">
+            <div key={match.id} className="bg-surface-100 border border-surface-border rounded-xl p-5">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-3">
                   <span className="text-white font-medium text-sm">{getGameName(match.gameId)} — Match #{match.matchNumber}</span>

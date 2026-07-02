@@ -20,7 +20,7 @@ export function Modal({ isOpen, onClose, title, children }: ModalProps) {
         ></div>
 
         {/* Modal */}
-        <div className="inline-block align-bottom bg-surface-200 border border-surface-border rounded-xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+        <div className="inline-block align-bottom bg-surface-100 border border-surface-border rounded-xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
           <div className="px-6 pt-6 pb-4">
             <div className="flex items-start justify-between mb-5">
               <h3 className="text-base font-semibold text-white">{title}</h3>

@@ -40,7 +40,7 @@ export function TeamsPage() {
       </div>
 
       {teams.length === 0 ? (
-        <div className="bg-surface-200 border border-surface-border rounded-2xl p-16 text-center">
+        <div className="bg-surface-100 border border-surface-border rounded-2xl p-16 text-center">
           <div className="text-4xl mb-4">👥</div>
           <p className="text-zinc-500">Aucune équipe pour le moment</p>
           <p className="text-zinc-600 text-sm mt-1">Créez des équipes dans les paramètres</p>
@@ -51,7 +51,7 @@ export function TeamsPage() {
             <Link
               key={team.id}
               to={`/teams/${team.id}`}
-              className="bg-surface-200 border border-surface-border rounded-2xl p-5 hover:border-surface-border-light hover:bg-surface-300 transition-all group"
+              className="bg-surface-100 border border-surface-border rounded-2xl p-5 hover:border-surface-border-light hover:bg-surface-300 transition-all group"
             >
               <div className="flex items-center gap-4">
                 <div
