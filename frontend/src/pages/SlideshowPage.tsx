@@ -182,7 +182,7 @@ export function SlideshowPage() {
                       </span>
                     </td>
                     <td className="px-8 py-6 text-center text-2xl opacity-90">
-                      {entry.matchesPlayed}
+                      {entry.matchCount}
                     </td>
                   </tr>
                 ))}

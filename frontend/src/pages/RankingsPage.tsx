@@ -165,11 +165,11 @@ export function RankingsPage() {
                     </div>
 
                     {/* Matches */}
-                    <div className="col-span-2 text-right text-zinc-400 text-sm">{entry.matchesPlayed}</div>
+                    <div className="col-span-2 text-right text-zinc-400 text-sm">{entry.matchCount}</div>
 
                     {/* Average */}
                     <div className="col-span-2 text-right text-zinc-400 text-sm">
-                      {entry.matchesPlayed > 0 ? (entry.totalPoints / entry.matchesPlayed).toFixed(1) : "—"}
+                      {entry.matchCount > 0 ? (entry.totalPoints / entry.matchCount).toFixed(1) : "—"}
                     </div>
                   </div>
                 );

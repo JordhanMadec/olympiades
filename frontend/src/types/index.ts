@@ -80,7 +80,7 @@ export interface RankingEntry {
   teamName: string;
   teamColor: string;
   totalPoints: number;
-  matchesPlayed: number;
+  matchCount: number;
 }
 
 export interface GameRanking {

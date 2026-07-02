@@ -74,7 +74,7 @@ export function Dashboard() {
             <div>
               <p className="text-gray-500 text-sm">Rencontres jouées</p>
               <p className="text-3xl font-bold text-purple-600">
-                {ranking?.entries.reduce((sum, r) => sum + r.matchesPlayed, 0) || 0}
+                {ranking?.entries.reduce((sum, r) => sum + r.matchCount, 0) || 0}
               </p>
             </div>
             <div className="bg-purple-100 rounded-full p-3">
@@ -114,7 +114,7 @@ export function Dashboard() {
                 </div>
                 <div className="text-right">
                   <p className="text-2xl font-bold text-blue-600">{entry.totalPoints} pts</p>
-                  <p className="text-sm text-gray-500">{entry.matchesPlayed} matchs</p>
+                  <p className="text-sm text-gray-500">{entry.matchCount} matchs</p>
                 </div>
               </div>
             ))}
