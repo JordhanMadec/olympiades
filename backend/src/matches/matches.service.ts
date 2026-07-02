@@ -1,15 +1,19 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Match } from './match.entity';
-import { MatchTeam } from './match-team.entity';
-import { Game } from '../games/game.entity';
-import { Team } from '../teams/team.entity';
-import { CreateMatchDto } from './dto/create-match.dto';
-import { UpdateMatchDto } from './dto/update-match.dto';
-import { UpdateScoresDto } from './dto/update-scores.dto';
-import { MatchStatus } from './match.enums';
-import { ScoringDirection, GameFormat } from '../games/game.enums';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { Match } from "./match.entity";
+import { MatchTeam } from "./match-team.entity";
+import { Game } from "../games/game.entity";
+import { Team } from "../teams/team.entity";
+import { CreateMatchDto } from "./dto/create-match.dto";
+import { UpdateMatchDto } from "./dto/update-match.dto";
+import { UpdateScoresDto } from "./dto/update-scores.dto";
+import { MatchStatus } from "./match.enums";
+import { ScoringDirection, GameFormat } from "../games/game.enums";
 
 @Injectable()
 export class MatchesService {
@@ -26,14 +30,14 @@ export class MatchesService {
 
   async findAll(gameId?: number): Promise<Match[]> {
     const query = this.matchesRepository
-      .createQueryBuilder('match')
-      .leftJoinAndSelect('match.game', 'game')
-      .leftJoinAndSelect('match.matchTeams', 'matchTeams')
-      .leftJoinAndSelect('matchTeams.team', 'team')
-      .orderBy('match.matchNumber', 'ASC');
+      .createQueryBuilder("match")
+      .leftJoinAndSelect("match.game", "game")
+      .leftJoinAndSelect("match.matchTeams", "matchTeams")
+      .leftJoinAndSelect("matchTeams.team", "team")
+      .orderBy("match.matchNumber", "ASC");
 
     if (gameId) {
-      query.where('match.gameId = :gameId', { gameId });
+      query.where("match.gameId = :gameId", { gameId });
     }
 
     return query.getMany();
@@ -41,11 +45,11 @@ export class MatchesService {
 
   async findOne(id: number): Promise<Match> {
     const match = await this.matchesRepository
-      .createQueryBuilder('match')
-      .leftJoinAndSelect('match.game', 'game')
-      .leftJoinAndSelect('match.matchTeams', 'matchTeams')
-      .leftJoinAndSelect('matchTeams.team', 'team')
-      .where('match.id = :id', { id })
+      .createQueryBuilder("match")
+      .leftJoinAndSelect("match.game", "game")
+      .leftJoinAndSelect("match.matchTeams", "matchTeams")
+      .leftJoinAndSelect("matchTeams.team", "team")
+      .where("match.id = :id", { id })
       .getOne();
 
     if (!match) {
@@ -66,15 +70,15 @@ export class MatchesService {
     // Verify all teams exist
     const teams = await this.teamsRepository.findByIds(teamIds);
     if (teams.length !== teamIds.length) {
-      throw new NotFoundException('One or more teams not found');
+      throw new NotFoundException("One or more teams not found");
     }
 
     // Auto-generate matchNumber if not provided
     let matchNumber = matchData.matchNumber;
     if (!matchNumber) {
       const maxMatchNumber = await this.matchesRepository
-        .createQueryBuilder('match')
-        .select('MAX(match.matchNumber)', 'max')
+        .createQueryBuilder("match")
+        .select("MAX(match.matchNumber)", "max")
         .getRawOne();
 
       matchNumber = (maxMatchNumber?.max || 0) + 1;
@@ -115,17 +119,22 @@ export class MatchesService {
     await this.matchesRepository.remove(match);
   }
 
-  async updateScores(id: number, updateScoresDto: UpdateScoresDto): Promise<Match> {
+  async updateScores(
+    id: number,
+    updateScoresDto: UpdateScoresDto,
+  ): Promise<Match> {
     const match = await this.findOne(id);
     const game = match.game;
 
     // Validate that all teams in the match are included
     const teamIds = updateScoresDto.scores.map((s) => s.teamId);
     const matchTeamIds = match.matchTeams.map((mt) => mt.teamId);
-    
+
     for (const teamId of teamIds) {
       if (!matchTeamIds.includes(teamId)) {
-        throw new BadRequestException(`Team ${teamId} is not part of this match`);
+        throw new BadRequestException(
+          `Team ${teamId} is not part of this match`,
+        );
       }
     }
 
@@ -153,7 +162,9 @@ export class MatchesService {
 
     // Update match teams
     for (const scoreData of scoresWithPoints) {
-      const matchTeam = match.matchTeams.find((mt) => mt.teamId === scoreData.teamId);
+      const matchTeam = match.matchTeams.find(
+        (mt) => mt.teamId === scoreData.teamId,
+      );
       if (matchTeam) {
         matchTeam.rawScore = scoreData.rawScore;
         matchTeam.rank = scoreData.rank;
@@ -175,18 +186,18 @@ export class MatchesService {
   }
 
   async removeAll(): Promise<void> {
-    await this.matchTeamsRepository.delete({});
-    await this.matchesRepository.delete({});
+    await this.matchTeamsRepository.deleteAll();
+    await this.matchesRepository.deleteAll();
   }
 
   async generateAllMatches(): Promise<{ created: number }> {
     // Get all games and all teams
     const games = await this.gamesRepository.find();
     const teams = await this.teamsRepository.find();
-    const teamIds = teams.map(t => t.id);
+    const teamIds = teams.map((t) => t.id);
 
     if (teams.length === 0) {
-      throw new BadRequestException('No teams found. Add teams first.');
+      throw new BadRequestException("No teams found. Add teams first.");
     }
 
     let totalCreated = 0;
@@ -202,37 +213,63 @@ export class MatchesService {
     return { created: totalCreated };
   }
 
-  private async generateRoundRobinForGame(game: Game, teamIds: number[]): Promise<number> {
+  private async generateRoundRobinForGame(
+    game: Game,
+    teamIds: number[],
+  ): Promise<number> {
     const teamsPerMatch = game.teamsPerMatch || 2;
-    
-    // Allow teams to play alone if only 1 team available
+
     if (teamIds.length === 0) {
       return 0;
     }
 
-    // Each team plays once: create one match with all teams (up to teamsPerMatch)
-    const matchTeams = teamIds.slice(0, teamsPerMatch);
+    // Shuffle teams to randomize matchups
+    const shuffledTeams = [...teamIds].sort(() => Math.random() - 0.5);
 
-    const match = this.matchesRepository.create({
-      gameId: game.id,
-      matchNumber: 1,
-      status: MatchStatus.PENDING,
-    });
-
-    const savedMatch = await this.matchesRepository.save(match);
-
-    const matchTeamEntries = matchTeams.map((teamId) =>
-      this.matchTeamsRepository.create({
-        matchId: savedMatch.id,
-        teamId,
-      }),
+    console.log(
+      `[Round Robin] Game ${game.id} (${game.name}): ${shuffledTeams.length} teams, ${teamsPerMatch} per match`,
     );
 
-    await this.matchTeamsRepository.save(matchTeamEntries);
-    return 1;
+    let created = 0;
+    let matchNumber = 1;
+    let remainingTeams = [...shuffledTeams];
+
+    // Create matches until all teams have played once
+    while (remainingTeams.length > 0) {
+      // Take up to teamsPerMatch teams for this match
+      const matchTeams = remainingTeams.splice(0, teamsPerMatch);
+
+      console.log(
+        `[Round Robin] Creating match #${matchNumber} with teams: ${matchTeams.join(", ")}`,
+      );
+
+      const match = this.matchesRepository.create({
+        gameId: game.id,
+        matchNumber: matchNumber++,
+        status: MatchStatus.PENDING,
+      });
+
+      const savedMatch = await this.matchesRepository.save(match);
+
+      const matchTeamEntries = matchTeams.map((teamId) =>
+        this.matchTeamsRepository.create({
+          matchId: savedMatch.id,
+          teamId,
+        }),
+      );
+
+      await this.matchTeamsRepository.save(matchTeamEntries);
+      created++;
+    }
+
+    console.log(`[Round Robin] Game ${game.id}: Created ${created} matches`);
+    return created;
   }
 
-  private async generateBracketForGame(game: Game, teamIds: number[]): Promise<number> {
+  private async generateBracketForGame(
+    game: Game,
+    teamIds: number[],
+  ): Promise<number> {
     if (teamIds.length < 2) {
       return 0;
     }
@@ -245,16 +282,13 @@ export class MatchesService {
     const numberOfByes = bracketSize - shuffledTeams.length;
 
     // Fill with nulls for byes
-    const bracketTeams = [
-      ...shuffledTeams,
-      ...Array(numberOfByes).fill(null),
-    ];
+    const bracketTeams = [...shuffledTeams, ...Array(numberOfByes).fill(null)];
 
     const totalRounds = Math.log2(bracketSize);
     let matchNumber = 1;
     let created = 0;
 
-    // Create first round matches only
+    // Create first round matches
     for (let i = 0; i < bracketSize / 2; i++) {
       const team1 = bracketTeams[i * 2];
       const team2 = bracketTeams[i * 2 + 1];
@@ -270,20 +304,32 @@ export class MatchesService {
           matchNumber: matchNumber++,
           round: totalRounds,
           bracketPosition: i,
-          status: MatchStatus.PENDING,
+          status:
+            matchTeamIds.length === 1
+              ? MatchStatus.COMPLETED
+              : MatchStatus.PENDING,
         });
 
         const savedMatch = await this.matchesRepository.save(match);
 
-        const matchTeamEntries = matchTeamIds.map((teamId) =>
-          this.matchTeamsRepository.create({
+        // Create match teams with appropriate data
+        for (const teamId of matchTeamIds) {
+          const matchTeamData: Partial<MatchTeam> = {
             matchId: savedMatch.id,
             teamId,
-          }),
-        );
+            rank: matchTeamIds.length === 1 ? 1 : undefined,
+            points: matchTeamIds.length === 1 ? 1 : 0,
+          };
+          const matchTeam = this.matchTeamsRepository.create(matchTeamData);
+          await this.matchTeamsRepository.save(matchTeam);
+        }
 
-        await this.matchTeamsRepository.save(matchTeamEntries);
         created++;
+
+        // If it's a bye (only one team), advance them automatically
+        if (matchTeamIds.length === 1) {
+          await this.advanceWinnerInBracket(await this.findOne(savedMatch.id));
+        }
       }
     }
 
@@ -291,12 +337,12 @@ export class MatchesService {
   }
 
   private async advanceWinnerInBracket(completedMatch: Match): Promise<void> {
-    if (!completedMatch.round || !completedMatch.bracketPosition !== undefined) {
+    if (!completedMatch.round || completedMatch.bracketPosition == null) {
       return;
     }
 
     // Find winner (rank 1)
-    const winner = completedMatch.matchTeams.find(mt => mt.rank === 1);
+    const winner = completedMatch.matchTeams.find((mt) => mt.rank === 1);
     if (!winner) {
       return;
     }
@@ -316,15 +362,15 @@ export class MatchesService {
         round: nextRound,
         bracketPosition: nextPosition,
       },
-      relations: ['matchTeams'],
+      relations: ["matchTeams"],
     });
 
     if (!nextMatch) {
       // Create next round match
       const maxMatchNumber = await this.matchesRepository
-        .createQueryBuilder('match')
-        .where('match.gameId = :gameId', { gameId: completedMatch.gameId })
-        .select('MAX(match.matchNumber)', 'max')
+        .createQueryBuilder("match")
+        .where("match.gameId = :gameId", { gameId: completedMatch.gameId })
+        .select("MAX(match.matchNumber)", "max")
         .getRawOne();
 
       nextMatch = this.matchesRepository.create({
@@ -339,7 +385,9 @@ export class MatchesService {
     }
 
     // Add winner to next match
-    const existingTeam = nextMatch.matchTeams?.find(mt => mt.teamId === winner.teamId);
+    const existingTeam = nextMatch.matchTeams?.find(
+      (mt) => mt.teamId === winner.teamId,
+    );
     if (!existingTeam) {
       const newMatchTeam = this.matchTeamsRepository.create({
         matchId: nextMatch.id,
