@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { ArrowLeft, Medal } from 'lucide-react';
 import { gamesService, rankingsService, matchesService, teamsService } from '../services';
 import { Game, GameRanking, Match, Team, MatchStatus, GameType } from '../types';
 import { Loading, ErrorMessage } from '../components';
@@ -72,9 +73,7 @@ export function GameDetailPage() {
     <div>
       {/* Back */}
       <Link to="/games" className="inline-flex items-center gap-2 text-zinc-500 hover:text-zinc-300 text-sm mb-6 transition-colors">
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-        </svg>
+        <ArrowLeft className="h-4 w-4" />
         Retour aux épreuves
       </Link>
 
@@ -110,9 +109,17 @@ export function GameDetailPage() {
               <div className="divide-y divide-surface-border">
                 {ranking.entries.map((entry, index) => (
                   <div key={entry.teamId} className="flex items-center gap-4 px-5 py-3 hover:bg-surface-300 transition-colors">
-                    <span className="text-lg w-7 text-center">
-                      {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : <span className="text-zinc-500 text-sm font-bold">{index + 1}</span>}
-                    </span>
+                    <div className="w-7 flex justify-center">
+                      {index < 3 ? (
+                        <Medal className={`h-5 w-5 ${
+                          index === 0 ? 'text-yellow-400' : 
+                          index === 1 ? 'text-gray-300' : 
+                          'text-orange-500'
+                        }`} />
+                      ) : (
+                        <span className="text-zinc-500 text-sm font-bold">{index + 1}</span>
+                      )}
+                    </div>
                     <div
                       className="w-2.5 h-2.5 rounded-full flex-shrink-0"
                       style={{ backgroundColor: entry.teamColor }}

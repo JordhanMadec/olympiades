@@ -1,4 +1,5 @@
 import React from 'react';
+import { Trophy, CheckCircle } from 'lucide-react';
 import { Match, Team } from '../types';
 
 interface BracketProps {
@@ -118,8 +119,9 @@ export function Bracket({ matches, teams, onUpdateScore, readOnly = false }: Bra
                         </span>
                       )}
                       {match.status === 'COMPLETED' && (
-                        <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
-                          ✓ Terminé
+                        <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded flex items-center gap-1">
+                          <CheckCircle className="h-3 w-3" />
+                          Terminé
                         </span>
                       )}
                     </div>
@@ -150,7 +152,7 @@ export function Bracket({ matches, teams, onUpdateScore, readOnly = false }: Bra
                                     {team.name}
                                   </span>
                                   {isWinner && (
-                                    <span className="text-green-600 text-xl ml-2">🏆</span>
+                                    <Trophy className="h-5 w-5 text-green-600 ml-2" />
                                   )}
                                 </>
                               ) : (

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { Medal, Trophy } from 'lucide-react';
 import { rankingsService, gamesService } from '../services';
 import { GameRanking, Game } from '../types';
 import { Loading, ErrorMessage } from '../components';
@@ -63,10 +64,10 @@ export function RankingsPage() {
   };
 
   const getRankBadge = (index: number) => {
-    if (index === 0) return { emoji: '🥇', color: 'text-yellow-400', bg: 'bg-yellow-400/10 border-yellow-400/30' };
-    if (index === 1) return { emoji: '🥈', color: 'text-zinc-300', bg: 'bg-zinc-400/10 border-zinc-400/20' };
-    if (index === 2) return { emoji: '🥉', color: 'text-orange-600', bg: 'bg-orange-700/10 border-orange-700/20' };
-    return { emoji: null, color: 'text-zinc-500', bg: '' };
+    if (index === 0) return { color: 'text-yellow-400', bg: 'bg-yellow-400/10 border-yellow-400/30' };
+    if (index === 1) return { color: 'text-zinc-300', bg: 'bg-zinc-400/10 border-zinc-400/20' };
+    if (index === 2) return { color: 'text-orange-600', bg: 'bg-orange-700/10 border-orange-700/20' };
+    return { color: 'text-zinc-500', bg: '' };
   };
 
   if (loading) return <Loading />;
@@ -117,7 +118,7 @@ export function RankingsPage() {
       <div className="bg-surface-100 border border-surface-border rounded-2xl overflow-hidden">
         {!ranking || ranking.entries.length === 0 ? (
           <div className="p-16 text-center">
-            <div className="text-4xl mb-4">🏆</div>
+            <Trophy className="h-16 w-16 mx-auto mb-4 text-zinc-500" />
             <p className="text-zinc-500">Aucun résultat pour le moment</p>
           </div>
         ) : (
@@ -144,8 +145,8 @@ export function RankingsPage() {
                   >
                     {/* Rank */}
                     <div className="col-span-1">
-                      {badge.emoji ? (
-                        <span className="text-xl">{badge.emoji}</span>
+                      {index < 3 ? (
+                        <Medal className={`h-6 w-6 ${badge.color}`} />
                       ) : (
                         <span className="text-zinc-500 font-bold text-sm">{index + 1}</span>
                       )}

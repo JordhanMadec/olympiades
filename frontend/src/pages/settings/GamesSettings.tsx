@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Timer, Target } from 'lucide-react';
 import { gamesService } from '../../services';
 import { Game, CreateGameDto, GameType, GameFormat, ScoringDirection } from '../../types';
 import { Loading, ErrorMessage, Button, Input, Select, Textarea, Modal } from '../../components';
@@ -101,7 +102,11 @@ export function GamesSettings() {
   };
 
   const getTypeLabel = (type: GameType) => {
-    return { [GameType.TIME]: '⏱️ Temps', [GameType.SCORE]: '⚽ Score', [GameType.POINTS]: '🎯 Points' }[type];
+    return { 
+      [GameType.TIME]: { label: 'Temps', Icon: Timer }, 
+      [GameType.SCORE]: { label: 'Score', Icon: Target }, 
+      [GameType.POINTS]: { label: 'Points', Icon: Target } 
+    }[type];
   };
 
   const getFormatLabel = (format: GameFormat) => {
@@ -124,7 +129,10 @@ export function GamesSettings() {
         </div>
       ) : (
         <div className="space-y-3">
-          {games.map((game) => (
+          {games.map((game) => {
+            const typeInfo = getTypeLabel(game.gameType);
+            const IconComponent = typeInfo.Icon;
+            return (
             <div key={game.id} className="bg-surface-100 border border-surface-border rounded-xl p-5">
               <div className="flex items-start justify-between">
                 <div className="flex-1 min-w-0">
@@ -133,8 +141,9 @@ export function GamesSettings() {
                     <p className="text-zinc-500 text-sm mb-3">{game.description}</p>
                   )}
                   <div className="flex flex-wrap gap-2">
-                    <span className="px-2 py-0.5 bg-primary-500/10 text-primary-400 rounded text-xs border border-primary-500/20">
-                      {getTypeLabel(game.gameType)}
+                    <span className="px-2 py-0.5 bg-primary-500/10 text-primary-400 rounded text-xs border border-primary-500/20 flex items-center gap-1">
+                      <IconComponent className="h-3 w-3" />
+                      {typeInfo.label}
                     </span>
                     <span className="px-2 py-0.5 bg-surface-400 text-zinc-400 rounded text-xs border border-surface-border">
                       {getFormatLabel(game.gameFormat)}
@@ -154,7 +163,8 @@ export function GamesSettings() {
                 </div>
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
@@ -197,9 +207,9 @@ export function GamesSettings() {
             }}
             required
           >
-            <option value={GameType.TIME}>⏱️ Temps (meilleur temps gagne)</option>
-            <option value={GameType.SCORE}>⚽ Score (plus haut score gagne)</option>
-            <option value={GameType.POINTS}>🎯 Points (plus de points gagne)</option>
+            <option value={GameType.TIME}>Temps (meilleur temps gagne)</option>
+            <option value={GameType.SCORE}>Score (plus haut score gagne)</option>
+            <option value={GameType.POINTS}>Points (plus de points gagne)</option>
           </Select>
           <Select
             label="Format"

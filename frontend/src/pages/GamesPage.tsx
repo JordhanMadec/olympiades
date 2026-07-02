@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Timer, Target, Gamepad2 } from 'lucide-react';
 import { gamesService } from '../services';
 import { Game, GameType, GameFormat } from '../types';
 import { Loading, ErrorMessage } from '../components';
@@ -29,9 +30,9 @@ export function GamesPage() {
 
   const getTypeLabel = (type: GameType) => {
     const map = {
-      [GameType.TIME]: { label: 'Temps', icon: '⏱️' },
-      [GameType.SCORE]: { label: 'Score', icon: '⚽' },
-      [GameType.POINTS]: { label: 'Points', icon: '🎯' },
+      [GameType.TIME]: { label: 'Temps', Icon: Timer },
+      [GameType.SCORE]: { label: 'Score', Icon: Target },
+      [GameType.POINTS]: { label: 'Points', Icon: Target },
     };
     return map[type];
   };
@@ -54,7 +55,7 @@ export function GamesPage() {
 
       {games.length === 0 ? (
         <div className="bg-surface-100 border border-surface-border rounded-2xl p-16 text-center">
-          <div className="text-4xl mb-4">🎮</div>
+          <Gamepad2 className="h-16 w-16 mx-auto mb-4 text-zinc-500" />
           <p className="text-zinc-500">Aucune épreuve pour le moment</p>
           <p className="text-zinc-600 text-sm mt-1">Créez des épreuves dans les paramètres</p>
         </div>
@@ -62,6 +63,7 @@ export function GamesPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {games.map((game) => {
             const typeInfo = getTypeLabel(game.gameType);
+            const IconComponent = typeInfo.Icon;
             return (
               <Link
                 key={game.id}
@@ -72,7 +74,7 @@ export function GamesPage() {
                   <h3 className="text-white font-semibold text-lg group-hover:text-primary-400 transition-colors">
                     {game.name}
                   </h3>
-                  <span className="text-xl">{typeInfo.icon}</span>
+                  <IconComponent className="h-6 w-6 text-primary-400" />
                 </div>
                 {game.description && (
                   <p className="text-zinc-500 text-sm mb-4 line-clamp-2">{game.description}</p>

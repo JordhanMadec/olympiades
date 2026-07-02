@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Calendar, Medal } from 'lucide-react';
 import { matchesService, gamesService, teamsService } from '../services';
 import { Match, Game, Team, MatchStatus } from '../types';
 import { Loading, ErrorMessage } from '../components';
@@ -55,7 +56,6 @@ export function ProgrammePage() {
 
   const getTeamName = (teamId: number) => teams.find((t) => t.id === teamId)?.name || 'Équipe inconnue';
   const getTeamColor = (teamId: number) => teams.find((t) => t.id === teamId)?.color || '#888';
-  const getGameName = (gameId: number) => games.find((g) => g.id === gameId)?.name || 'Jeu inconnu';
 
   const getStatusBadge = (status: MatchStatus) => {
     const map = {
@@ -120,7 +120,7 @@ export function ProgrammePage() {
 
       {matches.length === 0 ? (
         <div className="bg-surface-100 border border-surface-border rounded-2xl p-16 text-center">
-          <div className="text-4xl mb-4">📅</div>
+          <Calendar className="h-16 w-16 mx-auto mb-4 text-zinc-500" />
           <p className="text-zinc-500">Aucune rencontre pour le moment</p>
         </div>
       ) : (
@@ -168,7 +168,7 @@ export function ProgrammePage() {
                                 <span className="text-primary-400 text-sm font-bold">{mt.rawScore}</span>
                               )}
                               {mt.rank === 1 && match.status === MatchStatus.COMPLETED && (
-                                <span className="text-yellow-400 text-xs">🥇</span>
+                                <Medal className="h-4 w-4 text-yellow-400" />
                               )}
                             </div>
                           ))}

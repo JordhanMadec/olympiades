@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Users } from 'lucide-react';
 import { teamsService } from '../services';
 import { Team } from '../types';
 import { Loading, ErrorMessage } from '../components';
@@ -41,7 +42,7 @@ export function TeamsPage() {
 
       {teams.length === 0 ? (
         <div className="bg-surface-100 border border-surface-border rounded-2xl p-16 text-center">
-          <div className="text-4xl mb-4">👥</div>
+          <Users className="h-16 w-16 mx-auto mb-4 text-zinc-500" />
           <p className="text-zinc-500">Aucune équipe pour le moment</p>
           <p className="text-zinc-600 text-sm mt-1">Créez des équipes dans les paramètres</p>
         </div>

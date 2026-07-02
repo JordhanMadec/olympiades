@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Trophy } from 'lucide-react';
 import { matchesService, gamesService, teamsService } from '../services';
 import { Match, Game, Team, MatchStatus, UpdateScoresDto } from '../types';
 import { Loading, ErrorMessage, Button, Select, Modal, Input, Bracket } from '../components';
@@ -154,7 +155,7 @@ export function MatchesPage() {
             <option value="all">Tous les jeux</option>
             {games.map((game) => (
               <option key={game.id} value={game.id}>
-                {game.name} {game.gameFormat === 'ELIMINATION' ? '🏆' : '🔄'}
+                {game.name} {game.gameFormat === 'ELIMINATION' ? '(Élimination)' : '(Round-Robin)'}
               </option>
             ))}
           </Select>
@@ -172,7 +173,8 @@ export function MatchesPage() {
             <div className="mb-8">
               <div className="bg-white rounded-lg shadow p-6">
                 <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-                  🏆 Arbre du tournoi - {selectedGame.name}
+                  <Trophy className="h-6 w-6" />
+                  Arbre du tournoi - {selectedGame.name}
                 </h2>
                 <Bracket 
                   matches={matches} 

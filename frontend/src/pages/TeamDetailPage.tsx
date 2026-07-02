@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { ArrowLeft, Medal } from 'lucide-react';
 import { teamsService, matchesService, gamesService } from '../services';
 import { Team, Match, Game, MatchStatus } from '../types';
 import { Loading, ErrorMessage } from '../components';
@@ -69,9 +70,7 @@ export function TeamDetailPage() {
     <div>
       {/* Back */}
       <Link to="/teams" className="inline-flex items-center gap-2 text-zinc-500 hover:text-zinc-300 text-sm mb-6 transition-colors">
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-        </svg>
+        <ArrowLeft className="h-4 w-4" />
         Retour aux équipes
       </Link>
 
@@ -121,7 +120,7 @@ export function TeamDetailPage() {
                     {getStatusBadge(match.status)}
                   </div>
                   {myTeamEntry?.rank === 1 && match.status === MatchStatus.COMPLETED && (
-                    <span className="text-yellow-400 text-sm font-medium">🥇 Vainqueur</span>
+                    <Medal className="h-5 w-5 text-yellow-400" />
                   )}
                 </div>
                 <div className="flex items-center gap-6 text-sm">

@@ -1,4 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
+import { Trophy } from 'lucide-react';
 
 export function Navbar() {
   const location = useLocation();
@@ -11,8 +12,9 @@ export function Navbar() {
     <nav className="bg-blue-600 text-white shadow-lg">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          <Link to="/" className="text-2xl font-bold">
-            🏆 Olympiades
+          <Link to="/" className="text-2xl font-bold flex items-center gap-2">
+            <Trophy className="h-7 w-7" />
+            Olympiades
           </Link>
           
           <div className="flex space-x-1">

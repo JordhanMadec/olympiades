@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Users, Gamepad2, ClipboardList } from 'lucide-react';
 import { TeamsSettings } from './settings/TeamsSettings';
 import { GamesSettings } from './settings/GamesSettings';
 import { MatchesSettings } from './settings/MatchesSettings';
@@ -8,10 +9,10 @@ type Tab = 'teams' | 'games' | 'matches';
 export function SettingsPage() {
   const [activeTab, setActiveTab] = useState<Tab>('teams');
 
-  const tabs: { id: Tab; label: string; icon: string }[] = [
-    { id: 'teams', label: 'Équipes', icon: '👥' },
-    { id: 'games', label: 'Épreuves', icon: '🎮' },
-    { id: 'matches', label: 'Rencontres', icon: '📋' },
+  const tabs: { id: Tab; label: string; Icon: any }[] = [
+    { id: 'teams', label: 'Équipes', Icon: Users },
+    { id: 'games', label: 'Épreuves', Icon: Gamepad2 },
+    { id: 'matches', label: 'Rencontres', Icon: ClipboardList },
   ];
 
   return (
@@ -23,20 +24,23 @@ export function SettingsPage() {
 
       {/* Tabs */}
       <div className="flex gap-1 bg-surface-100 border border-surface-border rounded-xl p-1 w-fit mb-8">
-        {tabs.map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={`flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-medium transition-all ${
-              activeTab === tab.id
-                ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/20'
-                : 'text-zinc-400 hover:text-white'
-            }`}
-          >
-            <span>{tab.icon}</span>
-            {tab.label}
-          </button>
-        ))}
+        {tabs.map((tab) => {
+          const IconComponent = tab.Icon;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-medium transition-all ${
+                activeTab === tab.id
+                  ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/20'
+                  : 'text-zinc-400 hover:text-white'
+              }`}
+            >
+              <IconComponent className="h-4 w-4" />
+              {tab.label}
+            </button>
+          );
+        })}
       </div>
 
       {/* Tab content */}
