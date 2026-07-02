@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { matchesService, gamesService, teamsService } from '../services';
 import { Match, Game, Team, MatchStatus, UpdateScoresDto } from '../types';
-import { Loading, ErrorMessage, Button, Select, Modal, Input } from '../components';
+import { Loading, ErrorMessage, Button, Select, Modal, Input, Bracket } from '../components';
 
 export function MatchesPage() {
   const [matches, setMatches] = useState<Match[]>([]);
@@ -137,6 +137,11 @@ export function MatchesPage() {
   if (loading) return <Loading />;
   if (error) return <ErrorMessage message={error} onRetry={loadMatches} />;
 
+  // Group matches by game for bracket display
+  const selectedGame = selectedGameId ? games.find(g => g.id === selectedGameId) : null;
+  const isBracketFormat = selectedGame?.gameFormat === 'ELIMINATION';
+  const hasRoundInfo = matches.some(m => m.round !== null && m.round !== undefined);
+
   return (
     <div>
       <div className="flex items-center justify-between mb-8">
@@ -149,7 +154,7 @@ export function MatchesPage() {
             <option value="all">Tous les jeux</option>
             {games.map((game) => (
               <option key={game.id} value={game.id}>
-                {game.name}
+                {game.name} {game.gameFormat === 'ELIMINATION' ? '🏆' : '🔄'}
               </option>
             ))}
           </Select>
@@ -161,7 +166,31 @@ export function MatchesPage() {
           <p className="text-gray-500">Aucun match pour le moment</p>
         </div>
       ) : (
-        <div className="space-y-4">
+        <>
+          {/* Bracket View for Elimination Games */}
+          {isBracketFormat && hasRoundInfo && (
+            <div className="mb-8">
+              <div className="bg-white rounded-lg shadow p-6">
+                <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+                  🏆 Arbre du tournoi - {selectedGame.name}
+                </h2>
+                <Bracket 
+                  matches={matches} 
+                  teams={teams}
+                  readOnly={true}
+                />
+              </div>
+            </div>
+          )}
+
+          {/* List View */}
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-gray-700">
+              {isBracketFormat && hasRoundInfo ? 'Liste des matchs' : 'Tous les matchs'}
+            </h2>
+          </div>
+          
+          <div className="space-y-4">
           {matches.map((match) => (
             <div key={match.id} className="bg-white rounded-lg shadow hover:shadow-lg transition p-6">
               <div className="flex items-start justify-between mb-4">
@@ -224,6 +253,7 @@ export function MatchesPage() {
             </div>
           ))}
         </div>
+       </>
       )}
 
       {/* Scoring Modal */}
