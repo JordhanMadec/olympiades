@@ -124,13 +124,10 @@ export function DrawsPage() {
         await matchesService.create({
           gameId: selectedGameId,
           matchNumber: draw.matchNumber,
-          status: 'PENDING' as any,
+          teamIds: draw.teamIds,
           round: 'round' in draw ? draw.round : undefined,
           bracketPosition: 'bracketPosition' in draw ? draw.bracketPosition : undefined,
         });
-
-        // Note: Team assignment would be handled by the backend
-        // when creating matches from the draw results
       }
 
       alert('Matchs créés avec succès !');
