@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { teamsService, gamesService, rankingsService } from '../services';
-import { Team, Game, RankingEntry } from '../types';
+import { Team, Game, GameRanking } from '../types';
 import { Loading, ErrorMessage } from '../components';
 
 export function Dashboard() {
   const [teams, setTeams] = useState<Team[]>([]);
   const [games, setGames] = useState<Game[]>([]);
-  const [rankings, setRankings] = useState<RankingEntry[]>([]);
+  const [ranking, setRanking] = useState<GameRanking | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -18,14 +18,14 @@ export function Dashboard() {
   const loadData = async () => {
     try {
       setLoading(true);
-      const [teamsData, gamesData, rankingsData] = await Promise.all([
+      const [teamsData, gamesData, rankingData] = await Promise.all([
         teamsService.getAll(),
         gamesService.getAll(),
         rankingsService.getGeneralRanking(),
       ]);
       setTeams(teamsData);
       setGames(gamesData);
-      setRankings(rankingsData);
+      setRanking(rankingData);
       setError(null);
     } catch (err) {
       setError('Erreur lors du chargement des données');
@@ -77,7 +77,7 @@ export function Dashboard() {
             <div>
               <p className="text-gray-500 text-sm">Rencontres jouées</p>
               <p className="text-3xl font-bold text-purple-600">
-                {rankings.reduce((sum, r) => sum + r.matchesPlayed, 0)}
+                {ranking?.entries.reduce((sum, r) => sum + r.matchesPlayed, 0) || 0}
               </p>
             </div>
             <div className="bg-purple-100 rounded-full p-3">
@@ -90,11 +90,11 @@ export function Dashboard() {
       </div>
 
       {/* Top 3 Rankings */}
-      {rankings.length > 0 && (
+      {ranking && ranking.entries.length > 0 && (
         <div className="bg-white rounded-lg shadow p-6 mb-8">
           <h2 className="text-xl font-bold mb-4">🏆 Top 3</h2>
           <div className="space-y-3">
-            {rankings.slice(0, 3).map((entry, index) => (
+            {ranking.entries.slice(0, 3).map((entry, index) => (
               <div
                 key={entry.teamId}
                 className={`flex items-center justify-between p-4 rounded-lg ${

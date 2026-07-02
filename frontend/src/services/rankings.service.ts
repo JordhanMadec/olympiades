@@ -1,14 +1,14 @@
 import { api } from './api';
-import { RankingEntry, GameRanking } from '../types';
+import { GameRanking } from '../types';
 
 export const rankingsService = {
-  async getGeneralRanking(): Promise<RankingEntry[]> {
-    const response = await api.get<RankingEntry[]>('/rankings');
+  async getGeneralRanking(): Promise<GameRanking> {
+    const response = await api.get<GameRanking>('/rankings/general');
     return response.data;
   },
 
-  async getRankingByGame(gameId: number): Promise<RankingEntry[]> {
-    const response = await api.get<RankingEntry[]>(`/rankings/game/${gameId}`);
+  async getRankingByGame(gameId: number): Promise<GameRanking> {
+    const response = await api.get<GameRanking>(`/rankings/game/${gameId}`);
     return response.data;
   },
 

@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { rankingsService } from '../services';
-import { RankingEntry, GameRanking } from '../types';
+import { GameRanking } from '../types';
 import { Loading, ErrorMessage, Button } from '../components';
 
 export function SlideshowPage() {
   const [allRankings, setAllRankings] = useState<GameRanking[]>([]);
-  const [generalRanking, setGeneralRanking] = useState<RankingEntry[]>([]);
+  const [generalRanking, setGeneralRanking] = useState<GameRanking | null>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [interval, setIntervalValue] = useState(5000); // 5 seconds
@@ -68,8 +68,8 @@ export function SlideshowPage() {
   if (error) return <ErrorMessage message={error} onRetry={loadRankings} />;
 
   const currentRankings = currentSlide === 0 
-    ? { title: 'Classement Général', rankings: generalRanking }
-    : { title: allRankings[currentSlide - 1].gameName, rankings: allRankings[currentSlide - 1].rankings };
+    ? { title: 'Classement Général', entries: generalRanking?.entries || [] }
+    : { title: allRankings[currentSlide - 1].gameName, entries: allRankings[currentSlide - 1].entries };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-700 to-blue-900 text-white">
@@ -123,7 +123,7 @@ export function SlideshowPage() {
         </div>
 
         {/* Rankings Table */}
-        {currentRankings.rankings.length === 0 ? (
+        {currentRankings.entries.length === 0 ? (
           <div className="text-center text-2xl opacity-75">
             Aucun résultat pour le moment
           </div>
@@ -139,7 +139,7 @@ export function SlideshowPage() {
                 </tr>
               </thead>
               <tbody>
-                {currentRankings.rankings.slice(0, 10).map((entry, index) => (
+                {currentRankings.entries.slice(0, 10).map((entry, index) => (
                   <tr
                     key={entry.teamId}
                     className={`border-t border-white border-opacity-20 ${
@@ -174,18 +174,18 @@ export function SlideshowPage() {
         )}
 
         {/* Podium for top 3 (General ranking only) */}
-        {currentSlide === 0 && currentRankings.rankings.length >= 3 && (
+        {currentSlide === 0 && currentRankings.entries.length >= 3 && (
           <div className="mt-12 flex items-end justify-center space-x-8">
             {/* 2nd place */}
             <div className="flex flex-col items-center">
               <div className="text-6xl mb-2">🥈</div>
               <div
                 className="w-32 h-32 rounded-full border-4 border-white mb-4"
-                style={{ backgroundColor: currentRankings.rankings[1].teamColor }}
+                style={{ backgroundColor: currentRankings.entries[1].teamColor }}
               ></div>
-              <div className="text-2xl font-bold">{currentRankings.rankings[1].teamName}</div>
+              <div className="text-2xl font-bold">{currentRankings.entries[1].teamName}</div>
               <div className="text-3xl font-bold text-yellow-300">
-                {currentRankings.rankings[1].totalPoints} pts
+                {currentRankings.entries[1].totalPoints} pts
               </div>
             </div>
 
@@ -194,11 +194,11 @@ export function SlideshowPage() {
               <div className="text-8xl mb-2">🥇</div>
               <div
                 className="w-40 h-40 rounded-full border-4 border-yellow-400 mb-4 shadow-2xl"
-                style={{ backgroundColor: currentRankings.rankings[0].teamColor }}
+                style={{ backgroundColor: currentRankings.entries[0].teamColor }}
               ></div>
-              <div className="text-3xl font-bold">{currentRankings.rankings[0].teamName}</div>
+              <div className="text-3xl font-bold">{currentRankings.entries[0].teamName}</div>
               <div className="text-4xl font-bold text-yellow-300">
-                {currentRankings.rankings[0].totalPoints} pts
+                {currentRankings.entries[0].totalPoints} pts
               </div>
             </div>
 
@@ -207,11 +207,11 @@ export function SlideshowPage() {
               <div className="text-6xl mb-2">🥉</div>
               <div
                 className="w-32 h-32 rounded-full border-4 border-white mb-4"
-                style={{ backgroundColor: currentRankings.rankings[2].teamColor }}
+                style={{ backgroundColor: currentRankings.entries[2].teamColor }}
               ></div>
-              <div className="text-2xl font-bold">{currentRankings.rankings[2].teamName}</div>
+              <div className="text-2xl font-bold">{currentRankings.entries[2].teamName}</div>
               <div className="text-3xl font-bold text-yellow-300">
-                {currentRankings.rankings[2].totalPoints} pts
+                {currentRankings.entries[2].totalPoints} pts
               </div>
             </div>
           </div>

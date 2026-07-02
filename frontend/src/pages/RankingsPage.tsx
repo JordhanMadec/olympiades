@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { rankingsService, gamesService } from '../services';
-import { RankingEntry, Game } from '../types';
+import { GameRanking, Game } from '../types';
 import { Loading, ErrorMessage, Select } from '../components';
 
 export function RankingsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [rankings, setRankings] = useState<RankingEntry[]>([]);
+  const [ranking, setRanking] = useState<GameRanking | null>(null);
   const [games, setGames] = useState<Game[]>([]);
   const [selectedGameId, setSelectedGameId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
@@ -42,7 +42,7 @@ export function RankingsPage() {
       const data = selectedGameId
         ? await rankingsService.getRankingByGame(selectedGameId)
         : await rankingsService.getGeneralRanking();
-      setRankings(data);
+      setRanking(data);
       setError(null);
     } catch (err) {
       setError('Erreur lors du chargement du classement');
@@ -93,7 +93,7 @@ export function RankingsPage() {
       </div>
 
       <div className="bg-white rounded-lg shadow">
-        {rankings.length === 0 ? (
+        {!ranking || ranking.entries.length === 0 ? (
           <div className="p-12 text-center">
             <p className="text-gray-500">Aucun résultat pour le moment</p>
           </div>
@@ -120,7 +120,7 @@ export function RankingsPage() {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {rankings.map((entry, index) => (
+                {ranking.entries.map((entry, index) => (
                   <tr
                     key={entry.teamId}
                     className={`${

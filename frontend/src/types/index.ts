@@ -84,9 +84,9 @@ export interface RankingEntry {
 }
 
 export interface GameRanking {
-  gameId: number;
-  gameName: string;
-  rankings: RankingEntry[];
+  gameId?: number;
+  gameName?: string;
+  entries: RankingEntry[];
 }
 
 export interface RoundRobinMatch {
