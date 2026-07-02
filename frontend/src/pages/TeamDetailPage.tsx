@@ -1,4 +1,4 @@
-import { ArrowLeft, Medal } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ErrorMessage, Loading } from "../components";
@@ -80,24 +80,18 @@ export function TeamDetailPage() {
       {/* Team header */}
       <div className="flex items-center gap-4 mb-8">
         <div
-          className="w-12 h-12 rounded-full flex-shrink-0 border-4"
-          style={{ backgroundColor: team.color, borderColor: team.color + "40" }}
+          className="w-8 h-8 rounded-full flex-shrink-0 border-2"
+          style={{ backgroundColor: team.color + "30", borderColor: team.color }}
         />
-        <div>
-          <h1 className="text-2xl font-bold text-white">{team.name}</h1>
-          <p className="text-zinc-500 text-sm">{matches.length} rencontres</p>
-        </div>
+        <h1 className="text-2xl font-bold text-white">{team.name}</h1>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-3 gap-4 mb-8">
         {[
-          { label: "Matchs joués", value: completedMatches.length },
-          { label: "Total points", value: totalPoints },
-          {
-            label: "Moy. points",
-            value: completedMatches.length > 0 ? (totalPoints / completedMatches.length).toFixed(1) : "—",
-          },
+          { label: "Épreuves terminées", value: completedMatches.length },
+          { label: "Points", value: totalPoints },
+          { label: "Classement", value: "-" },
         ].map((stat) => (
           <div key={stat.label} className="bg-surface-100 border border-surface-border rounded-xl p-4">
             <p className="text-zinc-500 text-xs mb-1">{stat.label}</p>
@@ -107,7 +101,7 @@ export function TeamDetailPage() {
       </div>
 
       {/* Matches */}
-      <h2 className="text-base font-semibold text-white mb-4">Rencontres</h2>
+      <h2 className="text-base font-semibold text-white mb-4">Épreuves</h2>
       {matches.length === 0 ? (
         <div className="bg-surface-100 border border-surface-border rounded-xl p-12 text-center">
           <p className="text-zinc-500">Aucune rencontre</p>
@@ -118,51 +112,40 @@ export function TeamDetailPage() {
             const myTeamEntry = match.matchTeams.find((mt) => mt.teamId === teamId);
             const opponents = match.matchTeams.filter((mt) => mt.teamId !== teamId);
             return (
-              <div
-                key={match.id}
-                className="bg-surface-100 border border-surface-border rounded-xl p-4 hover:border-surface-border-light transition-colors"
-              >
+              <div key={match.id} className="bg-surface-100 border border-surface-border rounded-xl p-4 ">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-3">
                     <span className="text-sm font-medium text-white">{getGameName(match.gameId)}</span>
-                    <span className="text-zinc-600 text-sm">Match #{match.matchNumber}</span>
-                    {getStatusBadge(match.status)}
                   </div>
-                  {myTeamEntry?.rank === 1 && match.status === MatchStatus.COMPLETED && (
-                    <Medal className="h-5 w-5 text-yellow-400" />
-                  )}
+                  {getStatusBadge(match.status)}
                 </div>
                 <div className="flex items-center gap-6 text-sm">
                   <div>
                     <span className="text-zinc-500 text-xs">Score</span>
                     <p className="text-zinc-200 font-medium">
-                      {myTeamEntry?.rawScore != null ? myTeamEntry.rawScore : "—"}
+                      {myTeamEntry?.rawScore != null ? myTeamEntry.rawScore : "-"}
                     </p>
                   </div>
                   <div>
                     <span className="text-zinc-500 text-xs">Points</span>
-                    <p className="text-primary-400 font-bold">
-                      {myTeamEntry?.points != null ? myTeamEntry.points : "—"}
+                    <p className="font-bold">{myTeamEntry?.points != null ? myTeamEntry.points : "-"}</p>
+                  </div>
+                  <div>
+                    <span className="text-zinc-500 text-xs">Classement</span>
+                    <p className="text-zinc-200 font-medium">
+                      {myTeamEntry?.rank != null ? `#${myTeamEntry.rank}` : "-"}
                     </p>
                   </div>
                   <div>
-                    <span className="text-zinc-500 text-xs">Rang</span>
-                    <p className="text-zinc-200 font-medium">
-                      {myTeamEntry?.rank != null ? `#${myTeamEntry.rank}` : "—"}
+                    <span className="text-zinc-500 text-xs">Adversaires</span>
+                    <p className="text-zinc-400 text-xs">
+                      {opponents
+                        ?.map((o) => {
+                          return o.team?.name || `Équipe ${o.teamId}`;
+                        })
+                        ?.join(", ") || "-"}
                     </p>
                   </div>
-                  {opponents.length > 0 && (
-                    <div>
-                      <span className="text-zinc-500 text-xs">Adversaires</span>
-                      <p className="text-zinc-400 text-xs">
-                        {opponents
-                          .map((o) => {
-                            return o.team?.name || `Équipe ${o.teamId}`;
-                          })
-                          .join(", ")}
-                      </p>
-                    </div>
-                  )}
                 </div>
               </div>
             );

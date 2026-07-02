@@ -49,7 +49,7 @@ export function GamesPage() {
           <p className="text-zinc-600 text-sm mt-1">Créez des épreuves dans les paramètres</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1">
+        <div className="grid grid-cols-1 gap-4">
           {games.map((game) => {
             return (
               <Link
