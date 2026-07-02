@@ -11,13 +11,13 @@ export function Button({
   className = '',
   ...props 
 }: ButtonProps) {
-  const baseClasses = 'px-4 py-2 rounded font-medium transition disabled:opacity-50 disabled:cursor-not-allowed';
+  const baseClasses = 'px-4 py-2 rounded-lg text-sm font-medium transition-all duration-150 disabled:opacity-40 disabled:cursor-not-allowed';
   
   const variantClasses = {
-    primary: 'bg-blue-600 text-white hover:bg-blue-700',
-    secondary: 'bg-gray-200 text-gray-800 hover:bg-gray-300',
-    danger: 'bg-red-600 text-white hover:bg-red-700',
-    success: 'bg-green-600 text-white hover:bg-green-700',
+    primary: 'bg-primary-500 text-white hover:bg-primary-600 shadow-lg shadow-primary-500/20',
+    secondary: 'bg-surface-400 text-zinc-200 hover:bg-surface-500 border border-surface-border-light',
+    danger: 'bg-red-600/20 text-red-400 hover:bg-red-600/30 border border-red-500/30',
+    success: 'bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600/30 border border-emerald-500/30',
   };
 
   return (

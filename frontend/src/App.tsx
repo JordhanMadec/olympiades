@@ -1,13 +1,14 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Layout } from './components';
-import { 
-  Dashboard, 
-  TeamsPage, 
-  GamesPage, 
-  RankingsPage, 
-  MatchesPage, 
-  DrawsPage, 
-  SlideshowPage 
+import {
+  RankingsPage,
+  TeamsPage,
+  TeamDetailPage,
+  GamesPage,
+  GameDetailPage,
+  ProgrammePage,
+  SettingsPage,
+  SlideshowPage,
 } from './pages';
 import './index.css';
 
@@ -17,21 +18,24 @@ function App() {
       <Routes>
         {/* Slideshow without layout (fullscreen) */}
         <Route path="/slideshow" element={<SlideshowPage />} />
-        
-        {/* Regular pages with layout */}
-        <Route path="/" element={<Layout><Dashboard /></Layout>} />
-        <Route path="/teams" element={<Layout><TeamsPage /></Layout>} />
-        <Route path="/games" element={<Layout><GamesPage /></Layout>} />
+
+        {/* Regular pages with sidebar layout */}
+        <Route path="/" element={<Navigate to="/rankings" replace />} />
         <Route path="/rankings" element={<Layout><RankingsPage /></Layout>} />
-        <Route path="/matches" element={<Layout><MatchesPage /></Layout>} />
-        <Route path="/draws" element={<Layout><DrawsPage /></Layout>} />
-        
+        <Route path="/teams" element={<Layout><TeamsPage /></Layout>} />
+        <Route path="/teams/:id" element={<Layout><TeamDetailPage /></Layout>} />
+        <Route path="/games" element={<Layout><GamesPage /></Layout>} />
+        <Route path="/games/:id" element={<Layout><GameDetailPage /></Layout>} />
+        <Route path="/programme" element={<Layout><ProgrammePage /></Layout>} />
+        <Route path="/settings" element={<Layout><SettingsPage /></Layout>} />
+
         {/* 404 */}
         <Route path="*" element={
           <Layout>
-            <div className="text-center py-12">
-              <h2 className="text-2xl font-bold text-gray-800 mb-2">404 - Page non trouvée</h2>
-              <p className="text-gray-600">La page que vous recherchez n'existe pas.</p>
+            <div className="flex flex-col items-center justify-center py-24 text-center">
+              <p className="text-6xl font-bold text-surface-500 mb-4">404</p>
+              <h2 className="text-xl font-semibold text-white mb-2">Page introuvable</h2>
+              <p className="text-zinc-500">La page que vous recherchez n'existe pas.</p>
             </div>
           </Layout>
         } />

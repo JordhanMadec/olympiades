@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Trophy, Medal, Pause, Play } from 'lucide-react';
 import { rankingsService } from '../services';
 import { GameRanking } from '../types';
 import { Loading, ErrorMessage, Button } from '../components';
@@ -48,9 +49,9 @@ export function SlideshowPage() {
   };
 
   const getRankMedal = (index: number) => {
-    if (index === 0) return '🥇';
-    if (index === 1) return '🥈';
-    if (index === 2) return '🥉';
+    if (index === 0) return <Medal className="h-12 w-12 text-yellow-400" />;
+    if (index === 1) return <Medal className="h-12 w-12 text-gray-300" />;
+    if (index === 2) return <Medal className="h-12 w-12 text-orange-500" />;
     return `${index + 1}`;
   };
 
@@ -80,9 +81,17 @@ export function SlideshowPage() {
             <Button
               variant={isPlaying ? 'danger' : 'success'}
               onClick={() => setIsPlaying(!isPlaying)}
-              className="text-sm"
+              className="text-sm flex items-center gap-1"
             >
-              {isPlaying ? '⏸ Pause' : '▶ Play'}
+              {isPlaying ? (
+                <>
+                  <Pause className="h-4 w-4" /> Pause
+                </>
+              ) : (
+                <>
+                  <Play className="h-4 w-4" /> Play
+                </>
+              )}
             </Button>
             <Button variant="secondary" onClick={handlePrevious} className="text-sm">
               ←
@@ -115,7 +124,10 @@ export function SlideshowPage() {
       <div className="container mx-auto px-8 py-12 flex flex-col justify-center min-h-screen">
         {/* Title */}
         <div className="text-center mb-12 animate-fade-in">
-          <h1 className="text-6xl font-bold mb-4">🏆 OLYMPIADES</h1>
+          <div className="flex items-center justify-center gap-4 mb-4">
+            <Trophy className="h-16 w-16" />
+            <h1 className="text-6xl font-bold">OLYMPIADES</h1>
+          </div>
           <h2 className="text-4xl font-semibold">{currentRankings.title}</h2>
           <div className="mt-4 text-lg opacity-75">
             Slide {currentSlide + 1} / {1 + allRankings.length}
@@ -147,7 +159,13 @@ export function SlideshowPage() {
                     }`}
                   >
                     <td className="px-8 py-6">
-                      <span className="text-5xl font-bold">{getRankMedal(index)}</span>
+                      <div className="flex items-center justify-center">
+                        {typeof getRankMedal(index) === 'object' ? (
+                          getRankMedal(index)
+                        ) : (
+                          <span className="text-5xl font-bold">{getRankMedal(index)}</span>
+                        )}
+                      </div>
                     </td>
                     <td className="px-8 py-6">
                       <div className="flex items-center space-x-4">
@@ -178,7 +196,7 @@ export function SlideshowPage() {
           <div className="mt-12 flex items-end justify-center space-x-8">
             {/* 2nd place */}
             <div className="flex flex-col items-center">
-              <div className="text-6xl mb-2">🥈</div>
+              <Medal className="h-16 w-16 mb-2 text-gray-300" />
               <div
                 className="w-32 h-32 rounded-full border-4 border-white mb-4"
                 style={{ backgroundColor: currentRankings.entries[1].teamColor }}
@@ -191,7 +209,7 @@ export function SlideshowPage() {
 
             {/* 1st place */}
             <div className="flex flex-col items-center -mt-8">
-              <div className="text-8xl mb-2">🥇</div>
+              <Medal className="h-20 w-20 mb-2 text-yellow-400" />
               <div
                 className="w-40 h-40 rounded-full border-4 border-yellow-400 mb-4 shadow-2xl"
                 style={{ backgroundColor: currentRankings.entries[0].teamColor }}
@@ -204,7 +222,7 @@ export function SlideshowPage() {
 
             {/* 3rd place */}
             <div className="flex flex-col items-center">
-              <div className="text-6xl mb-2">🥉</div>
+              <Medal className="h-16 w-16 mb-2 text-orange-500" />
               <div
                 className="w-32 h-32 rounded-full border-4 border-white mb-4"
                 style={{ backgroundColor: currentRankings.entries[2].teamColor }}

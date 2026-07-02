@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Users, Gamepad2, CheckCircle, Trophy, Medal } from 'lucide-react';
 import { teamsService, gamesService, rankingsService } from '../services';
 import { Team, Game, GameRanking } from '../types';
 import { Loading, ErrorMessage } from '../components';
@@ -51,9 +52,7 @@ export function Dashboard() {
               <p className="text-3xl font-bold text-blue-600">{teams.length}</p>
             </div>
             <div className="bg-blue-100 rounded-full p-3">
-              <svg className="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-              </svg>
+              <Users className="h-8 w-8 text-blue-600" />
             </div>
           </div>
         </div>
@@ -65,9 +64,7 @@ export function Dashboard() {
               <p className="text-3xl font-bold text-green-600">{games.length}</p>
             </div>
             <div className="bg-green-100 rounded-full p-3">
-              <svg className="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5" />
-              </svg>
+              <Gamepad2 className="h-8 w-8 text-green-600" />
             </div>
           </div>
         </div>
@@ -81,9 +78,7 @@ export function Dashboard() {
               </p>
             </div>
             <div className="bg-purple-100 rounded-full p-3">
-              <svg className="h-8 w-8 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-              </svg>
+              <CheckCircle className="h-8 w-8 text-purple-600" />
             </div>
           </div>
         </div>
@@ -92,7 +87,10 @@ export function Dashboard() {
       {/* Top 3 Rankings */}
       {ranking && ranking.entries.length > 0 && (
         <div className="bg-white rounded-lg shadow p-6 mb-8">
-          <h2 className="text-xl font-bold mb-4">🏆 Top 3</h2>
+          <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+            <Trophy className="h-6 w-6" />
+            Top 3
+          </h2>
           <div className="space-y-3">
             {ranking.entries.slice(0, 3).map((entry, index) => (
               <div
@@ -106,9 +104,11 @@ export function Dashboard() {
                 }`}
               >
                 <div className="flex items-center space-x-4">
-                  <span className="text-2xl font-bold">
-                    {index === 0 ? '🥇' : index === 1 ? '🥈' : '🥉'}
-                  </span>
+                  <Medal 
+                    className={`h-8 w-8 ${
+                      index === 0 ? 'text-yellow-500' : index === 1 ? 'text-gray-400' : 'text-orange-500'
+                    }`}
+                  />
                   <div
                     className="w-4 h-4 rounded-full"
                     style={{ backgroundColor: entry.teamColor }}
