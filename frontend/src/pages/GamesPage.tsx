@@ -1,9 +1,9 @@
-import { BowArrow, Target, Timer } from "lucide-react";
+import { ArrowRight, BowArrow } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ErrorMessage, Loading } from "../components";
 import { gamesService } from "../services";
-import { Game, GameFormat, GameType } from "../types";
+import { Game } from "../types";
 
 export function GamesPage() {
   const [games, setGames] = useState<Game[]>([]);
@@ -28,19 +28,6 @@ export function GamesPage() {
     }
   };
 
-  const getTypeLabel = (type: GameType) => {
-    const map = {
-      [GameType.TIME]: { label: "Temps", Icon: Timer },
-      [GameType.SCORE]: { label: "Score", Icon: Target },
-      [GameType.POINTS]: { label: "Points", Icon: Target },
-    };
-    return map[type];
-  };
-
-  const getFormatLabel = (format: GameFormat) => {
-    return format === GameFormat.ROUND_ROBIN ? "Round-Robin" : "Élimination";
-  };
-
   if (loading) return <Loading />;
   if (error) return <ErrorMessage message={error} onRetry={loadGames} />;
 
@@ -62,35 +49,23 @@ export function GamesPage() {
           <p className="text-zinc-600 text-sm mt-1">Créez des épreuves dans les paramètres</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1">
           {games.map((game) => {
-            const typeInfo = getTypeLabel(game.gameType);
-            const IconComponent = typeInfo.Icon;
             return (
               <Link
                 key={game.id}
                 to={`/games/${game.id}`}
-                className="bg-surface-100 border border-surface-border rounded-2xl p-6 hover:border-surface-border-light hover:bg-surface-200 transition-all group"
+                className="bg-surface-100 border border-surface-border rounded-2xl p-4 hover:border-surface-border-light hover:bg-surface-200 transition-all group"
               >
-                <div className="flex items-start justify-between mb-3">
-                  <h3 className="text-white font-semibold text-lg group-hover:text-primary-400 transition-colors">
-                    {game.name}
-                  </h3>
-                  <IconComponent className="h-6 w-6 text-primary-400" />
+                <div className="flex items-center gap-4">
+                  <div className="flex-1 min-w-0">
+                    <div className="text-white font-semibold truncate group-hover:text-primary-400 transition-colors">
+                      {game.name}
+                    </div>
+                  </div>
+
+                  <ArrowRight className="w-4 h-4 text-zinc-500 group-hover:text-primary-400 transition-colors" />
                 </div>
-                {game.description && <p className="text-zinc-500 text-sm mb-4 line-clamp-2">{game.description}</p>}
-                <div className="flex flex-wrap gap-2">
-                  <span className="px-2.5 py-1 bg-primary-500/10 text-primary-400 rounded-lg text-xs font-medium border border-primary-500/20">
-                    {typeInfo.label}
-                  </span>
-                  <span className="px-2.5 py-1 bg-surface-400 text-zinc-400 rounded-lg text-xs font-medium border border-surface-border">
-                    {getFormatLabel(game.gameFormat)}
-                  </span>
-                  <span className="px-2.5 py-1 bg-surface-400 text-zinc-400 rounded-lg text-xs font-medium border border-surface-border">
-                    {game.teamsPerMatch} éq./match
-                  </span>
-                </div>
-                <p className="text-zinc-600 text-xs mt-4">Voir classement et rencontres →</p>
               </Link>
             );
           })}

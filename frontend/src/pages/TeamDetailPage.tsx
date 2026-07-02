@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Medal } from 'lucide-react';
-import { teamsService, matchesService, gamesService } from '../services';
-import { Team, Match, Game, MatchStatus } from '../types';
-import { Loading, ErrorMessage } from '../components';
+import { ArrowLeft, Medal } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import { ErrorMessage, Loading } from "../components";
+import { gamesService, matchesService, teamsService } from "../services";
+import { Game, Match, MatchStatus, Team } from "../types";
 
 export function TeamDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -29,7 +29,7 @@ export function TeamDetailPage() {
       ]);
       const found = teamsData.find((t) => t.id === teamId);
       if (!found) {
-        setError('Équipe introuvable');
+        setError("Équipe introuvable");
         return;
       }
       setTeam(found);
@@ -37,20 +37,20 @@ export function TeamDetailPage() {
       setGames(gamesData);
       setError(null);
     } catch (err) {
-      setError('Erreur lors du chargement');
+      setError("Erreur lors du chargement");
       console.error(err);
     } finally {
       setLoading(false);
     }
   };
 
-  const getGameName = (gameId: number) => games.find((g) => g.id === gameId)?.name || 'Jeu inconnu';
+  const getGameName = (gameId: number) => games.find((g) => g.id === gameId)?.name || "Jeu inconnu";
 
   const getStatusBadge = (status: MatchStatus) => {
     const map = {
-      [MatchStatus.PENDING]: { label: 'En attente', cls: 'bg-zinc-500/20 text-zinc-400' },
-      [MatchStatus.IN_PROGRESS]: { label: 'En cours', cls: 'bg-blue-500/20 text-blue-400' },
-      [MatchStatus.COMPLETED]: { label: 'Terminé', cls: 'bg-emerald-500/20 text-emerald-400' },
+      [MatchStatus.PENDING]: { label: "En attente", cls: "bg-zinc-500/20 text-zinc-400" },
+      [MatchStatus.IN_PROGRESS]: { label: "En cours", cls: "bg-blue-500/20 text-blue-400" },
+      [MatchStatus.COMPLETED]: { label: "Terminé", cls: "bg-emerald-500/20 text-emerald-400" },
     };
     const { label, cls } = map[status];
     return <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${cls}`}>{label}</span>;
@@ -69,7 +69,10 @@ export function TeamDetailPage() {
   return (
     <div>
       {/* Back */}
-      <Link to="/teams" className="inline-flex items-center gap-2 text-zinc-500 hover:text-zinc-300 text-sm mb-6 transition-colors">
+      <Link
+        to="/teams"
+        className="inline-flex items-center gap-2 text-zinc-500 hover:text-zinc-300 text-sm mb-6 transition-colors"
+      >
         <ArrowLeft className="h-4 w-4" />
         Retour aux équipes
       </Link>
@@ -78,7 +81,7 @@ export function TeamDetailPage() {
       <div className="flex items-center gap-4 mb-8">
         <div
           className="w-12 h-12 rounded-full flex-shrink-0 border-4"
-          style={{ backgroundColor: team.color, borderColor: team.color + '40' }}
+          style={{ backgroundColor: team.color, borderColor: team.color + "40" }}
         />
         <div>
           <h1 className="text-2xl font-bold text-white">{team.name}</h1>
@@ -89,13 +92,16 @@ export function TeamDetailPage() {
       {/* Stats */}
       <div className="grid grid-cols-3 gap-4 mb-8">
         {[
-          { label: 'Matchs joués', value: completedMatches.length },
-          { label: 'Total points', value: totalPoints },
-          { label: 'Moy. points', value: completedMatches.length > 0 ? (totalPoints / completedMatches.length).toFixed(1) : '—' },
+          { label: "Matchs joués", value: completedMatches.length },
+          { label: "Total points", value: totalPoints },
+          {
+            label: "Moy. points",
+            value: completedMatches.length > 0 ? (totalPoints / completedMatches.length).toFixed(1) : "—",
+          },
         ].map((stat) => (
-          <div key={stat.label} className="bg-surface-100 border border-surface-border rounded-xl p-5">
+          <div key={stat.label} className="bg-surface-100 border border-surface-border rounded-xl p-4">
             <p className="text-zinc-500 text-xs mb-1">{stat.label}</p>
-            <p className="text-2xl font-bold text-primary-400">{stat.value}</p>
+            <p className="text-2xl font-bold">{stat.value}</p>
           </div>
         ))}
       </div>
@@ -112,7 +118,10 @@ export function TeamDetailPage() {
             const myTeamEntry = match.matchTeams.find((mt) => mt.teamId === teamId);
             const opponents = match.matchTeams.filter((mt) => mt.teamId !== teamId);
             return (
-              <div key={match.id} className="bg-surface-100 border border-surface-border rounded-xl p-5 hover:border-surface-border-light transition-colors">
+              <div
+                key={match.id}
+                className="bg-surface-100 border border-surface-border rounded-xl p-4 hover:border-surface-border-light transition-colors"
+              >
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-3">
                     <span className="text-sm font-medium text-white">{getGameName(match.gameId)}</span>
@@ -127,28 +136,30 @@ export function TeamDetailPage() {
                   <div>
                     <span className="text-zinc-500 text-xs">Score</span>
                     <p className="text-zinc-200 font-medium">
-                      {myTeamEntry?.rawScore != null ? myTeamEntry.rawScore : '—'}
+                      {myTeamEntry?.rawScore != null ? myTeamEntry.rawScore : "—"}
                     </p>
                   </div>
                   <div>
                     <span className="text-zinc-500 text-xs">Points</span>
                     <p className="text-primary-400 font-bold">
-                      {myTeamEntry?.points != null ? myTeamEntry.points : '—'}
+                      {myTeamEntry?.points != null ? myTeamEntry.points : "—"}
                     </p>
                   </div>
                   <div>
                     <span className="text-zinc-500 text-xs">Rang</span>
                     <p className="text-zinc-200 font-medium">
-                      {myTeamEntry?.rank != null ? `#${myTeamEntry.rank}` : '—'}
+                      {myTeamEntry?.rank != null ? `#${myTeamEntry.rank}` : "—"}
                     </p>
                   </div>
                   {opponents.length > 0 && (
                     <div>
                       <span className="text-zinc-500 text-xs">Adversaires</span>
                       <p className="text-zinc-400 text-xs">
-                        {opponents.map((o) => {
-                          return o.team?.name || `Équipe ${o.teamId}`;
-                        }).join(', ')}
+                        {opponents
+                          .map((o) => {
+                            return o.team?.name || `Équipe ${o.teamId}`;
+                          })
+                          .join(", ")}
                       </p>
                     </div>
                   )}

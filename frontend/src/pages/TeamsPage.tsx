@@ -54,7 +54,7 @@ export function TeamsPage() {
             <Link
               key={team.id}
               to={`/teams/${team.id}`}
-              className="bg-surface-100 border border-surface-border rounded-2xl p-5 hover:border-surface-border-light hover:bg-surface-200 transition-all group"
+              className="bg-surface-100 border border-surface-border rounded-2xl p-4 hover:border-surface-border-light hover:bg-surface-200 transition-all group"
             >
               <div className="flex items-center gap-4">
                 <div

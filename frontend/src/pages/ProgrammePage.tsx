@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
-import { Calendar, Medal } from 'lucide-react';
-import { matchesService, gamesService, teamsService } from '../services';
-import { Match, Game, Team, MatchStatus } from '../types';
-import { Loading, ErrorMessage } from '../components';
+import { Calendar, Medal } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ErrorMessage, Loading } from "../components";
+import { gamesService, matchesService, teamsService } from "../services";
+import { Game, Match, MatchStatus, Team } from "../types";
 
 export function ProgrammePage() {
   const [matches, setMatches] = useState<Match[]>([]);
@@ -25,15 +25,12 @@ export function ProgrammePage() {
   const loadInitialData = async () => {
     try {
       setLoading(true);
-      const [gamesData, teamsData] = await Promise.all([
-        gamesService.getAll(),
-        teamsService.getAll(),
-      ]);
+      const [gamesData, teamsData] = await Promise.all([gamesService.getAll(), teamsService.getAll()]);
       setGames(gamesData);
       setTeams(teamsData);
       setError(null);
     } catch (err) {
-      setError('Erreur lors du chargement des données');
+      setError("Erreur lors du chargement des données");
       console.error(err);
     } finally {
       setLoading(false);
@@ -47,21 +44,21 @@ export function ProgrammePage() {
       setMatches(data);
       setError(null);
     } catch (err) {
-      setError('Erreur lors du chargement des matchs');
+      setError("Erreur lors du chargement des matchs");
       console.error(err);
     } finally {
       setLoading(false);
     }
   };
 
-  const getTeamName = (teamId: number) => teams.find((t) => t.id === teamId)?.name || 'Équipe inconnue';
-  const getTeamColor = (teamId: number) => teams.find((t) => t.id === teamId)?.color || '#888';
+  const getTeamName = (teamId: number) => teams.find((t) => t.id === teamId)?.name || "Équipe inconnue";
+  const getTeamColor = (teamId: number) => teams.find((t) => t.id === teamId)?.color || "#888";
 
   const getStatusBadge = (status: MatchStatus) => {
     const map = {
-      [MatchStatus.PENDING]: { label: 'En attente', cls: 'bg-zinc-500/20 text-zinc-400 border-zinc-500/20' },
-      [MatchStatus.IN_PROGRESS]: { label: 'En cours', cls: 'bg-blue-500/20 text-blue-400 border-blue-500/20' },
-      [MatchStatus.COMPLETED]: { label: 'Terminé', cls: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/20' },
+      [MatchStatus.PENDING]: { label: "En attente", cls: "bg-zinc-500/20 text-zinc-400 border-zinc-500/20" },
+      [MatchStatus.IN_PROGRESS]: { label: "En cours", cls: "bg-blue-500/20 text-blue-400 border-blue-500/20" },
+      [MatchStatus.COMPLETED]: { label: "Terminé", cls: "bg-emerald-500/20 text-emerald-400 border-emerald-500/20" },
     };
     const { label, cls } = map[status];
     return <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium border ${cls}`}>{label}</span>;
@@ -87,7 +84,9 @@ export function ProgrammePage() {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-2xl font-bold text-white">Programme</h1>
-          <p className="text-zinc-500 text-sm mt-1">{matches.length} rencontre{matches.length !== 1 ? 's' : ''}</p>
+          <p className="text-zinc-500 text-sm mt-1">
+            {matches.length} rencontre{matches.length !== 1 ? "s" : ""}
+          </p>
         </div>
 
         {/* Filter tabs */}
@@ -96,8 +95,8 @@ export function ProgrammePage() {
             onClick={() => setSelectedGameId(null)}
             className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
               !selectedGameId
-                ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/20'
-                : 'text-zinc-400 hover:text-white'
+                ? "bg-primary-500 text-white shadow-lg shadow-primary-500/20"
+                : "text-zinc-400 hover:text-white"
             }`}
           >
             Tous
@@ -108,8 +107,8 @@ export function ProgrammePage() {
               onClick={() => setSelectedGameId(game.id)}
               className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
                 selectedGameId === game.id
-                  ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/20'
-                  : 'text-zinc-400 hover:text-white'
+                  ? "bg-primary-500 text-white shadow-lg shadow-primary-500/20"
+                  : "text-zinc-400 hover:text-white"
               }`}
             >
               {game.name}
@@ -129,21 +128,17 @@ export function ProgrammePage() {
             const gameMatches = matchesByGame[game.id] || [];
             return (
               <div key={game.id}>
-                <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-wider mb-3">
-                  {game.name}
-                </h2>
+                <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-wider mb-3">{game.name}</h2>
                 <div className="space-y-3">
                   {gameMatches.map((match) => (
                     <div
                       key={match.id}
-                      className="bg-surface-100 border border-surface-border rounded-xl p-5 hover:border-surface-border-light transition-colors"
+                      className="bg-surface-100 border border-surface-border rounded-xl p-4 hover:border-surface-border-light transition-colors"
                     >
                       <div className="flex items-center justify-between mb-3">
                         <span className="text-white font-medium">Match #{match.matchNumber}</span>
                         <div className="flex items-center gap-2">
-                          {match.round && (
-                            <span className="text-zinc-500 text-xs">Round {match.round}</span>
-                          )}
+                          {match.round && <span className="text-zinc-500 text-xs">Round {match.round}</span>}
                           {getStatusBadge(match.status)}
                         </div>
                       </div>
@@ -155,8 +150,8 @@ export function ProgrammePage() {
                               key={mt.id}
                               className={`flex items-center gap-2 rounded-xl px-3 py-2 border ${
                                 mt.rank === 1 && match.status === MatchStatus.COMPLETED
-                                  ? 'bg-primary-500/10 border-primary-500/30'
-                                  : 'bg-surface-400 border-surface-border'
+                                  ? "bg-primary-500/10 border-primary-500/30"
+                                  : "bg-surface-400 border-surface-border"
                               }`}
                             >
                               <div

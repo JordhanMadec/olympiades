@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
-import { Timer, Target } from 'lucide-react';
-import { gamesService } from '../../services';
-import { Game, CreateGameDto, GameType, GameFormat, ScoringDirection } from '../../types';
-import { Loading, ErrorMessage, Button, Input, Select, Textarea, Modal } from '../../components';
+import { Target, Timer } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Button, ErrorMessage, Input, Loading, Modal, Select, Textarea } from "../../components";
+import { gamesService } from "../../services";
+import { CreateGameDto, Game, GameFormat, GameType, ScoringDirection } from "../../types";
 
 export function GamesSettings() {
   const [games, setGames] = useState<Game[]>([]);
@@ -12,16 +12,18 @@ export function GamesSettings() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingGame, setEditingGame] = useState<Game | null>(null);
   const [formData, setFormData] = useState<CreateGameDto>({
-    name: '',
-    description: '',
-    rules: '',
+    name: "",
+    description: "",
+    rules: "",
     gameType: GameType.SCORE,
     gameFormat: GameFormat.ROUND_ROBIN,
     scoringDirection: ScoringDirection.DESC,
     teamsPerMatch: 2,
   });
 
-  useEffect(() => { loadGames(); }, []);
+  useEffect(() => {
+    loadGames();
+  }, []);
 
   const loadGames = async () => {
     try {
@@ -30,7 +32,7 @@ export function GamesSettings() {
       setGames(data);
       setError(null);
     } catch (err) {
-      setError('Erreur lors du chargement des épreuves');
+      setError("Erreur lors du chargement des épreuves");
     } finally {
       setLoading(false);
     }
@@ -49,21 +51,21 @@ export function GamesSettings() {
       await loadGames();
       handleCloseModal();
     } catch (err: any) {
-      alert(err.response?.data?.message || 'Erreur lors de la sauvegarde');
+      alert(err.response?.data?.message || "Erreur lors de la sauvegarde");
     } finally {
       setSaving(false);
     }
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm('Êtes-vous sûr de vouloir supprimer ce jeu ?')) return;
+    if (!confirm("Êtes-vous sûr de vouloir supprimer ce jeu ?")) return;
     if (saving) return;
     try {
       setSaving(true);
       await gamesService.delete(id);
       await loadGames();
     } catch (err: any) {
-      alert(err.response?.data?.message || 'Erreur lors de la suppression');
+      alert(err.response?.data?.message || "Erreur lors de la suppression");
     } finally {
       setSaving(false);
     }
@@ -84,9 +86,9 @@ export function GamesSettings() {
     } else {
       setEditingGame(null);
       setFormData({
-        name: '',
-        description: '',
-        rules: '',
+        name: "",
+        description: "",
+        rules: "",
         gameType: GameType.SCORE,
         gameFormat: GameFormat.ROUND_ROBIN,
         scoringDirection: ScoringDirection.DESC,
@@ -102,15 +104,15 @@ export function GamesSettings() {
   };
 
   const getTypeLabel = (type: GameType) => {
-    return { 
-      [GameType.TIME]: { label: 'Temps', Icon: Timer }, 
-      [GameType.SCORE]: { label: 'Score', Icon: Target }, 
-      [GameType.POINTS]: { label: 'Points', Icon: Target } 
+    return {
+      [GameType.TIME]: { label: "Temps", Icon: Timer },
+      [GameType.SCORE]: { label: "Score", Icon: Target },
+      [GameType.POINTS]: { label: "Points", Icon: Target },
     }[type];
   };
 
   const getFormatLabel = (format: GameFormat) => {
-    return format === GameFormat.ROUND_ROBIN ? 'Round-Robin' : 'Élimination';
+    return format === GameFormat.ROUND_ROBIN ? "Round-Robin" : "Élimination";
   };
 
   if (loading) return <Loading />;
@@ -119,7 +121,9 @@ export function GamesSettings() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <p className="text-zinc-400 text-sm">{games.length} épreuve{games.length !== 1 ? 's' : ''}</p>
+        <p className="text-zinc-400 text-sm">
+          {games.length} épreuve{games.length !== 1 ? "s" : ""}
+        </p>
         <Button onClick={() => handleOpenModal()}>+ Nouvelle épreuve</Button>
       </div>
 
@@ -133,42 +137,44 @@ export function GamesSettings() {
             const typeInfo = getTypeLabel(game.gameType);
             const IconComponent = typeInfo.Icon;
             return (
-            <div key={game.id} className="bg-surface-100 border border-surface-border rounded-xl p-5">
-              <div className="flex items-start justify-between">
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-white font-medium mb-1">{game.name}</h3>
-                  {game.description && (
-                    <p className="text-zinc-500 text-sm mb-3">{game.description}</p>
-                  )}
-                  <div className="flex flex-wrap gap-2">
-                    <span className="px-2 py-0.5 bg-primary-500/10 text-primary-400 rounded text-xs border border-primary-500/20 flex items-center gap-1">
-                      <IconComponent className="h-3 w-3" />
-                      {typeInfo.label}
-                    </span>
-                    <span className="px-2 py-0.5 bg-surface-400 text-zinc-400 rounded text-xs border border-surface-border">
-                      {getFormatLabel(game.gameFormat)}
-                    </span>
-                    <span className="px-2 py-0.5 bg-surface-400 text-zinc-400 rounded text-xs border border-surface-border">
-                      {game.teamsPerMatch} éq./match
-                    </span>
+              <div key={game.id} className="bg-surface-100 border border-surface-border rounded-xl p-4">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-white font-medium mb-1">{game.name}</h3>
+                    {game.description && <p className="text-zinc-500 text-sm mb-3">{game.description}</p>}
+                    <div className="flex flex-wrap gap-2">
+                      <span className="px-2 py-0.5 bg-primary-500/10 text-primary-400 rounded text-xs border border-primary-500/20 flex items-center gap-1">
+                        <IconComponent className="h-3 w-3" />
+                        {typeInfo.label}
+                      </span>
+                      <span className="px-2 py-0.5 bg-surface-400 text-zinc-400 rounded text-xs border border-surface-border">
+                        {getFormatLabel(game.gameFormat)}
+                      </span>
+                      <span className="px-2 py-0.5 bg-surface-400 text-zinc-400 rounded text-xs border border-surface-border">
+                        {game.teamsPerMatch} éq./match
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex gap-2 ml-4">
+                    <Button variant="secondary" onClick={() => handleOpenModal(game)} className="text-xs">
+                      Modifier
+                    </Button>
+                    <Button variant="danger" onClick={() => handleDelete(game.id)} className="text-xs">
+                      Supprimer
+                    </Button>
                   </div>
                 </div>
-                <div className="flex gap-2 ml-4">
-                  <Button variant="secondary" onClick={() => handleOpenModal(game)} className="text-xs">
-                    Modifier
-                  </Button>
-                  <Button variant="danger" onClick={() => handleDelete(game.id)} className="text-xs">
-                    Supprimer
-                  </Button>
-                </div>
               </div>
-            </div>
             );
           })}
         </div>
       )}
 
-      <Modal isOpen={isModalOpen} onClose={handleCloseModal} title={editingGame ? 'Modifier l\'épreuve' : 'Nouvelle épreuve'}>
+      <Modal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        title={editingGame ? "Modifier l'épreuve" : "Nouvelle épreuve"}
+      >
         <form onSubmit={handleSubmit}>
           <Input
             label="Nom"
@@ -230,7 +236,7 @@ export function GamesSettings() {
           />
           <div className="flex gap-3 mt-6">
             <Button type="submit" className="flex-1" disabled={saving}>
-              {saving ? 'Enregistrement...' : editingGame ? 'Mettre à jour' : 'Créer'}
+              {saving ? "Enregistrement..." : editingGame ? "Mettre à jour" : "Créer"}
             </Button>
             <Button type="button" variant="secondary" onClick={handleCloseModal} className="flex-1" disabled={saving}>
               Annuler

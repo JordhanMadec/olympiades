@@ -5,15 +5,10 @@ interface ErrorMessageProps {
 
 export function ErrorMessage({ message, onRetry }: ErrorMessageProps) {
   return (
-    <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-5 my-4">
+    <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4 my-4">
       <div className="flex items-start">
         <div className="flex-shrink-0">
-          <svg
-            className="h-5 w-5 text-red-400"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
+          <svg className="h-5 w-5 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
