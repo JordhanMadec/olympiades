@@ -9,6 +9,8 @@ import { TeamMatchHistory } from './database/team-match-history.entity';
 import { TeamsModule } from './teams/teams.module';
 import { GamesModule } from './games/games.module';
 import { MatchesModule } from './matches/matches.module';
+import { RankingsModule } from './rankings/rankings.module';
+import { DrawsModule } from './draws/draws.module';
 
 @Module({
   imports: [
@@ -25,6 +27,8 @@ import { MatchesModule } from './matches/matches.module';
     TeamsModule,
     GamesModule,
     MatchesModule,
+    RankingsModule,
+    DrawsModule,
   ],
 })
 export class AppModule {}
