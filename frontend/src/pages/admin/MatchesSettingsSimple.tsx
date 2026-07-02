@@ -189,10 +189,12 @@ export function MatchesSettingsSimple() {
               key={match.id}
               match={match}
               teams={teams}
+              games={games}
+              showGameName
               actions={
                 <div className="flex gap-2">
                   <Button variant="primary" size="small" onClick={() => handleOpenScoring(match)}>
-                    {match.status === MatchStatus.COMPLETED ? "Scores" : "Saisir scores"}
+                    Scores
                   </Button>
                   <Button variant="danger" size="small" onClick={() => handleDeleteMatch(match.id)}>
                     <Trash2 className="h-4 w-4" />

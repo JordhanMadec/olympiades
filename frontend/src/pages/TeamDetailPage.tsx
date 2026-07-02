@@ -88,14 +88,11 @@ export function TeamDetailPage() {
           </Card>
         ) : (
           <div className="flex flex-col gap-3">
-            {matches.map((match) => {
-              const game = games.find((g) => g.id === match.gameId);
-              return (
-                <Link to={`/games/${match.gameId}`}>
-                  <MatchCard key={match.id} match={match} teams={[team]} gameName={game?.name} showGameName hover />
-                </Link>
-              );
-            })}
+            {matches.map((match) => (
+              <Link to={`/games/${match.gameId}`}>
+                <MatchCard key={match.id} match={match} teams={[team]} games={games} showGameName hover />
+              </Link>
+            ))}
           </div>
         )}
       </div>
