@@ -100,7 +100,7 @@ export function TeamsSettings() {
           {teams.map((team) => (
             <div key={team.id} className="p-4 flex gap-2 items-center">
               <div
-                className="w-8 h-8 rounded-full flex-shrink-0 border-2"
+                className="w-4 h-4 rounded-full flex-shrink-0 border-2"
                 style={{ backgroundColor: team.color + "30", borderColor: team.color }}
               />
 

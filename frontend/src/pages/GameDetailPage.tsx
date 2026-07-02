@@ -110,7 +110,7 @@ export function GameDetailPage() {
               {ranking.entries.map((entry, index) => (
                 <div
                   key={entry.teamId}
-                  className="flex items-center gap-4 px-5 py-3 hover:bg-surface-200 transition-colors"
+                  className="flex items-center gap-6 px-5 py-3 hover:bg-surface-200 transition-colors"
                 >
                   <div className="w-7 flex justify-center">
                     {index < 3 ? (
@@ -123,12 +123,14 @@ export function GameDetailPage() {
                       <span className="text-zinc-500 text-sm font-bold">{index + 1}</span>
                     )}
                   </div>
-                  <div
-                    className="w-2.5 h-2.5 rounded-full flex-shrink-0"
-                    style={{ backgroundColor: entry.teamColor }}
-                  />
-                  <span className="text-white font-medium flex-1">{entry.teamName}</span>
-                  <span className="text-primary-400 font-bold">{entry.totalPoints} pts</span>
+                  <div className="flex-1 flex items-center gap-2">
+                    <div
+                      className="w-4 h-4 rounded-full flex-shrink-0 border-2"
+                      style={{ backgroundColor: entry.teamColor + "30", borderColor: entry.teamColor }}
+                    />
+                    <span className="text-white font-bold flex-1">{entry.teamName}</span>
+                  </div>
+                  <span className=" text-gray-500">{entry.totalPoints} pts</span>
                 </div>
               ))}
             </div>

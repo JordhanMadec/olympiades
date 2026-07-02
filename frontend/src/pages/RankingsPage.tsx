@@ -64,10 +64,10 @@ export function RankingsPage() {
   };
 
   const getRankBadge = (index: number) => {
-    if (index === 0) return { color: "text-yellow-400", bg: "bg-yellow-400/10 border-yellow-400/30" };
-    if (index === 1) return { color: "text-zinc-300", bg: "bg-zinc-400/10 border-zinc-400/20" };
-    if (index === 2) return { color: "text-orange-600", bg: "bg-orange-700/10 border-orange-700/20" };
-    return { color: "text-zinc-500", bg: "" };
+    if (index === 0) return { color: "text-yellow-400" };
+    if (index === 1) return { color: "text-zinc-300" };
+    if (index === 2) return { color: "text-orange-600" };
+    return { color: "text-zinc-500" };
   };
 
   if (loading) return <Loading />;
@@ -124,10 +124,8 @@ export function RankingsPage() {
             {/* Table header */}
             <div className="grid grid-cols-12 gap-4 px-6 py-3 border-b border-surface-border text-xs font-medium text-zinc-500 uppercase tracking-wider">
               <div className="col-span-1">Rang</div>
-              <div className="col-span-5">Équipe</div>
-              <div className="col-span-2 text-right">Points</div>
-              <div className="col-span-2 text-right">Matchs</div>
-              <div className="col-span-2 text-right">Moyenne</div>
+              <div className="col-span-10">Équipe</div>
+              <div className="col-span-1 text-right">Points</div>
             </div>
 
             {/* Rows */}
@@ -137,9 +135,7 @@ export function RankingsPage() {
                 return (
                   <div
                     key={entry.teamId}
-                    className={`grid grid-cols-12 gap-4 px-6 py-4 items-center hover:bg-surface-200 transition-colors ${
-                      index < 3 ? "border-l-2 border-primary-500/40" : ""
-                    }`}
+                    className={`grid grid-cols-12 gap-4 px-6 py-4 items-center hover:bg-surface-200 transition-colors`}
                   >
                     {/* Rank */}
                     <div className="col-span-1">
@@ -151,25 +147,17 @@ export function RankingsPage() {
                     </div>
 
                     {/* Team */}
-                    <div className="col-span-5 flex items-center gap-3">
+                    <div className="col-span-10 flex items-center gap-3">
                       <div
-                        className="w-3 h-3 rounded-full flex-shrink-0"
-                        style={{ backgroundColor: entry.teamColor }}
+                        className="w-4 h-4 rounded-full flex-shrink-0 border-2"
+                        style={{ backgroundColor: entry.teamColor + "30", borderColor: entry.teamColor }}
                       />
-                      <span className="font-medium text-white">{entry.teamName}</span>
+                      <span className="font-bold text-white">{entry.teamName}</span>
                     </div>
 
                     {/* Points */}
-                    <div className="col-span-2 text-right">
-                      <span className="text-primary-400 font-bold text-lg">{entry.totalPoints}</span>
-                    </div>
-
-                    {/* Matches */}
-                    <div className="col-span-2 text-right text-zinc-400 text-sm">{entry.matchCount}</div>
-
-                    {/* Average */}
-                    <div className="col-span-2 text-right text-zinc-400 text-sm">
-                      {entry.matchCount > 0 ? (entry.totalPoints / entry.matchCount).toFixed(1) : "—"}
+                    <div className="col-span-1 text-right">
+                      <span className="text-gray-500">{entry.totalPoints} pts</span>
                     </div>
                   </div>
                 );

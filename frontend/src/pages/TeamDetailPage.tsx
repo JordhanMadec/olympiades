@@ -78,9 +78,9 @@ export function TeamDetailPage() {
       </Link>
 
       {/* Team header */}
-      <div className="flex items-center gap-4 mb-8">
+      <div className="flex items-center gap-2 mb-8">
         <div
-          className="w-8 h-8 rounded-full flex-shrink-0 border-2"
+          className="w-5 h-5 rounded-full flex-shrink-0 border-2"
           style={{ backgroundColor: team.color + "30", borderColor: team.color }}
         />
         <h1 className="text-2xl font-bold text-white">{team.name}</h1>

@@ -56,9 +56,9 @@ export function TeamsPage() {
               to={`/teams/${team.id}`}
               className="bg-surface-100 border border-surface-border rounded-2xl p-4 hover:border-surface-border-light hover:bg-surface-200 transition-all group"
             >
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
                 <div
-                  className="w-8 h-8 rounded-full flex-shrink-0 border-2"
+                  className="w-4 h-4 rounded-full flex-shrink-0 border-2"
                   style={{ backgroundColor: team.color + "30", borderColor: team.color }}
                 />
 
