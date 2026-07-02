@@ -1,0 +1,30 @@
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from '@nestjs/config';
+import { Team } from './teams/team.entity';
+import { Game } from './games/game.entity';
+import { Match } from './matches/match.entity';
+import { MatchTeam } from './matches/match-team.entity';
+import { TeamMatchHistory } from './database/team-match-history.entity';
+import { TeamsModule } from './teams/teams.module';
+import { GamesModule } from './games/games.module';
+import { MatchesModule } from './matches/matches.module';
+
+@Module({
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    TypeOrmModule.forRoot({
+      type: 'sqlite',
+      database: 'olympiades.sqlite',
+      entities: [Team, Game, Match, MatchTeam, TeamMatchHistory],
+      synchronize: true, // Only for development
+      logging: true,
+    }),
+    TeamsModule,
+    GamesModule,
+    MatchesModule,
+  ],
+})
+export class AppModule {}
