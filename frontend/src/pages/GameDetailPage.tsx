@@ -97,82 +97,80 @@ export function GameDetailPage() {
         {game.description && <p className="text-zinc-500 text-sm mt-3">{game.description}</p>}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Ranking */}
-        <div>
-          <h2 className="text-base font-semibold text-white mb-4">Classement</h2>
-          <div className="bg-surface-100 border border-surface-border rounded-2xl overflow-hidden">
-            {!ranking || ranking.entries.length === 0 ? (
-              <div className="p-10 text-center">
-                <p className="text-zinc-500 text-sm">Aucun résultat</p>
-              </div>
-            ) : (
-              <div className="divide-y divide-surface-border">
-                {ranking.entries.map((entry, index) => (
-                  <div
-                    key={entry.teamId}
-                    className="flex items-center gap-4 px-5 py-3 hover:bg-surface-200 transition-colors"
-                  >
-                    <div className="w-7 flex justify-center">
-                      {index < 3 ? (
-                        <Medal
-                          className={`h-5 w-5 ${
-                            index === 0 ? "text-yellow-400" : index === 1 ? "text-gray-300" : "text-orange-500"
-                          }`}
-                        />
-                      ) : (
-                        <span className="text-zinc-500 text-sm font-bold">{index + 1}</span>
-                      )}
-                    </div>
-                    <div
-                      className="w-2.5 h-2.5 rounded-full flex-shrink-0"
-                      style={{ backgroundColor: entry.teamColor }}
-                    />
-                    <span className="text-white font-medium flex-1">{entry.teamName}</span>
-                    <span className="text-primary-400 font-bold">{entry.totalPoints} pts</span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Matches */}
-        <div>
-          <h2 className="text-base font-semibold text-white mb-4">Rencontres ({matches.length})</h2>
-          {matches.length === 0 ? (
-            <div className="bg-surface-100 border border-surface-border rounded-2xl p-10 text-center">
-              <p className="text-zinc-500 text-sm">Aucune rencontre</p>
+      {/* Ranking */}
+      <div className="mb-8">
+        <h2 className="text-base font-semibold text-white mb-4">Classement</h2>
+        <div className="bg-surface-100 border border-surface-border rounded-2xl overflow-hidden">
+          {!ranking || ranking.entries.length === 0 ? (
+            <div className="p-10 text-center">
+              <p className="text-zinc-500 text-sm">Aucun résultat</p>
             </div>
           ) : (
-            <div className="space-y-3 max-h-[480px] overflow-y-auto pr-1">
-              {matches.map((match) => (
+            <div className="divide-y divide-surface-border">
+              {ranking.entries.map((entry, index) => (
                 <div
-                  key={match.id}
-                  className="bg-surface-100 border border-surface-border rounded-xl p-4 hover:border-surface-border-light transition-colors"
+                  key={entry.teamId}
+                  className="flex items-center gap-4 px-5 py-3 hover:bg-surface-200 transition-colors"
                 >
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-white text-sm font-medium">Match #{match.matchNumber}</span>
-                    {getStatusBadge(match.status)}
+                  <div className="w-7 flex justify-center">
+                    {index < 3 ? (
+                      <Medal
+                        className={`h-5 w-5 ${
+                          index === 0 ? "text-yellow-400" : index === 1 ? "text-gray-300" : "text-orange-500"
+                        }`}
+                      />
+                    ) : (
+                      <span className="text-zinc-500 text-sm font-bold">{index + 1}</span>
+                    )}
                   </div>
-                  <div className="flex flex-wrap gap-2">
-                    {match.matchTeams
-                      .sort((a, b) => (a.rank || 999) - (b.rank || 999))
-                      .map((mt) => (
-                        <div key={mt.id} className="flex items-center gap-1.5 bg-surface-400 rounded-lg px-2.5 py-1.5">
-                          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: getTeamColor(mt.teamId) }} />
-                          <span className="text-zinc-300 text-xs">{getTeamName(mt.teamId)}</span>
-                          {mt.rawScore != null && (
-                            <span className="text-primary-400 text-xs font-bold ml-1">{mt.rawScore}</span>
-                          )}
-                        </div>
-                      ))}
-                  </div>
+                  <div
+                    className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                    style={{ backgroundColor: entry.teamColor }}
+                  />
+                  <span className="text-white font-medium flex-1">{entry.teamName}</span>
+                  <span className="text-primary-400 font-bold">{entry.totalPoints} pts</span>
                 </div>
               ))}
             </div>
           )}
         </div>
+      </div>
+
+      {/* Matches */}
+      <div>
+        <h2 className="text-base font-semibold text-white mb-4">Rencontres ({matches.length})</h2>
+        {matches.length === 0 ? (
+          <div className="bg-surface-100 border border-surface-border rounded-2xl p-10 text-center">
+            <p className="text-zinc-500 text-sm">Aucune rencontre</p>
+          </div>
+        ) : (
+          <div className="space-y-3 pr-1">
+            {matches.map((match) => (
+              <div
+                key={match.id}
+                className="bg-surface-100 border border-surface-border rounded-xl p-4 hover:border-surface-border-light transition-colors"
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-white text-sm font-medium">Match #{match.matchNumber}</span>
+                  {getStatusBadge(match.status)}
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {match.matchTeams
+                    .sort((a, b) => (a.rank || 999) - (b.rank || 999))
+                    .map((mt) => (
+                      <div key={mt.id} className="flex items-center gap-1.5 bg-surface-400 rounded-lg px-2.5 py-1.5">
+                        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: getTeamColor(mt.teamId) }} />
+                        <span className="text-zinc-300 text-xs">{getTeamName(mt.teamId)}</span>
+                        {mt.rawScore != null && (
+                          <span className="text-primary-400 text-xs font-bold ml-1">{mt.rawScore}</span>
+                        )}
+                      </div>
+                    ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
