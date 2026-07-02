@@ -3,33 +3,32 @@ import { rankingsService } from '../services/rankings.service';
 import type { TeamRanking, GameRanking } from '../types';
 
 const MEDAL_ICONS = ['🥇', '🥈', '🥉'];
-const PODIUM_HEIGHTS = ['h-32', 'h-24', 'h-20'];
+
+// Tailwind height tokens mapped to pixel values for inline style
+const PODIUM_PX = [128, 96, 80]; // h-32=8rem=128px, h-24=6rem=96px, h-20=5rem=80px
 
 const PodiumSlide: React.FC<{ rankings: TeamRanking[]; title: string }> = ({ rankings, title }) => {
   const top3 = rankings.slice(0, 3);
-  // Arrange: 2nd, 1st, 3rd
-  const order = [top3[1], top3[0], top3[2]].filter(Boolean);
-  const podiumOrder = [1, 0, 2];
+  // Display order: 2nd (left), 1st (centre), 3rd (right)
+  const displayOrder = [top3[1], top3[0], top3[2]];
+  const actualRanks = [1, 0, 2]; // index into MEDAL_ICONS / PODIUM_PX
 
   return (
     <div className="flex flex-col items-center justify-center h-full gap-8">
       <h2 className="text-4xl font-bold text-white drop-shadow">{title}</h2>
       <div className="flex items-end gap-4 justify-center">
-        {order.map((r, displayIdx) => {
+        {displayOrder.map((r, i) => {
           if (!r) return null;
-          const actualRank = podiumOrder[displayIdx];
-          const height = PODIUM_HEIGHTS[actualRank];
+          const rank = actualRanks[i];
+          const heightPx = PODIUM_PX[rank];
           return (
             <div key={r.team.id} className="flex flex-col items-center gap-2">
-              <span className="text-5xl">{MEDAL_ICONS[actualRank]}</span>
+              <span className="text-5xl">{MEDAL_ICONS[rank]}</span>
               <div
                 className="w-24 rounded-t-xl flex items-end justify-center pb-2"
-                style={{ backgroundColor: r.team.color, minHeight: height.replace('h-', '') + 'px' }}
+                style={{ backgroundColor: r.team.color, height: heightPx }}
               >
-                <div className={`w-full ${height} rounded-t-xl flex items-end justify-center pb-2`}
-                  style={{ backgroundColor: r.team.color }}>
-                  <span className="text-white font-bold text-xl drop-shadow">{r.totalPoints}</span>
-                </div>
+                <span className="text-white font-bold text-xl drop-shadow">{r.totalPoints}</span>
               </div>
               <p className="text-white font-semibold text-lg drop-shadow max-w-[120px] text-center truncate">
                 {r.team.name}
@@ -62,6 +61,71 @@ const GRADIENT_CLASSES = [
   'from-blue-900 via-indigo-900 to-violet-900',
 ];
 
+interface SlideDisplayProps {
+  slide: { title: string; rankings: TeamRanking[] };
+  slides: { title: string; rankings: TeamRanking[] }[];
+  currentSlide: number;
+  gradient: string;
+  fullscreen: boolean;
+  onClose: () => void;
+  onPrev: () => void;
+  onNext: () => void;
+  onSelect: (i: number) => void;
+}
+
+const SlideDisplay: React.FC<SlideDisplayProps> = ({
+  slide, slides, currentSlide, gradient, fullscreen, onClose, onPrev, onNext, onSelect,
+}) => (
+  <div
+    className={`bg-gradient-to-br ${gradient} relative overflow-hidden`}
+    style={
+      fullscreen
+        ? { position: 'fixed', inset: 0, zIndex: 9999 }
+        : { minHeight: '70vh', borderRadius: '1rem' }
+    }
+  >
+    {/* Decorative blobs */}
+    <div className="absolute top-0 left-0 w-64 h-64 bg-white/5 rounded-full -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+    <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/5 rounded-full translate-x-1/2 translate-y-1/2 pointer-events-none" />
+
+    <div className="absolute top-4 right-4 flex items-center gap-2">
+      <span className="text-white/50 text-sm">{currentSlide + 1} / {slides.length}</span>
+      {fullscreen && (
+        <button onClick={onClose} className="text-white/70 hover:text-white text-xl">✕</button>
+      )}
+    </div>
+
+    <div className="h-full flex flex-col p-8">
+      <PodiumSlide rankings={slide.rankings} title={slide.title} />
+    </div>
+
+    <button
+      onClick={onPrev}
+      className="absolute left-4 top-1/2 -translate-y-1/2 text-white/60 hover:text-white text-3xl"
+    >
+      ‹
+    </button>
+    <button
+      onClick={onNext}
+      className="absolute right-4 top-1/2 -translate-y-1/2 text-white/60 hover:text-white text-3xl"
+    >
+      ›
+    </button>
+
+    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+      {slides.map((_, i) => (
+        <button
+          key={i}
+          onClick={() => onSelect(i)}
+          className={`h-2 rounded-full transition-all ${
+            i === currentSlide ? 'bg-white w-4' : 'bg-white/40 w-2'
+          }`}
+        />
+      ))}
+    </div>
+  </div>
+);
+
 export const SlideshowPage: React.FC = () => {
   const [global, setGlobal] = useState<TeamRanking[]>([]);
   const [gameRankings, setGameRankings] = useState<GameRanking[]>([]);
@@ -69,13 +133,13 @@ export const SlideshowPage: React.FC = () => {
   const [fullscreen, setFullscreen] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [auto, setAuto] = useState(false);
-  const [interval, setIntervalSeconds] = useState(5);
+  const [intervalSeconds, setIntervalSeconds] = useState(5);
 
   const load = () =>
     Promise.all([rankingsService.getGlobal(), rankingsService.getAllGames()])
       .then(([g, gr]) => {
         setGlobal(g);
-        setGameRankings(gr.filter((gr) => gr.rankings.length > 0));
+        setGameRankings(gr.filter((r) => r.rankings.length > 0));
       })
       .finally(() => setLoading(false));
 
@@ -86,19 +150,19 @@ export const SlideshowPage: React.FC = () => {
     ...gameRankings.map((gr) => ({ title: gr.game.name, rankings: gr.rankings })),
   ].filter((s) => s.rankings.length > 0);
 
-  const next = useCallback(() => {
-    setCurrentSlide((s) => (s + 1) % slides.length);
-  }, [slides.length]);
-
-  const prev = () => setCurrentSlide((s) => (s - 1 + slides.length) % slides.length);
+  const next = useCallback(
+    () => setCurrentSlide((s) => (s + 1) % Math.max(slides.length, 1)),
+    [slides.length],
+  );
+  const prev = () =>
+    setCurrentSlide((s) => (s - 1 + Math.max(slides.length, 1)) % Math.max(slides.length, 1));
 
   useEffect(() => {
     if (!auto || slides.length === 0) return;
-    const timer = setInterval(next, interval * 1000);
+    const timer = setInterval(next, intervalSeconds * 1000);
     return () => clearInterval(timer);
-  }, [auto, interval, next, slides.length]);
+  }, [auto, intervalSeconds, next, slides.length]);
 
-  // Keyboard navigation
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key === 'ArrowRight') next();
@@ -127,62 +191,16 @@ export const SlideshowPage: React.FC = () => {
 
   const slide = slides[currentSlide];
   const gradient = GRADIENT_CLASSES[currentSlide % GRADIENT_CLASSES.length];
-
-  const SlideContent = () => (
-    <div
-      className={`bg-gradient-to-br ${gradient} w-full h-full relative overflow-hidden`}
-      style={fullscreen ? { position: 'fixed', inset: 0, zIndex: 9999 } : { minHeight: '70vh', borderRadius: '1rem' }}
-    >
-      {/* Decorative blobs */}
-      <div className="absolute top-0 left-0 w-64 h-64 bg-white/5 rounded-full -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/5 rounded-full translate-x-1/2 translate-y-1/2 pointer-events-none" />
-
-      <div className="absolute top-4 right-4 flex items-center gap-2">
-        <span className="text-white/50 text-sm">
-          {currentSlide + 1} / {slides.length}
-        </span>
-        {fullscreen && (
-          <button
-            onClick={() => setFullscreen(false)}
-            className="text-white/70 hover:text-white text-xl"
-          >
-            ✕
-          </button>
-        )}
-      </div>
-
-      <div className="h-full flex flex-col p-8">
-        <PodiumSlide rankings={slide.rankings} title={slide.title} />
-      </div>
-
-      {/* Navigation arrows */}
-      <button
-        onClick={prev}
-        className="absolute left-4 top-1/2 -translate-y-1/2 text-white/60 hover:text-white text-3xl"
-      >
-        ‹
-      </button>
-      <button
-        onClick={next}
-        className="absolute right-4 top-1/2 -translate-y-1/2 text-white/60 hover:text-white text-3xl"
-      >
-        ›
-      </button>
-
-      {/* Slide indicators */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-        {slides.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setCurrentSlide(i)}
-            className={`w-2 h-2 rounded-full transition-all ${
-              i === currentSlide ? 'bg-white w-4' : 'bg-white/40'
-            }`}
-          />
-        ))}
-      </div>
-    </div>
-  );
+  const slideProps: Omit<SlideDisplayProps, 'fullscreen'> = {
+    slide,
+    slides,
+    currentSlide,
+    gradient,
+    onClose: () => setFullscreen(false),
+    onPrev: prev,
+    onNext: next,
+    onSelect: setCurrentSlide,
+  };
 
   return (
     <div className="space-y-6">
@@ -208,7 +226,7 @@ export const SlideshowPage: React.FC = () => {
             Auto
           </label>
           <select
-            value={interval}
+            value={intervalSeconds}
             onChange={(e) => setIntervalSeconds(+e.target.value)}
             className="text-sm border border-gray-300 rounded-lg px-2 py-1.5"
           >
@@ -225,9 +243,11 @@ export const SlideshowPage: React.FC = () => {
         </div>
       </div>
 
-      <SlideContent />
+      {/* Inline preview (always visible) */}
+      <SlideDisplay {...slideProps} fullscreen={false} />
 
-      {fullscreen && <SlideContent />}
+      {/* Fullscreen overlay (portal-like, rendered on top) */}
+      {fullscreen && <SlideDisplay {...slideProps} fullscreen={true} />}
     </div>
   );
 };
