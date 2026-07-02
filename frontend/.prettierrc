@@ -1,0 +1,22 @@
+{
+  "singleQuote": true,
+  "trailingComma": "all",
+  "printWidth": 120,
+  "overrides": [
+    {
+      "files": [
+        "**/*.css",
+        "**/*.scss",
+        "**/*.html",
+        "**/*.jsx",
+        "**/*.tsx"
+      ],
+      "options": {
+        "singleQuote": false
+      }
+    }
+  ],
+  "plugins": [
+    "prettier-plugin-organize-imports"
+  ]
+}
