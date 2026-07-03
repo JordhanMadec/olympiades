@@ -1,27 +1,27 @@
-import { useState, FormEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
-import { Button, Input } from '@/components';
-import { Lock, Trophy } from 'lucide-react';
+import { Button, Input } from "@/components";
+import { useAuth } from "@/contexts/AuthContext";
+import { Lock } from "lucide-react";
+import { FormEvent, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export function LoginPage() {
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setLoading(true);
 
     const success = await login(password);
-    
+
     if (success) {
-      navigate('/admin');
+      navigate("/admin");
     } else {
-      setError('Mot de passe incorrect');
+      setError("Mot de passe incorrect");
       setLoading(false);
     }
   };
@@ -31,12 +31,8 @@ export function LoginPage() {
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="flex items-center justify-center gap-3 mb-8">
-          <div className="w-12 h-12 rounded-lg bg-primary-500 flex items-center justify-center">
-            <Trophy className="w-6 h-6 text-white" />
-          </div>
           <div className="flex flex-col">
-            <div className="text-2xl font-bold text-white">Olympiades</div>
-            <div className="text-sm text-gray">Coëtmieux</div>
+            <div className="text-2xl font-bold text-white">Olympiades 2026</div>
           </div>
         </div>
 
@@ -49,9 +45,7 @@ export function LoginPage() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-white mb-2">
-                Mot de passe
-              </label>
+              <label className="block text-sm font-medium text-white mb-2">Mot de passe</label>
               <Input
                 type="password"
                 value={password}
@@ -68,12 +62,8 @@ export function LoginPage() {
               </div>
             )}
 
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={loading || !password}
-            >
-              {loading ? 'Connexion...' : 'Se connecter'}
+            <Button type="submit" className="w-full" disabled={loading || !password}>
+              {loading ? "Connexion..." : "Se connecter"}
             </Button>
           </form>
 
