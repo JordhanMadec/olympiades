@@ -34,7 +34,6 @@ export interface Game {
   id: number;
   name: string;
   description: string;
-  rules: string;
   gameType: GameType;
   gameFormat: GameFormat;
   scoringDirection: ScoringDirection;
@@ -119,7 +118,6 @@ export interface UpdateTeamDto {
 export interface CreateGameDto {
   name: string;
   description: string;
-  rules: string;
   gameType: GameType;
   gameFormat: GameFormat;
   scoringDirection: ScoringDirection;
@@ -131,7 +129,6 @@ export interface CreateGameDto {
 export interface UpdateGameDto {
   name?: string;
   description?: string;
-  rules?: string;
   gameType?: GameType;
   gameFormat?: GameFormat;
   scoringDirection?: ScoringDirection;

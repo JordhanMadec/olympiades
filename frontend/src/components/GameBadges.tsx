@@ -1,4 +1,4 @@
-import { GameFormat, GameType, ScoringDirection } from "../types";
+import { GameFormat, GameType } from "../types";
 
 interface GameTypeBadgeProps {
   type: GameType;
@@ -10,8 +10,8 @@ interface GameFormatBadgeProps {
   size?: "sm" | "md";
 }
 
-interface ScoringDirectionBadgeProps {
-  direction: ScoringDirection;
+interface GameParticipantsBadgeProps {
+  teamsPerMatch: number;
   size?: "sm" | "md";
 }
 
@@ -22,13 +22,15 @@ const sizeClasses = {
 
 export function GameTypeBadge({ type, size = "md" }: GameTypeBadgeProps) {
   const typeLabels = {
-    [GameType.TIME]: "Temps",
-    [GameType.SCORE]: "Score",
-    [GameType.POINTS]: "Points",
+    [GameType.TIME]: "Meilleurs temps",
+    [GameType.SCORE]: "Match à élimination",
+    [GameType.POINTS]: "Meilleur score",
   };
 
   return (
-    <span className={`bg-primary-500/15 text-primary-400 rounded-lg font-medium border border-primary-500/20 ${sizeClasses[size]}`}>
+    <span
+      className={`bg-primary-500/15 text-primary-400 rounded-lg font-medium border border-primary-500/20 ${sizeClasses[size]}`}
+    >
       {typeLabels[type]}
     </span>
   );
@@ -36,26 +38,25 @@ export function GameTypeBadge({ type, size = "md" }: GameTypeBadgeProps) {
 
 export function GameFormatBadge({ format, size = "md" }: GameFormatBadgeProps) {
   const formatLabels = {
-    [GameFormat.ROUND_ROBIN]: "Round-Robin",
-    [GameFormat.ELIMINATION]: "Élimination",
+    [GameFormat.ROUND_ROBIN]: "Championnat",
+    [GameFormat.ELIMINATION]: "Élimination directe",
   };
 
   return (
-    <span className={`bg-surface-300 text-zinc-400 rounded-lg font-medium border border-surface-border ${sizeClasses[size]}`}>
+    <span
+      className={`bg-primary-500/15 text-primary-400 rounded-lg font-medium border border-primary-500/20 ${sizeClasses[size]}`}
+    >
       {formatLabels[format]}
     </span>
   );
 }
 
-export function ScoringDirectionBadge({ direction, size = "md" }: ScoringDirectionBadgeProps) {
-  const directionLabels = {
-    [ScoringDirection.ASC]: "Croissant",
-    [ScoringDirection.DESC]: "Décroissant",
-  };
-
+export function GameParticipantsBadge({ teamsPerMatch, size = "md" }: GameParticipantsBadgeProps) {
   return (
-    <span className={`bg-surface-300 text-zinc-400 rounded-lg font-medium border border-surface-border ${sizeClasses[size]}`}>
-      {directionLabels[direction]}
+    <span
+      className={`bg-primary-500/15 text-primary-400 rounded-lg font-medium border border-primary-500/20 ${sizeClasses[size]}`}
+    >
+      {teamsPerMatch} équipes / rencontre
     </span>
   );
 }

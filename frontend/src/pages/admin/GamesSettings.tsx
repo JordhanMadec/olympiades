@@ -14,7 +14,6 @@ export function GamesSettings() {
   const [formData, setFormData] = useState<CreateGameDto>({
     name: "",
     description: "",
-    rules: "",
     gameType: GameType.SCORE,
     gameFormat: GameFormat.ROUND_ROBIN,
     scoringDirection: ScoringDirection.DESC,
@@ -79,7 +78,6 @@ export function GamesSettings() {
       setFormData({
         name: game.name,
         description: game.description,
-        rules: game.rules,
         gameType: game.gameType,
         gameFormat: game.gameFormat,
         scoringDirection: game.scoringDirection,
@@ -92,7 +90,6 @@ export function GamesSettings() {
       setFormData({
         name: "",
         description: "",
-        rules: "",
         gameType: GameType.SCORE,
         gameFormat: GameFormat.ELIMINATION, // SCORE defaults to ELIMINATION
         scoringDirection: ScoringDirection.DESC,
@@ -201,28 +198,20 @@ export function GamesSettings() {
             placeholder="Courte description"
             rows={2}
           />
-          <Textarea
-            label="Règles"
-            value={formData.rules}
-            onChange={(e) => setFormData({ ...formData, rules: e.target.value })}
-            required
-            placeholder="Règles complètes"
-            rows={3}
-          />
           <Select
             label="Type de scoring"
             value={formData.gameType}
             onChange={(e) => {
               const gameType = e.target.value as GameType;
               let newData: Partial<CreateGameDto> = { gameType };
-              
+
               // Auto-set scoring direction
               if (gameType === GameType.TIME) {
                 newData.scoringDirection = ScoringDirection.ASC;
               } else {
                 newData.scoringDirection = ScoringDirection.DESC;
               }
-              
+
               // Auto-set format based on game type
               if (gameType === GameType.SCORE) {
                 newData.gameFormat = GameFormat.ELIMINATION;
@@ -234,7 +223,7 @@ export function GamesSettings() {
                 // TIME or POINTS
                 newData.gameFormat = GameFormat.ROUND_ROBIN;
               }
-              
+
               setFormData({ ...formData, ...newData });
             }}
             required
@@ -243,25 +232,29 @@ export function GamesSettings() {
             <option value={GameType.SCORE}>Score compétitif (élimination directe)</option>
             <option value={GameType.POINTS}>Quantité (ex: mL, kg, ...)</option>
           </Select>
-          
+
           <Select
             label="Format"
             value={formData.gameFormat}
             onChange={(e) => setFormData({ ...formData, gameFormat: e.target.value as GameFormat })}
             required
-            disabled={formData.gameType === GameType.SCORE || formData.gameType === GameType.TIME || formData.gameType === GameType.POINTS}
+            disabled={
+              formData.gameType === GameType.SCORE ||
+              formData.gameType === GameType.TIME ||
+              formData.gameType === GameType.POINTS
+            }
             title={
-              formData.gameType === GameType.SCORE 
-                ? "Les jeux de type SCORE sont toujours en élimination directe" 
+              formData.gameType === GameType.SCORE
+                ? "Les jeux de type SCORE sont toujours en élimination directe"
                 : formData.gameType === GameType.TIME || formData.gameType === GameType.POINTS
-                ? "Les jeux de type TEMPS et QUANTITÉ sont toujours en round-robin"
-                : ""
+                  ? "Les jeux de type TEMPS et QUANTITÉ sont toujours en round-robin"
+                  : ""
             }
           >
             <option value={GameFormat.ROUND_ROBIN}>Round-Robin (tous contre tous)</option>
             <option value={GameFormat.ELIMINATION}>Élimination directe (bracket)</option>
           </Select>
-          
+
           <Input
             label="Équipes par match"
             type="number"
@@ -277,7 +270,7 @@ export function GamesSettings() {
                 : undefined
             }
           />
-          
+
           {formData.gameType === GameType.SCORE && (
             <Input
               label="Points pour une victoire"
@@ -289,12 +282,12 @@ export function GamesSettings() {
               helperText="Points attribués au vainqueur (et aux byes). Le perdant reçoit 0 points."
             />
           )}
-          
+
           {formData.gameType === GameType.POINTS && (
             <Input
               label="Unité"
               type="text"
-              value={formData.unit || ''}
+              value={formData.unit || ""}
               onChange={(e) => setFormData({ ...formData, unit: e.target.value })}
               placeholder="Ex: mL, kg, m, ..."
               helperText="Unité de mesure pour afficher les résultats (optionnel)"

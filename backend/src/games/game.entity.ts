@@ -1,8 +1,15 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
-import { GameType, GameFormat, ScoringDirection } from './game.enums';
-import { Match } from '../matches/match.entity';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  OneToMany,
+} from "typeorm";
+import { GameType, GameFormat, ScoringDirection } from "./game.enums";
+import { Match } from "../matches/match.entity";
 
-@Entity('games')
+@Entity("games")
 export class Game {
   @PrimaryGeneratedColumn()
   id: number;
@@ -10,26 +17,23 @@ export class Game {
   @Column()
   name: string;
 
-  @Column('text')
+  @Column("text")
   description: string;
 
-  @Column('text')
-  rules: string;
-
   @Column({
-    type: 'varchar',
+    type: "varchar",
     enum: GameType,
   })
   gameType: GameType;
 
   @Column({
-    type: 'varchar',
+    type: "varchar",
     enum: GameFormat,
   })
   gameFormat: GameFormat;
 
   @Column({
-    type: 'varchar',
+    type: "varchar",
     enum: ScoringDirection,
   })
   scoringDirection: ScoringDirection;
@@ -43,7 +47,7 @@ export class Game {
   @Column({ nullable: true })
   winPoints: number; // Points awarded for a win in SCORE games (default: use Olympic system)
 
-  @OneToMany(() => Match, match => match.game)
+  @OneToMany(() => Match, (match) => match.game)
   matches: Match[];
 
   @CreateDateColumn()

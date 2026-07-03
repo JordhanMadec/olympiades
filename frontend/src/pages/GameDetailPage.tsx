@@ -1,16 +1,7 @@
 import { ArrowLeft } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import {
-  BracketViewer,
-  Card,
-  ErrorMessage,
-  GameFormatBadge,
-  GameTypeBadge,
-  Loading,
-  MatchCard,
-  RankingTable,
-} from "../components";
+import { BracketViewer, Card, ErrorMessage, GameTypeBadge, Loading, MatchCard, RankingTable } from "../components";
 import { gamesService, matchesService, rankingsService, teamsService } from "../services";
 import { Game, GameFormat, GameRanking, Match, Team } from "../types";
 
@@ -72,16 +63,12 @@ export function GameDetailPage() {
       </Link>
 
       {/* Game header */}
-      <div className="mb-8">
+      <div className="flex flex-col items-start gap-3 mb-8">
         <h1 className="text-2xl font-bold text-white">{game.name}</h1>
-        <div className="flex items-center gap-3 mt-2">
-          <GameTypeBadge type={game.gameType} />
-          <GameFormatBadge format={game.gameFormat} />
-          <span className="px-2.5 py-1 bg-surface-300 text-zinc-400 rounded-lg text-xs font-medium border border-surface-border">
-            {game.teamsPerMatch} équipes/match
-          </span>
-        </div>
-        {game.description && <p className="text-zinc-500 text-sm mt-3">{game.description}</p>}
+
+        {game.description && <p>{game.description}</p>}
+
+        <GameTypeBadge type={game.gameType} />
       </div>
 
       {/* Ranking */}

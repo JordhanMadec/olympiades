@@ -1,11 +1,11 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { GamesController } from './games.controller';
-import { GamesService } from './games.service';
-import { CreateGameDto } from './dto/create-game.dto';
-import { UpdateGameDto } from './dto/update-game.dto';
-import { GameType, GameFormat, ScoringDirection } from './game.enums';
+import { Test, TestingModule } from "@nestjs/testing";
+import { GamesController } from "./games.controller";
+import { GamesService } from "./games.service";
+import { CreateGameDto } from "./dto/create-game.dto";
+import { UpdateGameDto } from "./dto/update-game.dto";
+import { GameType, GameFormat, ScoringDirection } from "./game.enums";
 
-describe('GamesController', () => {
+describe("GamesController", () => {
   let controller: GamesController;
   let service: GamesService;
 
@@ -19,9 +19,8 @@ describe('GamesController', () => {
 
   const mockGame = {
     id: 1,
-    name: 'Babyfoot',
-    description: 'Match de babyfoot en 2v2',
-    rules: 'Premier à 10 buts',
+    name: "Babyfoot",
+    description: "Match de babyfoot en 2v2",
     gameType: GameType.SCORE,
     gameFormat: GameFormat.ROUND_ROBIN,
     scoringDirection: ScoringDirection.DESC,
@@ -45,16 +44,15 @@ describe('GamesController', () => {
     service = module.get<GamesService>(GamesService);
   });
 
-  it('should be defined', () => {
+  it("should be defined", () => {
     expect(controller).toBeDefined();
   });
 
-  describe('create', () => {
-    it('should create a game with SCORE type', async () => {
+  describe("create", () => {
+    it("should create a game with SCORE type", async () => {
       const dto: CreateGameDto = {
-        name: 'Babyfoot',
-        description: 'Match de babyfoot en 2v2',
-        rules: 'Premier à 10 buts',
+        name: "Babyfoot",
+        description: "Match de babyfoot en 2v2",
         gameType: GameType.SCORE,
         gameFormat: GameFormat.ROUND_ROBIN,
         scoringDirection: ScoringDirection.DESC,
@@ -68,11 +66,10 @@ describe('GamesController', () => {
       expect(result.scoringDirection).toBe(ScoringDirection.DESC);
     });
 
-    it('should create a TIME game with ASC scoring', async () => {
+    it("should create a TIME game with ASC scoring", async () => {
       const dto: CreateGameDto = {
-        name: 'Course relais',
-        description: 'Course par équipe',
-        rules: 'Le plus rapide gagne',
+        name: "Course relais",
+        description: "Course par équipe",
         gameType: GameType.TIME,
         gameFormat: GameFormat.ROUND_ROBIN,
         scoringDirection: ScoringDirection.ASC,
@@ -81,7 +78,7 @@ describe('GamesController', () => {
 
       const timeGame = {
         ...mockGame,
-        name: 'Course relais',
+        name: "Course relais",
         gameType: GameType.TIME,
         scoringDirection: ScoringDirection.ASC,
       };
@@ -93,11 +90,10 @@ describe('GamesController', () => {
       expect(result.scoringDirection).toBe(ScoringDirection.ASC);
     });
 
-    it('should create an ELIMINATION format game', async () => {
+    it("should create an ELIMINATION format game", async () => {
       const dto: CreateGameDto = {
-        name: 'Tournoi bracket',
-        description: 'Tournoi à élimination directe',
-        rules: 'Single elimination',
+        name: "Tournoi bracket",
+        description: "Tournoi à élimination directe",
         gameType: GameType.SCORE,
         gameFormat: GameFormat.ELIMINATION,
         scoringDirection: ScoringDirection.DESC,
@@ -116,11 +112,11 @@ describe('GamesController', () => {
     });
   });
 
-  describe('findAll', () => {
-    it('should return array of games', async () => {
+  describe("findAll", () => {
+    it("should return array of games", async () => {
       const games = [
         mockGame,
-        { ...mockGame, id: 2, name: 'Course', gameType: GameType.TIME },
+        { ...mockGame, id: 2, name: "Course", gameType: GameType.TIME },
       ];
       mockGamesService.findAll.mockResolvedValue(games);
 
@@ -130,8 +126,8 @@ describe('GamesController', () => {
     });
   });
 
-  describe('findOne', () => {
-    it('should return a game by id', async () => {
+  describe("findOne", () => {
+    it("should return a game by id", async () => {
       mockGamesService.findOne.mockResolvedValue(mockGame);
 
       const result = await controller.findOne(1);
@@ -140,20 +136,20 @@ describe('GamesController', () => {
     });
   });
 
-  describe('update', () => {
-    it('should update game properties', async () => {
+  describe("update", () => {
+    it("should update game properties", async () => {
       const dto: UpdateGameDto = {
-        rules: 'Premier à 15 buts',
+        description: "Premier à 15 buts",
       };
 
-      const updatedGame = { ...mockGame, rules: 'Premier à 15 buts' };
+      const updatedGame = { ...mockGame, description: "Premier à 15 buts" };
       mockGamesService.update.mockResolvedValue(updatedGame);
 
       const result = await controller.update(1, dto);
-      expect(result.rules).toBe('Premier à 15 buts');
+      expect(result.description).toBe("Premier à 15 buts");
     });
 
-    it('should allow changing game type and scoring direction', async () => {
+    it("should allow changing game type and scoring direction", async () => {
       const dto: UpdateGameDto = {
         gameType: GameType.POINTS,
         scoringDirection: ScoringDirection.DESC,
@@ -172,8 +168,8 @@ describe('GamesController', () => {
     });
   });
 
-  describe('remove', () => {
-    it('should delete a game', async () => {
+  describe("remove", () => {
+    it("should delete a game", async () => {
       mockGamesService.remove.mockResolvedValue(undefined);
 
       await controller.remove(1);
