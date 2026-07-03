@@ -27,8 +27,10 @@ import { AppController } from "./app.controller";
             username: process.env.DATABASE_USER,
             password: process.env.DATABASE_PASSWORD,
             entities: [Team, Game, Match, MatchTeam, TeamMatchHistory],
-            synchronize: process.env.NODE_ENV !== "production",
-            logging: process.env.NODE_ENV === "development",
+            // Temporairement activé en production pour créer les tables
+            // TODO: Désactiver après première migration et utiliser TypeORM migrations
+            synchronize: true,
+            logging: true,
             ssl:
               process.env.DATABASE_SSL === "true"
                 ? { rejectUnauthorized: false }
