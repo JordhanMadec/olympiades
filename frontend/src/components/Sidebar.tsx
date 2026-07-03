@@ -52,13 +52,8 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
       {/* Header avec bouton fermer (mobile uniquement) */}
       <div className="flex items-center justify-between gap-3 px-5 py-5 border-b border-surface-border">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-primary-500 flex items-center justify-center flex-shrink-0">
-            <Trophy className="w-4 h-4 text-white" />
-          </div>
-
           <div className="flex flex-col gap-1">
-            <div className="text-base font-bold text-white leading-none">Olympiades</div>
-            <div className="text-xs text-gray leading-none">Coëtmieux</div>
+            <div className="text-base font-bold text-white leading-none">Olympiades 2026</div>
           </div>
         </div>
 

@@ -1,6 +1,5 @@
 import { MobileMenuBar } from "@/components/MobileMenuBar.tsx";
 import { useAuth } from "@/contexts/AuthContext.tsx";
-import { Trophy } from "lucide-react";
 import { ReactNode, useState } from "react";
 import { Sidebar } from "./Sidebar";
 
@@ -38,9 +37,6 @@ export function Layout({ children }: LayoutProps) {
             </button>
           )}
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-primary-500 flex items-center justify-center">
-              <Trophy className="w-4 h-4 text-white" />
-            </div>
             <span className="font-bold text-white">Olympiades 2026</span>
           </div>
           <div className="w-10"></div> {/* Spacer pour centrer le titre */}
