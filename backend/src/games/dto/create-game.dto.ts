@@ -27,4 +27,13 @@ export class CreateGameDto {
   @Min(1)
   @IsOptional()
   teamsPerMatch?: number;
+
+  @IsString()
+  @IsOptional()
+  unit?: string; // Unit for quantity-based games (mL, kg, etc.)
+
+  @IsInt()
+  @Min(1)
+  @IsOptional()
+  winPoints?: number; // Points for a win in SCORE games
 }

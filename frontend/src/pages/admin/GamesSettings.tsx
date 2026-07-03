@@ -19,6 +19,8 @@ export function GamesSettings() {
     gameFormat: GameFormat.ROUND_ROBIN,
     scoringDirection: ScoringDirection.DESC,
     teamsPerMatch: 2,
+    unit: undefined,
+    winPoints: undefined,
   });
 
   useEffect(() => {
@@ -82,6 +84,8 @@ export function GamesSettings() {
         gameFormat: game.gameFormat,
         scoringDirection: game.scoringDirection,
         teamsPerMatch: game.teamsPerMatch,
+        unit: game.unit,
+        winPoints: game.winPoints,
       });
     } else {
       setEditingGame(null);
@@ -90,9 +94,11 @@ export function GamesSettings() {
         description: "",
         rules: "",
         gameType: GameType.SCORE,
-        gameFormat: GameFormat.ROUND_ROBIN,
+        gameFormat: GameFormat.ELIMINATION, // SCORE defaults to ELIMINATION
         scoringDirection: ScoringDirection.DESC,
         teamsPerMatch: 2,
+        unit: undefined,
+        winPoints: 10, // Default win points for SCORE games
       });
     }
     setIsModalOpen(true);
@@ -208,35 +214,92 @@ export function GamesSettings() {
             value={formData.gameType}
             onChange={(e) => {
               const gameType = e.target.value as GameType;
-              setFormData({
-                ...formData,
-                gameType,
-                scoringDirection: gameType === GameType.TIME ? ScoringDirection.ASC : ScoringDirection.DESC,
-              });
+              let newData: Partial<CreateGameDto> = { gameType };
+              
+              // Auto-set scoring direction
+              if (gameType === GameType.TIME) {
+                newData.scoringDirection = ScoringDirection.ASC;
+              } else {
+                newData.scoringDirection = ScoringDirection.DESC;
+              }
+              
+              // Auto-set format based on game type
+              if (gameType === GameType.SCORE) {
+                newData.gameFormat = GameFormat.ELIMINATION;
+                newData.teamsPerMatch = 2;
+                if (!formData.winPoints) {
+                  newData.winPoints = 10;
+                }
+              } else {
+                // TIME or POINTS
+                newData.gameFormat = GameFormat.ROUND_ROBIN;
+              }
+              
+              setFormData({ ...formData, ...newData });
             }}
             required
           >
             <option value={GameType.TIME}>Temps (meilleur temps gagne)</option>
-            <option value={GameType.SCORE}>Score (plus haut score gagne)</option>
-            <option value={GameType.POINTS}>Points (plus de points gagne)</option>
+            <option value={GameType.SCORE}>Score compétitif (élimination directe)</option>
+            <option value={GameType.POINTS}>Quantité (ex: mL, kg, ...)</option>
           </Select>
+          
           <Select
             label="Format"
             value={formData.gameFormat}
             onChange={(e) => setFormData({ ...formData, gameFormat: e.target.value as GameFormat })}
             required
+            disabled={formData.gameType === GameType.SCORE || formData.gameType === GameType.TIME || formData.gameType === GameType.POINTS}
+            title={
+              formData.gameType === GameType.SCORE 
+                ? "Les jeux de type SCORE sont toujours en élimination directe" 
+                : formData.gameType === GameType.TIME || formData.gameType === GameType.POINTS
+                ? "Les jeux de type TEMPS et QUANTITÉ sont toujours en round-robin"
+                : ""
+            }
           >
             <option value={GameFormat.ROUND_ROBIN}>Round-Robin (tous contre tous)</option>
             <option value={GameFormat.ELIMINATION}>Élimination directe (bracket)</option>
           </Select>
+          
           <Input
             label="Équipes par match"
             type="number"
-            min="2"
+            min={formData.gameType === GameType.TIME || formData.gameType === GameType.POINTS ? "1" : "2"}
             value={formData.teamsPerMatch}
             onChange={(e) => setFormData({ ...formData, teamsPerMatch: parseInt(e.target.value) })}
             required
+            disabled={formData.gameType === GameType.SCORE}
+            title={formData.gameType === GameType.SCORE ? "Les jeux de type SCORE ont toujours 2 équipes" : ""}
+            helperText={
+              formData.gameType === GameType.TIME || formData.gameType === GameType.POINTS
+                ? "Peut être 1 pour les jeux acceptant un seul participant"
+                : undefined
+            }
           />
+          
+          {formData.gameType === GameType.SCORE && (
+            <Input
+              label="Points pour une victoire"
+              type="number"
+              min="1"
+              value={formData.winPoints || 10}
+              onChange={(e) => setFormData({ ...formData, winPoints: parseInt(e.target.value) })}
+              required
+              helperText="Points attribués au vainqueur (et aux byes). Le perdant reçoit 0 points."
+            />
+          )}
+          
+          {formData.gameType === GameType.POINTS && (
+            <Input
+              label="Unité"
+              type="text"
+              value={formData.unit || ''}
+              onChange={(e) => setFormData({ ...formData, unit: e.target.value })}
+              placeholder="Ex: mL, kg, m, ..."
+              helperText="Unité de mesure pour afficher les résultats (optionnel)"
+            />
+          )}
           <div className="flex gap-3 mt-6">
             <Button type="submit" className="flex-1" disabled={saving}>
               {saving ? "Enregistrement..." : editingGame ? "Mettre à jour" : "Créer"}

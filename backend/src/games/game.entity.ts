@@ -37,6 +37,12 @@ export class Game {
   @Column({ nullable: true })
   teamsPerMatch: number;
 
+  @Column({ nullable: true })
+  unit: string; // Unit for quantity-based games (mL, kg, etc.)
+
+  @Column({ nullable: true })
+  winPoints: number; // Points awarded for a win in SCORE games (default: use Olympic system)
+
   @OneToMany(() => Match, match => match.game)
   matches: Match[];
 

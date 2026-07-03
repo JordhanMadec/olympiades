@@ -12,6 +12,7 @@ export * from './MatchTeamBadge';
 export * from './Modal';
 export * from './Navbar';
 export * from './RankingTable';
+export * from './ScoreInput';
 export * from './Select';
 export * from './Sidebar';
 export * from './StatCard';

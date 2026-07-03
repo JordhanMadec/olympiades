@@ -39,6 +39,8 @@ export interface Game {
   gameFormat: GameFormat;
   scoringDirection: ScoringDirection;
   teamsPerMatch: number;
+  unit?: string; // Unit for quantity-based games (mL, kg, etc.)
+  winPoints?: number; // Points for a win in SCORE games
   createdAt: string;
   updatedAt: string;
 }
@@ -122,6 +124,8 @@ export interface CreateGameDto {
   gameFormat: GameFormat;
   scoringDirection: ScoringDirection;
   teamsPerMatch: number;
+  unit?: string;
+  winPoints?: number;
 }
 
 export interface UpdateGameDto {
@@ -132,6 +136,8 @@ export interface UpdateGameDto {
   gameFormat?: GameFormat;
   scoringDirection?: ScoringDirection;
   teamsPerMatch?: number;
+  unit?: string;
+  winPoints?: number;
 }
 
 export interface CreateMatchDto {

@@ -1,6 +1,6 @@
 import { Dices, Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Button, ErrorMessage, Input, Loading, MatchCard, Modal, Select } from "../../components";
+import { Button, ErrorMessage, Loading, MatchCard, Modal, ScoreInput, Select } from "../../components";
 import { gamesService, matchesService, teamsService } from "../../services";
 import { Game, Match, MatchStatus, Team, UpdateScoresDto } from "../../types";
 
@@ -284,28 +284,30 @@ export function MatchesSettingsSimple() {
         >
           <form onSubmit={handleSubmitScores}>
             <div className="space-y-3 mb-6">
-              {scoringMatch.matchTeams.map((mt) => (
-                <div key={mt.teamId}>
-                  <div className="flex items-center gap-2 mb-1">
-                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: getTeamColor(mt.teamId) }} />
-                    <label className="text-zinc-200 text-sm font-medium">{getTeamName(mt.teamId)}</label>
+              {scoringMatch.matchTeams.map((mt) => {
+                const game = games.find(g => g.id === scoringMatch.gameId);
+                return (
+                  <div key={mt.teamId}>
+                    <div className="flex items-center gap-2 mb-1">
+                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: getTeamColor(mt.teamId) }} />
+                      <label className="text-zinc-200 text-sm font-medium">{getTeamName(mt.teamId)}</label>
+                    </div>
+                    {game && (
+                      <ScoreInput
+                        game={game}
+                        value={scores[mt.teamId] ? parseFloat(scores[mt.teamId]) : null}
+                        onChange={(val) => setScores({ ...scores, [mt.teamId]: val.toString() })}
+                        placeholder="Score"
+                      />
+                    )}
+                    {mt.rank && (
+                      <p className="text-xs text-zinc-500 -mt-3">
+                        Rang: {mt.rank} — Points: {mt.points}
+                      </p>
+                    )}
                   </div>
-                  <Input
-                    type="number"
-                    step="0.01"
-                    value={scores[mt.teamId] || ""}
-                    onChange={(e) => setScores({ ...scores, [mt.teamId]: e.target.value })}
-                    placeholder="Score"
-                    required
-                    disabled={scoringMatch.status === MatchStatus.COMPLETED}
-                  />
-                  {mt.rank && (
-                    <p className="text-xs text-zinc-500 -mt-3">
-                      Rang: {mt.rank} — Points: {mt.points}
-                    </p>
-                  )}
-                </div>
-              ))}
+                );
+              })}
             </div>
             <div className="flex gap-3">
               {scoringMatch.status !== MatchStatus.COMPLETED && (

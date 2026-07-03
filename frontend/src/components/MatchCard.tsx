@@ -17,7 +17,8 @@ interface MatchCardProps {
 export function MatchCard({ match, teams, games = [], actions, showGameName = false, hover = false }: MatchCardProps) {
   const getTeamName = (teamId: number) => teams.find((t) => t.id === teamId)?.name || "Équipe inconnue";
   const getTeamColor = (teamId: number) => teams.find((t) => t.id === teamId)?.color || "#888";
-  const gameName = games.find((g) => g.id === match.gameId)?.name;
+  const game = games.find((g) => g.id === match.gameId);
+  const gameName = game?.name;
 
   return (
     <Card hover={hover}>
@@ -44,6 +45,7 @@ export function MatchCard({ match, teams, games = [], actions, showGameName = fa
                 score={mt.rawScore ?? undefined}
                 rank={mt.rank ?? undefined}
                 isWinner={mt.rank === 1 && match.status === MatchStatus.COMPLETED}
+                game={game}
               />
             ))}
         </div>

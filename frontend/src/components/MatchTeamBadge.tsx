@@ -1,5 +1,7 @@
 import { Medal } from "lucide-react";
 import { TeamColorDot } from "./TeamColorDot";
+import { Game } from "../types";
+import { formatScore } from "../utils/formatters";
 
 interface MatchTeamBadgeProps {
   name: string;
@@ -8,14 +10,24 @@ interface MatchTeamBadgeProps {
   rank?: number;
   isWinner?: boolean;
   size?: "sm" | "md" | "lg";
+  game?: Game; // Optional game for score formatting
 }
 
-export function MatchTeamBadge({ name, color, score, isWinner = false, size = "md" }: MatchTeamBadgeProps) {
+export function MatchTeamBadge({ 
+  name, 
+  color, 
+  score, 
+  isWinner = false, 
+  size = "md",
+  game 
+}: MatchTeamBadgeProps) {
   const sizeClasses = {
     sm: "text-xs px-2 py-1",
     md: "text-sm px-2.5 py-1.5",
     lg: "text-base px-3 py-2",
   };
+
+  const formattedScore = game && score != null ? formatScore(score, game) : score?.toString();
 
   return (
     <div
@@ -27,7 +39,7 @@ export function MatchTeamBadge({ name, color, score, isWinner = false, size = "m
     >
       <TeamColorDot color={color} size="sm" />
       <span className="text-zinc-300">{name}</span>
-      {score != null && <span className="text-primary-400 font-bold">{score}</span>}
+      {formattedScore != null && <span className="text-primary-400 font-bold">{formattedScore}</span>}
       {isWinner && <Medal className="h-3.5 w-3.5 text-yellow-400" />}
     </div>
   );

@@ -153,12 +153,23 @@ export class MatchesService {
       rank: index + 1,
     }));
 
-    // Calculate olympic points based on rank
-    const pointsMap = [10, 8, 6, 5, 4, 3, 2, 1];
-    const scoresWithPoints = rankedScores.map((score) => ({
-      ...score,
-      points: pointsMap[score.rank - 1] || 0,
-    }));
+    // Calculate points based on game type
+    let scoresWithPoints;
+    if (game.gameType === 'SCORE') {
+      // For SCORE games: winner gets winPoints (or 10 if not set), loser gets 0
+      const winPoints = game.winPoints || 10;
+      scoresWithPoints = rankedScores.map((score) => ({
+        ...score,
+        points: score.rank === 1 ? winPoints : 0,
+      }));
+    } else {
+      // For TIME/POINTS games: use Olympic points system
+      const pointsMap = [10, 8, 6, 5, 4, 3, 2, 1];
+      scoresWithPoints = rankedScores.map((score) => ({
+        ...score,
+        points: pointsMap[score.rank - 1] || 0,
+      }));
+    }
 
     // Update match teams
     for (const scoreData of scoresWithPoints) {
@@ -314,11 +325,16 @@ export class MatchesService {
 
         // Create match teams with appropriate data
         for (const teamId of matchTeamIds) {
+          // For byes in SCORE games, award winPoints; for other games, award 1 point
+          const byePoints = matchTeamIds.length === 1
+            ? (game.gameType === 'SCORE' ? (game.winPoints || 10) : 1)
+            : 0;
+
           const matchTeamData: Partial<MatchTeam> = {
             matchId: savedMatch.id,
             teamId,
             rank: matchTeamIds.length === 1 ? 1 : undefined,
-            points: matchTeamIds.length === 1 ? 1 : 0,
+            points: byePoints,
           };
           const matchTeam = this.matchTeamsRepository.create(matchTeamData);
           await this.matchTeamsRepository.save(matchTeam);
