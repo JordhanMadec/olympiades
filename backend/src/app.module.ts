@@ -11,6 +11,7 @@ import { GamesModule } from "./games/games.module";
 import { MatchesModule } from "./matches/matches.module";
 import { RankingsModule } from "./rankings/rankings.module";
 import { DrawsModule } from "./draws/draws.module";
+import { AppController } from "./app.controller";
 
 @Module({
   imports: [
@@ -47,5 +48,6 @@ import { DrawsModule } from "./draws/draws.module";
     RankingsModule,
     DrawsModule,
   ],
+  controllers: [AppController],
 })
 export class AppModule {}
