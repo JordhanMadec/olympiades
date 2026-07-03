@@ -23,8 +23,8 @@ export function MatchTeamBadge({ name, color, score, isWinner = false, size = "m
 
   return (
     <div
-      className={`flex items-center gap-2 rounded-lg ${sizeClasses[size]} ${
-        isWinner ? "bg-primary-500/10 border-primary-500/30 border" : "bg-surface-200 "
+      className={`flex items-center gap-2 rounded-lg  ${sizeClasses[size]} ${
+        isWinner ? "bg-primary-500/20 " : "bg-surface-200"
       }`}
     >
       <TeamColorRing color={color} size="sm" />
