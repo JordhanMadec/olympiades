@@ -18,11 +18,23 @@ import { DrawsModule } from './draws/draws.module';
       isGlobal: true,
     }),
     TypeOrmModule.forRoot({
-      type: 'sqlite',
-      database: 'olympiades.sqlite',
+      type: process.env.DATABASE_TYPE === 'postgres' ? 'postgres' : 'sqlite',
+      // PostgreSQL config
+      host: process.env.DATABASE_HOST,
+      port: parseInt(process.env.DATABASE_PORT || '5432'),
+      username: process.env.DATABASE_USER,
+      password: process.env.DATABASE_PASSWORD,
+      database: process.env.DATABASE_NAME || 'olympiades.sqlite',
+      // SQLite fallback (for local development)
+      ...(process.env.DATABASE_TYPE !== 'postgres' && { 
+        database: 'olympiades.sqlite' 
+      }),
       entities: [Team, Game, Match, MatchTeam, TeamMatchHistory],
-      synchronize: true, // Only for development
-      logging: false, // Disable SQL logging
+      synchronize: process.env.NODE_ENV !== 'production', // Disable in production
+      logging: process.env.NODE_ENV === 'development',
+      ssl: process.env.DATABASE_SSL === 'true' ? {
+        rejectUnauthorized: false
+      } : false,
     }),
     TeamsModule,
     GamesModule,
