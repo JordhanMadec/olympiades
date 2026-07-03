@@ -3,14 +3,16 @@ import { ArrowLeft } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Card, ErrorMessage, Loading, MatchCard, StatCard } from "../components";
-import { gamesService, matchesService, teamsService } from "../services";
-import { Game, Match, MatchStatus, Team } from "../types";
+import { gamesService, matchesService, rankingsService, teamsService } from "../services";
+import { Game, GameRanking, Match, MatchStatus, Team } from "../types";
 
 export function TeamDetailPage() {
   const { id } = useParams<{ id: string }>();
   const teamId = parseInt(id!);
 
   const [team, setTeam] = useState<Team | null>(null);
+  const [teams, setTeams] = useState<Team[]>([]);
+  const [ranking, setRanking] = useState<GameRanking | null>(null);
   const [matches, setMatches] = useState<Match[]>([]);
   const [games, setGames] = useState<Game[]>([]);
   const [loading, setLoading] = useState(true);
@@ -23,10 +25,11 @@ export function TeamDetailPage() {
   const loadData = async () => {
     try {
       setLoading(true);
-      const [teamsData, matchesData, gamesData] = await Promise.all([
+      const [teamsData, matchesData, gamesData, rankingData] = await Promise.all([
         teamsService.getAll(),
         matchesService.getAll(),
         gamesService.getAll(),
+        rankingsService.getGeneralRanking(),
       ]);
       const found = teamsData.find((t) => t.id === teamId);
       if (!found) {
@@ -34,8 +37,10 @@ export function TeamDetailPage() {
         return;
       }
       setTeam(found);
+      setTeams(teamsData);
       setMatches(matchesData.filter((m) => m.matchTeams.some((mt) => mt.teamId === teamId)));
       setGames(gamesData);
+      setRanking(rankingData);
       setError(null);
     } catch (err) {
       setError("Erreur lors du chargement");
@@ -50,10 +55,12 @@ export function TeamDetailPage() {
   if (!team) return null;
 
   const completedMatches = matches.filter((m) => m.status === MatchStatus.COMPLETED);
-  const totalPoints = completedMatches.reduce((sum, m) => {
-    const mt = m.matchTeams.find((x) => x.teamId === teamId);
-    return sum + (mt?.points || 0);
-  }, 0);
+  const totalPoints =
+    completedMatches.reduce((sum, m) => {
+      const mt = m.matchTeams.find((x) => x.teamId === teamId);
+      return sum + (mt?.points || 0);
+    }, 0) + " pts";
+  const rank = (ranking?.entries.findIndex((entry) => entry.teamId === teamId) || 0) + 1;
 
   return (
     <div>
@@ -74,9 +81,9 @@ export function TeamDetailPage() {
 
       {/* Stats */}
       <div className="grid grid-cols-3 gap-4 mb-8">
-        <StatCard label="Épreuves" value={completedMatches.length} />
+        <StatCard label="Rencontres" value={completedMatches.length + " / " + matches.length} />
         <StatCard label="Points" value={totalPoints} />
-        <StatCard label="Classement" value="-" />
+        <StatCard label="Classement" value={rank} />
       </div>
 
       {/* Matches */}
@@ -90,7 +97,7 @@ export function TeamDetailPage() {
           <div className="flex flex-col gap-3">
             {matches.map((match) => (
               <Link to={`/games/${match.gameId}`}>
-                <MatchCard key={match.id} match={match} teams={[team]} games={games} showGameName hover />
+                <MatchCard key={match.id} match={match} teams={teams} games={games} showGameName hover />
               </Link>
             ))}
           </div>
