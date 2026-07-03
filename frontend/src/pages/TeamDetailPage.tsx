@@ -74,7 +74,7 @@ export function TeamDetailPage() {
 
       {/* Stats */}
       <div className="grid grid-cols-3 gap-4 mb-8">
-        <StatCard label="Épreuves terminées" value={completedMatches.length} />
+        <StatCard label="Épreuves" value={completedMatches.length} />
         <StatCard label="Points" value={totalPoints} />
         <StatCard label="Classement" value="-" />
       </div>

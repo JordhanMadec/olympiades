@@ -77,17 +77,18 @@ export function ProgrammePage() {
     <div>
       {/* Header */}
       <div className="flex flex-col gap-4 mb-6 sm:mb-8">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <div className="flex-1">
             <h1 className="text-xl sm:text-2xl font-bold text-white">Rencontres</h1>
             <p className="text-zinc-500 text-sm mt-1">
               {filteredByStatus.length} rencontre{filteredByStatus.length !== 1 ? "s" : ""}{" "}
-              {selectedStatus === "completed" ? "terminée" : "en attente"}{filteredByStatus.length > 1 ? "s" : ""}
+              {selectedStatus === "completed" ? "terminée" : "en attente"}
+              {filteredByStatus.length > 1 ? "s" : ""}
             </p>
           </div>
 
           {/* Game filter dropdown */}
-          <div className="w-full sm:w-64">
+          <div className="w-full sm:w-auto">
             <GameSelect
               games={games}
               selectedGameId={selectedGameId}
@@ -96,36 +97,36 @@ export function ProgrammePage() {
               allOptionLabel="Toutes les épreuves"
             />
           </div>
-        </div>
 
-        {/* Status filter tabs */}
-        <div className="flex items-center gap-2 bg-surface-100 border border-surface-border rounded-xl p-1">
-          <button
-            onClick={() => setSelectedStatus("pending")}
-            className={`flex-1 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-              selectedStatus === "pending"
-                ? "bg-primary-500 text-white shadow-lg shadow-primary-500/20"
-                : "text-zinc-400 hover:text-white"
-            }`}
-          >
-            En attente
-          </button>
-          <button
-            onClick={() => setSelectedStatus("completed")}
-            className={`flex-1 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-              selectedStatus === "completed"
-                ? "bg-primary-500 text-white shadow-lg shadow-primary-500/20"
-                : "text-zinc-400 hover:text-white"
-            }`}
-          >
-            Terminées
-          </button>
+          {/* Status filter tabs */}
+          <div className="w-full sm:w-auto flex items-center gap-2 bg-surface-100 border border-surface-border rounded-xl p-1">
+            <button
+              onClick={() => setSelectedStatus("pending")}
+              className={`flex-1 px-4 py-1 rounded-lg text-sm font-medium transition-all ${
+                selectedStatus === "pending"
+                  ? "bg-primary-500 text-white shadow-lg shadow-primary-500/20"
+                  : "text-zinc-400 hover:text-white"
+              }`}
+            >
+              En attente
+            </button>
+            <button
+              onClick={() => setSelectedStatus("completed")}
+              className={`flex-1 px-4 py-1 rounded-lg text-sm font-medium transition-all ${
+                selectedStatus === "completed"
+                  ? "bg-primary-500 text-white shadow-lg shadow-primary-500/20"
+                  : "text-zinc-400 hover:text-white"
+              }`}
+            >
+              Terminées
+            </button>
+          </div>
         </div>
       </div>
 
       {filteredByStatus.length === 0 ? (
         <Card className="p-16 text-center">
-          <Calendar className="h-12 sm:h-16 mx-auto mb-4 text-zinc-500" />
+          <Calendar className="w-12 h-12 sm:h-16 sm:w-16 mx-auto mb-2 text-zinc-500" />
           <p className="text-zinc-500">
             Aucune rencontre {selectedStatus === "completed" ? "terminée" : "en attente"} pour le moment
           </p>

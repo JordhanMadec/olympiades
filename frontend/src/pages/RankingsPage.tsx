@@ -77,7 +77,7 @@ export function RankingsPage() {
         </div>
 
         {/* Game filter dropdown */}
-        <div className="w-full sm:w-64">
+        <div className="w-full sm:w-auto">
           <GameSelect
             games={games}
             selectedGameId={selectedGameId}

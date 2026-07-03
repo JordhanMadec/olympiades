@@ -25,7 +25,7 @@ export function MatchCard({ match, teams, games = [], actions, showGameName = fa
       <div className="flex items-center mb-3">
         <div className="flex-1 flex items-center gap-2">
           <span className="text-white font-medium text-sm">
-            {showGameName && gameName ? gameName : `Match #${match.matchNumber}`}
+            {showGameName && gameName ? gameName : `Match ${match.matchNumber}`}
           </span>
           {match.round && <span className="text-gray-500 text-xs">Tour {match.round}</span>}
         </div>
