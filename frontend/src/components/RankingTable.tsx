@@ -36,26 +36,28 @@ export function RankingTable({ entries, emptyMessage = "Aucun résultat pour le 
           <Link
             key={entry.teamId}
             to={`/teams/${entry.teamId}`}
-            className="flex items-center gap-4 p-4 hover:bg-surface-200 transition-colors grid-cols-12"
+            className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 hover:bg-surface-200 transition-colors"
           >
             {/* Rank */}
-            <div className="w-6 flex justify-center">
+            <div className="w-5 sm:w-6 flex justify-center flex-shrink-0">
               {index < 3 ? (
-                <Medal className={`w-6 h-6 ${badge.color}`} />
+                <Medal className={`w-5 h-5 sm:w-6 sm:h-6 ${badge.color}`} />
               ) : (
-                <span className="text-zinc-500 ">{index + 1}</span>
+                <span className="text-zinc-500 text-sm">{index + 1}</span>
               )}
             </div>
 
             {/* Team */}
-            <div className="flex items-center gap-2 flex-1">
-              <TeamColorRing color={entry.teamColor} size="sm" />
-              <span className="font-semibold text-white">{entry.teamName}</span>
+            <div className="flex items-center gap-2 flex-1 min-w-0">
+              <div className="flex-shrink-0">
+                <TeamColorRing color={entry.teamColor} size="sm" />
+              </div>
+              <span className="font-semibold text-white text-sm sm:text-base truncate">{entry.teamName}</span>
             </div>
 
             {/* Points */}
-            <div className="text-right">
-              <span>{entry.totalPoints} pts</span>
+            <div className="text-right flex-shrink-0">
+              <span className="text-sm sm:text-base font-medium">{entry.totalPoints} pts</span>
             </div>
           </Link>
         );

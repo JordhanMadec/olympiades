@@ -67,19 +67,21 @@ export function ProgrammePage() {
   return (
     <div>
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-2xl font-bold text-white">Programme</h1>
-          <p className="text-zinc-500 text-sm mt-1">
-            {matches.length} rencontre{matches.length !== 1 ? "s" : ""}
-          </p>
+      <div className="flex flex-col gap-4 mb-6 sm:mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 className="text-xl sm:text-2xl font-bold text-white">Programme</h1>
+            <p className="text-zinc-500 text-sm mt-1">
+              {matches.length} rencontre{matches.length !== 1 ? "s" : ""}
+            </p>
+          </div>
         </div>
 
         {/* Filter tabs */}
-        <div className="flex items-center gap-2 bg-surface-100 border border-surface-border rounded-xl p-1 flex-wrap max-w-lg justify-end">
+        <div className="flex items-center gap-2 bg-surface-100 border border-surface-border rounded-xl p-1 overflow-x-auto">
           <button
             onClick={() => setSelectedGameId(null)}
-            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
               !selectedGameId
                 ? "bg-primary-500 text-white shadow-lg shadow-primary-500/20"
                 : "text-zinc-400 hover:text-white"
@@ -91,7 +93,7 @@ export function ProgrammePage() {
             <button
               key={game.id}
               onClick={() => setSelectedGameId(game.id)}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
                 selectedGameId === game.id
                   ? "bg-primary-500 text-white shadow-lg shadow-primary-500/20"
                   : "text-zinc-400 hover:text-white"

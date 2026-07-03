@@ -68,16 +68,17 @@ export function RankingsPage() {
   return (
     <div>
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-white">Classement</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-white">Classement</h1>
           <p className="text-zinc-500 text-sm mt-1">
             {selectedGameId ? games.find((g) => g.id === selectedGameId)?.name || "Par épreuve" : "Classement général"}
           </p>
         </div>
 
         {/* Filter tabs */}
-        <div className="flex items-center gap-2 bg-surface-100 border border-surface-border rounded-xl p-1">
+        <div className="flex items-center gap-2 bg-surface-100 border border-surface-border rounded-xl p-1 overflow-x-auto"
+>
           <button
             onClick={() => handleGameChange("all")}
             className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all ${

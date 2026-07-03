@@ -34,9 +34,9 @@ export function TeamsPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-white">Équipes</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-white">Équipes</h1>
           <p className="text-zinc-500 text-sm mt-1">
             {teams.length} équipe{teams.length !== 1 ? "s" : ""}
           </p>
@@ -44,13 +44,13 @@ export function TeamsPage() {
       </div>
 
       {teams.length === 0 ? (
-        <div className="bg-surface-100 border border-surface-border rounded-2xl p-16 text-center">
-          <Users className="h-16 w-16 mx-auto mb-4 text-zinc-500" />
+        <div className="bg-surface-100 border border-surface-border rounded-2xl p-8 sm:p-16 text-center">
+          <Users className="h-12 w-12 sm:h-16 sm:w-16 mx-auto mb-4 text-zinc-500" />
           <p className="text-zinc-500">Aucune équipe pour le moment</p>
           <p className="text-zinc-600 text-sm mt-1">Créez des équipes dans les paramètres</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3 sm:gap-4">
           {teams.map((team) => (
             <Link key={team.id} to={`/teams/${team.id}`}>
               <Card hover>
