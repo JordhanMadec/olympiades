@@ -70,7 +70,7 @@ export function ProgrammePage() {
       <div className="flex flex-col gap-4 mb-6 sm:mb-8">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-xl sm:text-2xl font-bold text-white">Programme</h1>
+            <h1 className="text-xl sm:text-2xl font-bold text-white">Rencontres</h1>
             <p className="text-zinc-500 text-sm mt-1">
               {matches.length} rencontre{matches.length !== 1 ? "s" : ""}
             </p>

@@ -158,7 +158,7 @@ export function MatchesSettingsSimple() {
       {/* Action buttons */}
       <div className="flex justify-between items-center gap-2 mb-4">
         <div>
-          <div className="font-bold">Programme</div>
+          <div className="font-bold">Rencontres</div>
           <div className="text-zinc-500 text-sm">
             {matches.length} rencontre{matches.length > 1 ? "s" : ""}
           </div>
@@ -285,7 +285,7 @@ export function MatchesSettingsSimple() {
           <form onSubmit={handleSubmitScores}>
             <div className="space-y-3 mb-6">
               {scoringMatch.matchTeams.map((mt) => {
-                const game = games.find(g => g.id === scoringMatch.gameId);
+                const game = games.find((g) => g.id === scoringMatch.gameId);
                 return (
                   <div key={mt.teamId}>
                     <div className="flex items-center gap-2 mb-1">

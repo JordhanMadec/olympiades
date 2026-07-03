@@ -1,6 +1,6 @@
-import { BowArrow, Calendar, LucideIcon, LogOut, ShieldCog, Trophy, Users, X } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { BowArrow, Calendar, LogOut, LucideIcon, ShieldCog, Trophy, Users, X } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 
 interface NavItem {
   path: string;
@@ -17,7 +17,7 @@ const navItems: NavItem[] = [
   { path: "/rankings", label: "Classement", icon: Trophy },
   { path: "/teams", label: "Équipes", icon: Users },
   { path: "/games", label: "Épreuves", icon: BowArrow },
-  { path: "/programme", label: "Programme", icon: Calendar },
+  { path: "/programme", label: "Rencontres", icon: Calendar },
 ];
 
 const adminItems: NavItem[] = [{ path: "/admin", label: "Admin", icon: ShieldCog }];
@@ -114,7 +114,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                 </Link>
               );
             })}
-            
+
             {/* Logout button */}
             <button
               onClick={handleLogout}

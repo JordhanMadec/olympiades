@@ -12,7 +12,7 @@ export function AdminPage() {
   const tabs: { id: Tab; label: string; Icon: any }[] = [
     { id: "teams", label: "Équipes", Icon: Users },
     { id: "games", label: "Épreuves", Icon: BowArrow },
-    { id: "matches", label: "Programme", Icon: Calendar },
+    { id: "matches", label: "Rencontres", Icon: Calendar },
   ];
 
   return (
