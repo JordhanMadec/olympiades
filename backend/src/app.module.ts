@@ -11,6 +11,7 @@ import { GamesModule } from "./games/games.module";
 import { MatchesModule } from "./matches/matches.module";
 import { RankingsModule } from "./rankings/rankings.module";
 import { DrawsModule } from "./draws/draws.module";
+import { AuthModule } from "./auth/auth.module";
 import { AppController } from "./app.controller";
 
 @Module({
@@ -42,6 +43,7 @@ import { AppController } from "./app.controller";
             logging: process.env.NODE_ENV === "development",
           },
     ),
+    AuthModule,
     TeamsModule,
     GamesModule,
     MatchesModule,

@@ -11,6 +11,7 @@ export * from './MatchCard';
 export * from './MatchTeamBadge';
 export * from './Modal';
 export * from './Navbar';
+export * from './ProtectedRoute';
 export * from './RankingTable';
 export * from './ScoreInput';
 export * from './Select';

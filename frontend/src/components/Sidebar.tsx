@@ -1,5 +1,6 @@
-import { BowArrow, Calendar, LucideIcon, ShieldCog, Trophy, Users } from "lucide-react";
+import { BowArrow, Calendar, LucideIcon, LogOut, ShieldCog, Trophy, Users } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface NavItem {
   path: string;
@@ -18,6 +19,7 @@ const adminItems: NavItem[] = [{ path: "/admin", label: "Admin", icon: ShieldCog
 
 export function Sidebar() {
   const location = useLocation();
+  const { isAuthenticated, logout } = useAuth();
 
   const isActive = (path: string) => {
     if (path === "/rankings" && location.pathname === "/") return true;
@@ -58,23 +60,37 @@ export function Sidebar() {
 
         <div className="flex-1"></div>
 
-        {adminItems.map(({ path, label, icon: Icon }) => {
-          const active = isActive(path);
-          return (
-            <Link
-              key={path}
-              to={path}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 ${
-                active
-                  ? "bg-primary-500 text-white shadow-lg shadow-primary-500/20"
-                  : "text-zinc-400 hover:text-white hover:bg-surface-200"
-              }`}
+        {/* Admin section - visible seulement si authentifié */}
+        {isAuthenticated && (
+          <>
+            {adminItems.map(({ path, label, icon: Icon }) => {
+              const active = isActive(path);
+              return (
+                <Link
+                  key={path}
+                  to={path}
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 ${
+                    active
+                      ? "bg-primary-500 text-white shadow-lg shadow-primary-500/20"
+                      : "text-zinc-400 hover:text-white hover:bg-surface-200"
+                  }`}
+                >
+                  <Icon className="w-4 h-4" />
+                  {label}
+                </Link>
+              );
+            })}
+            
+            {/* Logout button */}
+            <button
+              onClick={logout}
+              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-zinc-400 hover:text-white hover:bg-surface-200 transition-all duration-150"
             >
-              <Icon className="w-4 h-4" />
-              {label}
-            </Link>
-          );
-        })}
+              <LogOut className="w-4 h-4" />
+              Déconnexion
+            </button>
+          </>
+        )}
       </nav>
     </aside>
   );
