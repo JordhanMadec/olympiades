@@ -2,11 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0801f446-6e67-4e0d-8457-b5199c0ae79b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/RAILWAY_CHECKLIST.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RAILWAY_GITHUB_GUIDE.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RAILWAY_VISUAL.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/START_HERE.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/app.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/app.module.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

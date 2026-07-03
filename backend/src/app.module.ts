@@ -25,7 +25,6 @@ import { DrawsModule } from "./draws/draws.module";
             port: parseInt(process.env.DATABASE_PORT || "5432"),
             username: process.env.DATABASE_USER,
             password: process.env.DATABASE_PASSWORD,
-            database: process.env.DATABASE_NAME,
             entities: [Team, Game, Match, MatchTeam, TeamMatchHistory],
             synchronize: process.env.NODE_ENV !== "production",
             logging: process.env.NODE_ENV === "development",
