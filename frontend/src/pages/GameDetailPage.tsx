@@ -87,13 +87,13 @@ export function GameDetailPage() {
             <p className="text-zinc-500 text-sm">Aucune rencontre</p>
           </Card>
         ) : game.gameFormat === GameFormat.ELIMINATION ? (
-          <Card className="p-6">
+          <div>
             <BracketViewer matches={matches} teams={teams} />
-          </Card>
+          </div>
         ) : (
           <div className="flex flex-col gap-3">
             {matches.map((match) => (
-              <MatchCard key={match.id} match={match} teams={teams} />
+              <MatchCard key={match.id} match={match} teams={teams} games={[game]} />
             ))}
           </div>
         )}

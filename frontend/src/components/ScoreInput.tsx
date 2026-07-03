@@ -1,6 +1,6 @@
-import React from 'react';
-import { Game, GameType } from '../types';
-import { parseTime, formatTime } from '../utils/formatters';
+import React from "react";
+import { Game, GameType } from "../types";
+import { formatTime, parseTime } from "../utils/formatters";
 
 interface ScoreInputProps {
   game: Game;
@@ -10,14 +10,8 @@ interface ScoreInputProps {
   className?: string;
 }
 
-export const ScoreInput: React.FC<ScoreInputProps> = ({
-  game,
-  value,
-  onChange,
-  placeholder,
-  className = '',
-}) => {
-  const [timeString, setTimeString] = React.useState('');
+export const ScoreInput: React.FC<ScoreInputProps> = ({ game, value, onChange, placeholder, className = "" }) => {
+  const [timeString, setTimeString] = React.useState("");
 
   React.useEffect(() => {
     if (game.gameType === GameType.TIME && value !== null) {
@@ -28,7 +22,7 @@ export const ScoreInput: React.FC<ScoreInputProps> = ({
   const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
     setTimeString(input);
-    
+
     // Try to parse and update the value
     const seconds = parseTime(input);
     onChange(seconds);
@@ -46,12 +40,10 @@ export const ScoreInput: React.FC<ScoreInputProps> = ({
           type="text"
           value={timeString}
           onChange={handleTimeChange}
-          placeholder={placeholder || 'MM:SS ou HH:MM:SS'}
-          className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${className}`}
+          placeholder={placeholder || "MM:SS ou HH:MM:SS"}
+          className={`w-full px-3 py-2 border bg-surface-200 border-surface-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${className}`}
         />
-        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">
-          ⏱️
-        </span>
+        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">⏱️</span>
       </div>
     );
   }
@@ -61,11 +53,11 @@ export const ScoreInput: React.FC<ScoreInputProps> = ({
       <div className="relative">
         <input
           type="number"
-          value={value ?? ''}
+          value={value ?? ""}
           onChange={handleNumberChange}
           step="0.01"
-          placeholder={placeholder || '0'}
-          className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${className}`}
+          placeholder={placeholder || "0"}
+          className={`w-full px-3 py-2 border bg-surface-200 border-surface-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${className}`}
         />
         {game.unit && (
           <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm font-medium">
@@ -80,10 +72,10 @@ export const ScoreInput: React.FC<ScoreInputProps> = ({
   return (
     <input
       type="number"
-      value={value ?? ''}
+      value={value ?? ""}
       onChange={handleNumberChange}
-      placeholder={placeholder || '0'}
-      className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${className}`}
+      placeholder={placeholder || "0"}
+      className={`w-full px-3 py-2 border bg-surface-200 border-surface-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${className}`}
     />
   );
 };

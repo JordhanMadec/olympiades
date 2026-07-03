@@ -1,4 +1,6 @@
-import { Medal } from "lucide-react";
+import { Card } from "@/components/Card.tsx";
+import { TeamColorRing } from "@/components/TeamColorRing.tsx";
+import { getRoundName } from "@/utils/formatters.ts";
 import { Match, MatchStatus, Team } from "../types";
 
 interface BracketViewerProps {
@@ -14,25 +16,21 @@ interface BracketRound {
 export function BracketViewer({ matches, teams }: BracketViewerProps) {
   // Group matches by round
   const rounds: BracketRound[] = [];
-  const roundNumbers = [...new Set(matches.map(m => m.round).filter(r => r !== undefined))].sort((a, b) => (b || 0) - (a || 0));
+  const roundNumbers = [...new Set(matches.map((m) => m.round).filter((r) => r !== undefined))].sort(
+    (a, b) => (b || 0) - (a || 0),
+  );
 
-  roundNumbers.forEach(round => {
+  roundNumbers.forEach((round) => {
     rounds.push({
       round: round || 0,
-      matches: matches.filter(m => m.round === round).sort((a, b) => (a.bracketPosition || 0) - (b.bracketPosition || 0)),
+      matches: matches
+        .filter((m) => m.round === round)
+        .sort((a, b) => (a.bracketPosition || 0) - (b.bracketPosition || 0)),
     });
   });
 
-  const getTeamName = (teamId: number) => teams.find(t => t.id === teamId)?.name || "?";
-  const getTeamColor = (teamId: number) => teams.find(t => t.id === teamId)?.color || "#888";
-
-  const getRoundName = (round: number) => {
-    const totalRounds = Math.max(...roundNumbers);
-    if (round === 1) return "Finale";
-    if (round === 2) return "Demi-finales";
-    if (round === 3) return "Quarts de finale";
-    return `Tour ${totalRounds - round + 1}`;
-  };
+  const getTeamName = (teamId: number) => teams.find((t) => t.id === teamId)?.name || "?";
+  const getTeamColor = (teamId: number) => teams.find((t) => t.id === teamId)?.color || "#888";
 
   return (
     <div className="overflow-x-auto">
@@ -44,21 +42,7 @@ export function BracketViewer({ matches, teams }: BracketViewerProps) {
             </h3>
             <div className="space-y-4">
               {roundData.matches.map((match) => (
-                <div key={match.id} className="bg-surface-100 border border-surface-border rounded-lg overflow-hidden">
-                  {/* Match header */}
-                  <div className="px-3 py-2 bg-surface-200 border-b border-surface-border flex items-center justify-between">
-                    <span className="text-xs text-zinc-500">Match #{match.matchNumber}</span>
-                    {match.status === MatchStatus.COMPLETED && (
-                      <span className="text-xs text-emerald-400">Terminé</span>
-                    )}
-                    {match.status === MatchStatus.PENDING && match.matchTeams.length > 0 && (
-                      <span className="text-xs text-zinc-500">En attente</span>
-                    )}
-                    {match.matchTeams.length === 0 && (
-                      <span className="text-xs text-zinc-600 italic">À venir</span>
-                    )}
-                  </div>
-
+                <Card padding="none" key={match.id} className="overflow-hidden">
                   {/* Teams */}
                   <div className="divide-y divide-surface-border">
                     {match.matchTeams.length === 0 ? (
@@ -67,21 +51,26 @@ export function BracketViewer({ matches, teams }: BracketViewerProps) {
                       </div>
                     ) : match.matchTeams.length === 1 ? (
                       <>
-                        <div className="px-3 py-2.5 flex items-center justify-between">
+                        <div
+                          className={`p-3 flex items-center justify-between ${
+                            match.status === MatchStatus.COMPLETED ? "bg-primary-500/20" : ""
+                          }`}
+                        >
                           <div className="flex items-center gap-2">
-                            <div
-                              className="w-2.5 h-2.5 rounded-full"
-                              style={{ backgroundColor: getTeamColor(match.matchTeams[0].teamId) }}
-                            />
+                            <TeamColorRing color={getTeamColor(match.matchTeams[0].teamId)} size="sm" />
                             <span className="text-white text-sm font-medium">
                               {getTeamName(match.matchTeams[0].teamId)}
                             </span>
                           </div>
-                          <span className="text-zinc-600 text-xs italic">Qualifié</span>
+                          {match.status === MatchStatus.COMPLETED && (
+                            <span className="text-primary-500 text-xs">Qualifié</span>
+                          )}
                         </div>
-                        <div className="px-3 py-3 text-center text-zinc-600 text-sm italic">
-                          En attente
-                        </div>
+                        {match.status === MatchStatus.COMPLETED ? (
+                          <div className="px-3 py-3  text-sm ">Exempt</div>
+                        ) : (
+                          <div className="px-3 py-3 text-zinc-500 text-sm italic">En attente</div>
+                        )}
                       </>
                     ) : (
                       match.matchTeams
@@ -89,17 +78,13 @@ export function BracketViewer({ matches, teams }: BracketViewerProps) {
                         .map((mt) => (
                           <div
                             key={mt.id}
-                            className={`px-3 py-2.5 flex items-center justify-between ${
-                              mt.rank === 1 && match.status === MatchStatus.COMPLETED
-                                ? "bg-primary-500/5"
-                                : ""
+                            className={`p-3 flex items-center justify-between ${
+                              mt.rank === 1 && match.status === MatchStatus.COMPLETED ? "bg-primary-500/20" : ""
                             }`}
                           >
                             <div className="flex items-center gap-2">
-                              <div
-                                className="w-2.5 h-2.5 rounded-full"
-                                style={{ backgroundColor: getTeamColor(mt.teamId) }}
-                              />
+                              <TeamColorRing color={getTeamColor(mt.teamId)} size="sm" />
+
                               <span
                                 className={`text-sm font-medium ${
                                   mt.rank === 1 && match.status === MatchStatus.COMPLETED
@@ -112,19 +97,18 @@ export function BracketViewer({ matches, teams }: BracketViewerProps) {
                             </div>
                             <div className="flex items-center gap-2">
                               {mt.rawScore != null && (
-                                <span className="text-primary-400 text-sm font-bold">
+                                <span
+                                  className={`${mt.rank === 1 && match.status === MatchStatus.COMPLETED ? "text-primary-500" : ""} text-sm font-bold`}
+                                >
                                   {mt.rawScore}
                                 </span>
-                              )}
-                              {mt.rank === 1 && match.status === MatchStatus.COMPLETED && (
-                                <Medal className="h-3.5 w-3.5 text-yellow-400" />
                               )}
                             </div>
                           </div>
                         ))
                     )}
                   </div>
-                </div>
+                </Card>
               ))}
             </div>
           </div>

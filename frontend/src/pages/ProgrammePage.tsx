@@ -141,7 +141,7 @@ export function ProgrammePage() {
                 <div className="flex flex-col gap-3">
                   {gameMatches.map((match) => (
                     <Link to={`/games/${match.gameId}`} key={match.id}>
-                      <MatchCard match={match} teams={teams} hover />
+                      <MatchCard match={match} teams={teams} games={games} hover />
                     </Link>
                   ))}
                 </div>

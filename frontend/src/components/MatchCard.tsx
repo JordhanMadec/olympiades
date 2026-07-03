@@ -7,14 +7,14 @@ import { StatusBadge } from "./StatusBadge";
 interface MatchCardProps {
   match: Match;
   teams: Team[];
-  games?: Game[];
+  games: Game[];
   actions?: ReactNode;
   showGameName?: boolean;
   compact?: boolean;
   hover?: boolean;
 }
 
-export function MatchCard({ match, teams, games = [], actions, showGameName = false, hover = false }: MatchCardProps) {
+export function MatchCard({ match, teams, games, actions, hover = false }: MatchCardProps) {
   const getTeamName = (teamId: number) => teams.find((t) => t.id === teamId)?.name || "Équipe inconnue";
   const getTeamColor = (teamId: number) => teams.find((t) => t.id === teamId)?.color || "#888";
   const game = games.find((g) => g.id === match.gameId);
@@ -24,9 +24,7 @@ export function MatchCard({ match, teams, games = [], actions, showGameName = fa
     <Card hover={hover}>
       <div className="flex items-center mb-3">
         <div className="flex-1 flex items-center gap-2">
-          <span className="text-white font-medium text-sm">
-            {showGameName && gameName ? gameName : `Match ${match.matchNumber}`}
-          </span>
+          <span className="text-white font-medium text-sm">{gameName}</span>
           {match.round && <span className="text-gray-500 text-xs">Tour {match.round}</span>}
         </div>
         <StatusBadge status={match.status} />
@@ -39,7 +37,7 @@ export function MatchCard({ match, teams, games = [], actions, showGameName = fa
             .map((mt) => (
               <MatchTeamBadge
                 key={mt.id}
-                size="sm"
+                size="md"
                 name={getTeamName(mt.teamId)}
                 color={getTeamColor(mt.teamId)}
                 score={mt.rawScore ?? undefined}

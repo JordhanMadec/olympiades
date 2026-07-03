@@ -1,5 +1,4 @@
-import { Medal } from "lucide-react";
-import { TeamColorDot } from "./TeamColorDot";
+import { TeamColorRing } from "@/components/TeamColorRing.tsx";
 import { Game } from "../types";
 import { formatScore } from "../utils/formatters";
 
@@ -13,14 +12,7 @@ interface MatchTeamBadgeProps {
   game?: Game; // Optional game for score formatting
 }
 
-export function MatchTeamBadge({ 
-  name, 
-  color, 
-  score, 
-  isWinner = false, 
-  size = "md",
-  game 
-}: MatchTeamBadgeProps) {
+export function MatchTeamBadge({ name, color, score, isWinner = false, size = "md", game }: MatchTeamBadgeProps) {
   const sizeClasses = {
     sm: "text-xs px-2 py-1",
     md: "text-sm px-2.5 py-1.5",
@@ -31,16 +23,15 @@ export function MatchTeamBadge({
 
   return (
     <div
-      className={`flex items-center gap-2 rounded-lg border ${sizeClasses[size]} ${
-        isWinner
-          ? "bg-primary-500/10 border-primary-500/30"
-          : "bg-surface-400 border-surface-border"
+      className={`flex items-center gap-2 rounded-lg ${sizeClasses[size]} ${
+        isWinner ? "bg-primary-500/10 border-primary-500/30 border" : "bg-surface-200 "
       }`}
     >
-      <TeamColorDot color={color} size="sm" />
-      <span className="text-zinc-300">{name}</span>
-      {formattedScore != null && <span className="text-primary-400 font-bold">{formattedScore}</span>}
-      {isWinner && <Medal className="h-3.5 w-3.5 text-yellow-400" />}
+      <TeamColorRing color={color} size="sm" />
+      <span className="font-semibold">{name}</span>
+      {formattedScore != null && (
+        <span className={isWinner ? "text-primary-400" : "text-zinc-400"}>{formattedScore}</span>
+      )}
     </div>
   );
 }

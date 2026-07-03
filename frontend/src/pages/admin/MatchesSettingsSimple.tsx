@@ -277,11 +277,7 @@ export function MatchesSettingsSimple() {
 
       {/* Scoring Modal */}
       {scoringMatch && (
-        <Modal
-          isOpen={true}
-          onClose={() => setScoringMatch(null)}
-          title={`Scores — ${getGameName(scoringMatch.gameId)} #${scoringMatch.matchNumber}`}
-        >
+        <Modal isOpen={true} onClose={() => setScoringMatch(null)} title={getGameName(scoringMatch.gameId)}>
           <form onSubmit={handleSubmitScores}>
             <div className="space-y-3 mb-6">
               {scoringMatch.matchTeams.map((mt) => {

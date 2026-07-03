@@ -1,4 +1,3 @@
-export * from './Bracket';
 export * from './BracketViewer';
 export * from './Button';
 export * from './Card';

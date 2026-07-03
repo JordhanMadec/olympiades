@@ -1,19 +1,19 @@
-import { GameType, Game } from '../types';
+import { Game, GameType } from '../types';
 
 /**
  * Format a time value in seconds to MM:SS or HH:MM:SS
  */
 export function formatTime(seconds: number): string {
   if (seconds < 0) return '00:00';
-  
+
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
   const secs = Math.floor(seconds % 60);
-  
+
   if (hours > 0) {
     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   }
-  
+
   return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 }
 
@@ -21,8 +21,8 @@ export function formatTime(seconds: number): string {
  * Parse a time string (MM:SS or HH:MM:SS) to seconds
  */
 export function parseTime(timeString: string): number {
-  const parts = timeString.split(':').map(p => parseInt(p, 10) || 0);
-  
+  const parts = timeString.split(':').map((p) => parseInt(p, 10) || 0);
+
   if (parts.length === 3) {
     // HH:MM:SS
     return parts[0] * 3600 + parts[1] * 60 + parts[2];
@@ -30,7 +30,7 @@ export function parseTime(timeString: string): number {
     // MM:SS
     return parts[0] * 60 + parts[1];
   }
-  
+
   return 0;
 }
 
@@ -51,7 +51,7 @@ export function formatScore(value: number | null | undefined, game: Game): strin
   if (value === null || value === undefined) {
     return '-';
   }
-  
+
   switch (game.gameType) {
     case GameType.TIME:
       return formatTime(value);
@@ -61,4 +61,13 @@ export function formatScore(value: number | null | undefined, game: Game): strin
     default:
       return value.toString();
   }
+}
+
+export function getRoundName(round: number) {
+  if (round === 1) return 'Finale';
+  if (round === 2) return '1/2 finale';
+  if (round === 3) return '1/4 finale';
+  if (round === 4) return '1/8 finale';
+  if (round === 5) return '1/16 finale';
+  return `Tour ${round}`;
 }
