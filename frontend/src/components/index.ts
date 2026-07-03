@@ -4,6 +4,7 @@ export * from './Button';
 export * from './Card';
 export * from './ErrorMessage';
 export * from './GameBadges';
+export * from './GameSelect';
 export * from './Input';
 export * from './Layout';
 export * from './Loading';

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Card, ErrorMessage, Loading, RankingTable } from "../components";
+import { Card, ErrorMessage, GameSelect, Loading, RankingTable } from "../components";
 import { gamesService, rankingsService } from "../services";
 import { Game, GameRanking } from "../types";
 
@@ -54,11 +54,11 @@ export function RankingsPage() {
     }
   };
 
-  const handleGameChange = (gameId: string) => {
-    if (gameId === "all") {
+  const handleGameChange = (gameId: number | null) => {
+    if (gameId === null) {
       setSearchParams({});
     } else {
-      setSearchParams({ gameId });
+      setSearchParams({ gameId: gameId.toString() });
     }
   };
 
@@ -76,32 +76,15 @@ export function RankingsPage() {
           </p>
         </div>
 
-        {/* Filter tabs */}
-        <div className="flex items-center gap-2 bg-surface-100 border border-surface-border rounded-xl p-1 overflow-x-auto"
->
-          <button
-            onClick={() => handleGameChange("all")}
-            className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all ${
-              !selectedGameId
-                ? "bg-primary-500 text-white shadow-lg shadow-primary-500/20"
-                : "text-zinc-400 hover:text-white"
-            }`}
-          >
-            Général
-          </button>
-          {games.map((game) => (
-            <button
-              key={game.id}
-              onClick={() => handleGameChange(game.id.toString())}
-              className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all ${
-                selectedGameId === game.id
-                  ? "bg-primary-500 text-white shadow-lg shadow-primary-500/20"
-                  : "text-zinc-400 hover:text-white"
-              }`}
-            >
-              {game.name}
-            </button>
-          ))}
+        {/* Game filter dropdown */}
+        <div className="w-full sm:w-64">
+          <GameSelect
+            games={games}
+            selectedGameId={selectedGameId}
+            onChange={handleGameChange}
+            label=""
+            allOptionLabel="Classement général"
+          />
         </div>
       </div>
 

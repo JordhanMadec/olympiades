@@ -1,15 +1,18 @@
 import { Calendar } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Card, ErrorMessage, Loading, MatchCard } from "../components";
+import { Card, ErrorMessage, GameSelect, Loading, MatchCard } from "../components";
 import { gamesService, matchesService, teamsService } from "../services";
-import { Game, Match, Team } from "../types";
+import { Game, Match, MatchStatus, Team } from "../types";
+
+type StatusFilter = "completed" | "pending";
 
 export function ProgrammePage() {
   const [matches, setMatches] = useState<Match[]>([]);
   const [games, setGames] = useState<Game[]>([]);
   const [teams, setTeams] = useState<Team[]>([]);
   const [selectedGameId, setSelectedGameId] = useState<number | null>(null);
+  const [selectedStatus, setSelectedStatus] = useState<StatusFilter>("pending");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -53,9 +56,15 @@ export function ProgrammePage() {
   if (loading) return <Loading />;
   if (error) return <ErrorMessage message={error} onRetry={loadMatches} />;
 
+  // Filter matches by status (completed or pending)
+  const filteredByStatus = matches.filter((match) => {
+    const isCompleted = match.status === MatchStatus.COMPLETED;
+    return selectedStatus === "completed" ? isCompleted : !isCompleted;
+  });
+
   // Group matches by game
   const matchesByGame = games.reduce<Record<number, Match[]>>((acc, game) => {
-    const gameMatches = matches.filter((m) => m.gameId === game.id);
+    const gameMatches = filteredByStatus.filter((m) => m.gameId === game.id);
     if (gameMatches.length > 0) acc[game.id] = gameMatches;
     return acc;
   }, {});
@@ -72,43 +81,54 @@ export function ProgrammePage() {
           <div>
             <h1 className="text-xl sm:text-2xl font-bold text-white">Rencontres</h1>
             <p className="text-zinc-500 text-sm mt-1">
-              {matches.length} rencontre{matches.length !== 1 ? "s" : ""}
+              {filteredByStatus.length} rencontre{filteredByStatus.length !== 1 ? "s" : ""}{" "}
+              {selectedStatus === "completed" ? "terminée" : "en attente"}{filteredByStatus.length > 1 ? "s" : ""}
             </p>
+          </div>
+
+          {/* Game filter dropdown */}
+          <div className="w-full sm:w-64">
+            <GameSelect
+              games={games}
+              selectedGameId={selectedGameId}
+              onChange={setSelectedGameId}
+              label=""
+              allOptionLabel="Toutes les épreuves"
+            />
           </div>
         </div>
 
-        {/* Filter tabs */}
-        <div className="flex items-center gap-2 bg-surface-100 border border-surface-border rounded-xl p-1 overflow-x-auto">
+        {/* Status filter tabs */}
+        <div className="flex items-center gap-2 bg-surface-100 border border-surface-border rounded-xl p-1">
           <button
-            onClick={() => setSelectedGameId(null)}
-            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
-              !selectedGameId
+            onClick={() => setSelectedStatus("pending")}
+            className={`flex-1 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+              selectedStatus === "pending"
                 ? "bg-primary-500 text-white shadow-lg shadow-primary-500/20"
                 : "text-zinc-400 hover:text-white"
             }`}
           >
-            Tous
+            En attente
           </button>
-          {games.map((game) => (
-            <button
-              key={game.id}
-              onClick={() => setSelectedGameId(game.id)}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
-                selectedGameId === game.id
-                  ? "bg-primary-500 text-white shadow-lg shadow-primary-500/20"
-                  : "text-zinc-400 hover:text-white"
-              }`}
-            >
-              {game.name}
-            </button>
-          ))}
+          <button
+            onClick={() => setSelectedStatus("completed")}
+            className={`flex-1 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+              selectedStatus === "completed"
+                ? "bg-primary-500 text-white shadow-lg shadow-primary-500/20"
+                : "text-zinc-400 hover:text-white"
+            }`}
+          >
+            Terminées
+          </button>
         </div>
       </div>
 
-      {matches.length === 0 ? (
+      {filteredByStatus.length === 0 ? (
         <Card className="p-16 text-center">
-          <Calendar className="h-16 w-16 mx-auto mb-4 text-zinc-500" />
-          <p className="text-zinc-500">Aucune rencontre pour le moment</p>
+          <Calendar className="h-12 sm:h-16 mx-auto mb-4 text-zinc-500" />
+          <p className="text-zinc-500">
+            Aucune rencontre {selectedStatus === "completed" ? "terminée" : "en attente"} pour le moment
+          </p>
         </Card>
       ) : (
         <div className="space-y-8">
@@ -119,8 +139,8 @@ export function ProgrammePage() {
                 <h2 className="text-sm font-semibold text-zinc-400 mb-3">{game.name}</h2>
                 <div className="flex flex-col gap-3">
                   {gameMatches.map((match) => (
-                    <Link to={`/games/${match.gameId}`}>
-                      <MatchCard key={match.id} match={match} teams={teams} hover />
+                    <Link to={`/games/${match.gameId}`} key={match.id}>
+                      <MatchCard match={match} teams={teams} hover />
                     </Link>
                   ))}
                 </div>
