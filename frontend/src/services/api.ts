@@ -1,6 +1,10 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:3001/api';
+// Use environment variable if available, otherwise use production URL in prod mode
+const API_BASE_URL = import.meta.env.VITE_API_URL || 
+  (import.meta.env.PROD 
+    ? 'https://api.olympiades.jordhanmadec.fr/api'
+    : 'http://127.0.0.1:3001/api');
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
