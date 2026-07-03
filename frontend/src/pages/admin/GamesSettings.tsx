@@ -1,4 +1,4 @@
-import { Pen, Target, Timer, Trash2 } from "lucide-react";
+import { Pen, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button, Card, ErrorMessage, Input, Loading, Modal, Select, Textarea } from "../../components";
 import { gamesService } from "../../services";
@@ -14,10 +14,10 @@ export function GamesSettings() {
   const [formData, setFormData] = useState<CreateGameDto>({
     name: "",
     description: "",
-    gameType: GameType.SCORE,
+    gameType: GameType.TIME,
     gameFormat: GameFormat.ROUND_ROBIN,
-    scoringDirection: ScoringDirection.DESC,
-    teamsPerMatch: 2,
+    scoringDirection: ScoringDirection.ASC,
+    teamsPerMatch: 1,
     unit: undefined,
     winPoints: undefined,
   });
@@ -90,10 +90,10 @@ export function GamesSettings() {
       setFormData({
         name: "",
         description: "",
-        gameType: GameType.SCORE,
-        gameFormat: GameFormat.ELIMINATION, // SCORE defaults to ELIMINATION
-        scoringDirection: ScoringDirection.DESC,
-        teamsPerMatch: 2,
+        gameType: GameType.TIME,
+        gameFormat: GameFormat.ROUND_ROBIN,
+        scoringDirection: ScoringDirection.ASC,
+        teamsPerMatch: 1,
         unit: undefined,
         winPoints: 10, // Default win points for SCORE games
       });
@@ -108,14 +108,14 @@ export function GamesSettings() {
 
   const getTypeLabel = (type: GameType) => {
     return {
-      [GameType.TIME]: { label: "Temps", Icon: Timer },
-      [GameType.SCORE]: { label: "Score", Icon: Target },
-      [GameType.POINTS]: { label: "Points", Icon: Target },
+      [GameType.TIME]: "Meilleurs temps",
+      [GameType.SCORE]: "Match 1V1",
+      [GameType.POINTS]: "Meilleur score",
     }[type];
   };
 
   const getFormatLabel = (format: GameFormat) => {
-    return format === GameFormat.ROUND_ROBIN ? "Round-Robin" : "Élimination";
+    return format === GameFormat.ROUND_ROBIN ? "Round-Robin" : "Élimination directe";
   };
 
   if (loading) return <Loading />;
@@ -140,25 +140,28 @@ export function GamesSettings() {
       ) : (
         <div className="space-y-3">
           {games.map((game) => {
-            const typeInfo = getTypeLabel(game.gameType);
-            const IconComponent = typeInfo.Icon;
+            const typeLabel = getTypeLabel(game.gameType);
             return (
               <Card key={game.id}>
                 <div className="flex items-start justify-between">
                   <div className="flex-1 min-w-0">
                     <h3 className="text-white font-medium mb-1">{game.name}</h3>
-                    {game.description && <p className="text-zinc-500 text-sm mb-3">{game.description}</p>}
+                    {game.description && <p className="text-zinc-400 text-sm mb-3">{game.description}</p>}
                     <div className="flex flex-wrap gap-2">
                       <span className="px-2 py-0.5 bg-primary-500/10 text-primary-400 rounded text-xs border border-primary-500/20 flex items-center gap-1">
-                        <IconComponent className="h-3 w-3" />
-                        {typeInfo.label}
+                        {typeLabel}
                       </span>
-                      <span className="px-2 py-0.5 bg-surface-400 text-zinc-400 rounded text-xs border border-surface-border">
+                      <span className="px-2 py-0.5 bg-primary-500/10 text-primary-400 rounded text-xs border border-primary-500/20 flex items-center gap-1">
                         {getFormatLabel(game.gameFormat)}
                       </span>
-                      <span className="px-2 py-0.5 bg-surface-400 text-zinc-400 rounded text-xs border border-surface-border">
-                        {game.teamsPerMatch} éq./match
+                      <span className="px-2 py-0.5 bg-primary-500/10 text-primary-400 rounded text-xs border border-primary-500/20 flex items-center gap-1">
+                        {game.teamsPerMatch} participants
                       </span>
+                      {game.winPoints && (
+                        <span className="px-2 py-0.5 bg-primary-500/10 text-primary-400 rounded text-xs border border-primary-500/20 flex items-center gap-1">
+                          {game.winPoints} points
+                        </span>
+                      )}
                     </div>
                   </div>
                   <div className="flex gap-2 ml-4">
@@ -228,9 +231,9 @@ export function GamesSettings() {
             }}
             required
           >
-            <option value={GameType.TIME}>Temps (meilleur temps gagne)</option>
-            <option value={GameType.SCORE}>Score compétitif (élimination directe)</option>
-            <option value={GameType.POINTS}>Quantité (ex: mL, kg, ...)</option>
+            <option value={GameType.TIME}>Meilleur temps</option>
+            <option value={GameType.SCORE}>Match 1V1</option>
+            <option value={GameType.POINTS}>Meilleur score (ex: mL, kg, ...)</option>
           </Select>
 
           <Select

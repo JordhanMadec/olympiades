@@ -52,3 +52,4 @@ temp/
 
 # Railway
 .railway/
+.idea/workspace.xml
