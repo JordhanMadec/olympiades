@@ -27,9 +27,8 @@ import { AppController } from "./app.controller";
             username: process.env.DATABASE_USER,
             password: process.env.DATABASE_PASSWORD,
             entities: [Team, Game, Match, MatchTeam, TeamMatchHistory],
-            // TODO: Désactiver après première migration et utiliser TypeORM migrations
-            synchronize: true,
-            logging: true,
+            synchronize: false,
+            logging: process.env.NODE_ENV === "development",
             ssl:
               process.env.DATABASE_SSL === "true"
                 ? { rejectUnauthorized: false }
