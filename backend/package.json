@@ -17,7 +17,8 @@
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
     "migration:run": "npm run typeorm -- migration:run -d src/data-source.ts",
     "migration:revert": "npm run typeorm -- migration:revert -d src/data-source.ts",
-    "migration:show": "npm run typeorm -- migration:show -d src/data-source.ts"
+    "migration:show": "npm run typeorm -- migration:show -d src/data-source.ts",
+    "recalculate:points": "ts-node -r tsconfig-paths/register scripts/recalculate-points.ts"
   },
   "dependencies": {
     "@nestjs/common": "^10.3.0",
