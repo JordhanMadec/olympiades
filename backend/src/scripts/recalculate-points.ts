@@ -121,17 +121,19 @@ async function recalculatePoints() {
           sortedTeams.length
         );
 
+        // Always add to changes for diagnostic
+        matchChanges.teams.push({
+          teamName: matchTeam.team.name,
+          rank: matchTeam.rank,
+          rawScore: matchTeam.rawScore,
+          currentPoints: oldPoints,
+          calculatedPoints: newPoints,
+          needsUpdate: oldPoints !== newPoints,
+        });
+
         if (oldPoints !== newPoints) {
           matchHasChanges = true;
           totalTeamsUpdated++;
-
-          matchChanges.teams.push({
-            teamName: matchTeam.team.name,
-            rank: matchTeam.rank,
-            rawScore: matchTeam.rawScore,
-            oldPoints,
-            newPoints,
-          });
 
           // Update the points
           matchTeam.points = newPoints;
@@ -141,8 +143,9 @@ async function recalculatePoints() {
 
       if (matchHasChanges) {
         totalMatchesUpdated++;
-        changes.push(matchChanges);
       }
+      // Always add to changes for diagnostic
+      changes.push(matchChanges);
     }
 
     // Display summary
@@ -154,22 +157,31 @@ async function recalculatePoints() {
     console.log(`Teams updated: ${totalTeamsUpdated}`);
     console.log('════════════════════════════════════════════════════════════════════════════════');
 
-    if (changes.length > 0) {
-      console.log('\n📋 DETAILED CHANGES:\n');
-      for (const change of changes) {
-        console.log(`\n🎮 Match #${change.matchId} - ${change.gameName}`);
-        console.log(`   Format: ${change.gameFormat}, Type: ${change.gameType}`);
-        console.log('   ────────────────────────────────────────────────────────────');
-        for (const team of change.teams) {
-          console.log(`   ${team.teamName}`);
-          console.log(`     Rank: #${team.rank} | Score: ${team.rawScore}`);
-          console.log(`     Points: ${team.oldPoints} → ${team.newPoints} (${team.newPoints > team.oldPoints ? '+' : ''}${team.newPoints - team.oldPoints})`);
+    // Always show diagnostic details
+    console.log('\n📋 DIAGNOSTIC DETAILS (All Matches):\n');
+    for (const change of changes) {
+      const hasUpdates = change.teams.some(t => t.needsUpdate);
+      const symbol = hasUpdates ? '🔄' : '✅';
+      console.log(`\n${symbol} Match #${change.matchId} - ${change.gameName}`);
+      console.log(`   Format: ${change.gameFormat}, Type: ${change.gameType}`);
+      console.log('   ────────────────────────────────────────────────────────────');
+      for (const team of change.teams) {
+        const status = team.needsUpdate ? '🔄 UPDATED' : '✅ OK';
+        console.log(`   ${status} ${team.teamName}`);
+        console.log(`     Rank: #${team.rank} | Score: ${team.rawScore}`);
+        if (team.needsUpdate) {
+          console.log(`     Points: ${team.currentPoints} → ${team.calculatedPoints} (${team.calculatedPoints > team.currentPoints ? '+' : ''}${team.calculatedPoints - team.currentPoints})`);
+        } else {
+          console.log(`     Points: ${team.currentPoints} (already correct)`);
         }
       }
-      console.log('\n════════════════════════════════════════════════════════════════════════════════\n');
+    }
+    console.log('\n════════════════════════════════════════════════════════════════════════════════\n');
+
+    if (totalMatchesUpdated > 0) {
       console.log('✅ Points recalculation completed successfully!');
     } else {
-      console.log('\n✅ No changes needed - all points are already correct!');
+      console.log('✅ No changes needed - all points are already correct!');
     }
 
     await AppDataSource.destroy();
