@@ -153,17 +153,34 @@ export class MatchesService {
       rank: index + 1,
     }));
 
-    // Calculate points based on game type
+    // Calculate points based on game format
     let scoresWithPoints;
-    if (game.gameType === 'SCORE') {
-      // For SCORE games: winner gets winPoints (or 10 if not set), loser gets 0
-      const winPoints = game.winPoints || 10;
+    if (game.gameFormat === GameFormat.ROUND_ROBIN) {
+      // For ROUND_ROBIN games: always use Olympic points system
+      // 1st = 10, 2nd = 8, 3rd = 6, 4th = 5, 5th = 4, 6th = 3, 7th = 2, 8th = 1
+      const pointsMap = [10, 8, 6, 5, 4, 3, 2, 1];
       scoresWithPoints = rankedScores.map((score) => ({
         ...score,
-        points: score.rank === 1 ? winPoints : 0,
+        points: pointsMap[score.rank - 1] || 0,
       }));
+    } else if (game.gameFormat === GameFormat.ELIMINATION) {
+      // For ELIMINATION games: winner advances, use winPoints or default
+      if (game.gameType === 'SCORE') {
+        const winPoints = game.winPoints || 10;
+        scoresWithPoints = rankedScores.map((score) => ({
+          ...score,
+          points: score.rank === 1 ? winPoints : 0,
+        }));
+      } else {
+        // For TIME/POINTS elimination: use Olympic system too
+        const pointsMap = [10, 8, 6, 5, 4, 3, 2, 1];
+        scoresWithPoints = rankedScores.map((score) => ({
+          ...score,
+          points: pointsMap[score.rank - 1] || 0,
+        }));
+      }
     } else {
-      // For TIME/POINTS games: use Olympic points system
+      // Fallback: use Olympic system
       const pointsMap = [10, 8, 6, 5, 4, 3, 2, 1];
       scoresWithPoints = rankedScores.map((score) => ({
         ...score,
