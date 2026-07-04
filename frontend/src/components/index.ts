@@ -1,6 +1,7 @@
 export * from './BracketViewer';
 export * from './Button';
 export * from './Card';
+export * from './EditMatchScoresModal';
 export * from './ErrorMessage';
 export * from './GameBadges';
 export * from './GameSelect';

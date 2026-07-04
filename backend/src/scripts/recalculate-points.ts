@@ -144,16 +144,27 @@ async function recalculatePoints() {
             }
           });
 
-          // Assign global ranks and points
+          // Assign global ranks and points with ex aequo handling
           const pointsMap = [10, 8, 6, 5, 4, 3, 2, 1];
+          let currentRank = 1;
+          
           for (let i = 0; i < sortedPerformances.length; i++) {
             const perf = sortedPerformances[i];
-            const globalRank = i + 1;
-            const newPoints = pointsMap[i] || 0;
+            
+            // Check if this score is same as previous (ex aequo)
+            let newPoints;
+            if (i > 0 && perf.rawScore === sortedPerformances[i - 1].rawScore) {
+              // Same score = same rank = same points as previous
+              newPoints = pointsMap[currentRank - 1] || 0;
+            } else {
+              // New score = new rank
+              currentRank = i + 1;
+              newPoints = pointsMap[currentRank - 1] || 0;
+            }
 
             gameChanges.teams.push({
               teamName: perf.teamName,
-              globalRank,
+              globalRank: currentRank,
               rawScore: perf.rawScore,
               currentPoints: perf.currentPoints,
               calculatedPoints: newPoints,

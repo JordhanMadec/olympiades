@@ -437,6 +437,7 @@ export class MatchesService {
   /**
    * Recalculate points for all teams in a round robin game
    * Points are assigned based on GLOBAL ranking across all matches
+   * Teams with identical scores receive identical points (ex aequo)
    */
   private async recalculateRoundRobinPoints(gameId: number): Promise<void> {
     // Get game to know scoring direction
@@ -485,20 +486,30 @@ export class MatchesService {
       }
     });
 
-    // Assign global ranks and points
+    // Assign ranks and points with ex aequo handling
     const pointsMap = [10, 8, 6, 5, 4, 3, 2, 1];
-    const performancesWithPoints = sortedPerformances.map((perf, index) => ({
-      ...perf,
-      globalRank: index + 1,
-      points: pointsMap[index] || 0,
-    }));
-
-    // Update all match teams with new points
-    for (const perf of performancesWithPoints) {
-      await this.matchTeamsRepository.update(
-        { id: perf.matchTeamId },
-        { points: perf.points },
-      );
+    let currentRank = 1;
+    
+    for (let i = 0; i < sortedPerformances.length; i++) {
+      const currentPerf = sortedPerformances[i];
+      
+      // Check if this score is same as previous (ex aequo)
+      if (i > 0 && currentPerf.rawScore === sortedPerformances[i - 1].rawScore) {
+        // Same score = same rank = same points as previous
+        const previousPoints = pointsMap[currentRank - 1] || 0;
+        await this.matchTeamsRepository.update(
+          { id: currentPerf.matchTeamId },
+          { points: previousPoints },
+        );
+      } else {
+        // New score = new rank
+        currentRank = i + 1;
+        const points = pointsMap[currentRank - 1] || 0;
+        await this.matchTeamsRepository.update(
+          { id: currentPerf.matchTeamId },
+          { points },
+        );
+      }
     }
   }
 }

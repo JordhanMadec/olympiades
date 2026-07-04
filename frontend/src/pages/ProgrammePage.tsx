@@ -1,13 +1,15 @@
-import { Calendar } from "lucide-react";
+import { Calendar, Edit2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Card, ErrorMessage, GameSelect, Loading, MatchCard } from "../components";
+import { Card, EditMatchScoresModal, ErrorMessage, GameSelect, Loading, MatchCard } from "../components";
 import { gamesService, matchesService, teamsService } from "../services";
 import { Game, Match, MatchStatus, Team } from "../types";
+import { useAuth } from "../contexts/AuthContext";
 
 type StatusFilter = "completed" | "pending";
 
 export function ProgrammePage() {
+  const { isAuthenticated } = useAuth();
   const [matches, setMatches] = useState<Match[]>([]);
   const [games, setGames] = useState<Game[]>([]);
   const [teams, setTeams] = useState<Team[]>([]);
@@ -15,6 +17,7 @@ export function ProgrammePage() {
   const [selectedStatus, setSelectedStatus] = useState<StatusFilter>("pending");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [editingMatch, setEditingMatch] = useState<Match | null>(null);
 
   useEffect(() => {
     loadInitialData();
@@ -139,16 +142,48 @@ export function ProgrammePage() {
               <div key={game.id}>
                 <h2 className="text-sm font-semibold text-zinc-400 mb-3">{game.name}</h2>
                 <div className="flex flex-col gap-3">
-                  {gameMatches.map((match) => (
-                    <Link to={`/games/${match.gameId}`} key={match.id}>
-                      <MatchCard match={match} teams={teams} games={games} hover />
-                    </Link>
-                  ))}
+                  {gameMatches.map((match) => {
+                    const isCompleted = match.status === MatchStatus.COMPLETED;
+                    const canEdit = isAuthenticated && isCompleted;
+
+                    return (
+                      <div key={match.id} className="flex gap-2">
+                        <Link to={`/games/${match.gameId}`} className="flex-1">
+                          <MatchCard match={match} teams={teams} games={games} hover />
+                        </Link>
+                        
+                        {canEdit && (
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setEditingMatch(match);
+                            }}
+                            className="px-3 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors flex items-center gap-2 text-sm"
+                            title="Modifier les scores"
+                          >
+                            <Edit2 className="w-4 h-4" />
+                            <span className="hidden sm:inline">Modifier</span>
+                          </button>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             );
           })}
         </div>
+      )}
+
+      {/* Edit Scores Modal */}
+      {editingMatch && (
+        <EditMatchScoresModal
+          match={editingMatch}
+          onClose={() => setEditingMatch(null)}
+          onSuccess={() => {
+            loadMatches();
+          }}
+        />
       )}
     </div>
   );
