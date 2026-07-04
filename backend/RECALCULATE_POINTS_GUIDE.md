@@ -26,36 +26,45 @@ Le script détecte automatiquement SQLite en local.
 
 ### Option 2 : Production Railway (PostgreSQL)
 
-#### Méthode A : Script Automatisé (Recommandé)
+⚠️ **IMPORTANT** : La commande doit s'exécuter **DANS** le container Railway, pas localement !
+
+#### Méthode A : Via Dashboard Railway (⭐ Recommandé)
+
+1. Aller sur https://railway.app
+2. Sélectionner le projet **olympiades**
+3. Cliquer sur le service **backend**
+4. Onglet **Deployments**
+5. Cliquer sur le déploiement actif (le plus récent)
+6. Cliquer sur l'onglet **View Logs** puis **Deploy Logs**
+7. En haut à droite, cliquer sur **⋮** (trois points) → **Run Command**
+8. Entrer la commande : `npm run recalculate:points`
+9. Cliquer sur **Run**
+
+Vous verrez le script s'exécuter en direct dans les logs.
+
+#### Méthode B : Railway CLI avec Service
 
 ```bash
-cd backend
-./scripts/recalculate-points-railway.sh
+# Se connecter au service (ouvre un shell LOCAL avec les vars Railway)
+railway link
+railway shell -s backend
+
+# Dans le shell qui s'ouvre, exécuter :
+npm run recalculate:points
 ```
 
-Le script :
-- Vérifie Railway CLI
-- Vous connecte au projet
-- Demande confirmation
-- Exécute le recalcul sur production
+⚠️ **Note** : `railway shell` ouvre un shell **local** avec les variables d'environnement Railway. Cela ne fonctionnera **PAS** car `postgres.railway.internal` n'est pas accessible depuis votre machine.
 
-#### Méthode B : Railway CLI Direct
+**→ Utilisez la Méthode A (Dashboard) à la place.**
+
+#### Méthode C : API Railway (Avancé)
+
+Si vous avez besoin d'automatiser :
 
 ```bash
-# Installation Railway CLI (une fois)
-npm install -g @railway/cli
-railway login
-railway link  # Sélectionner le projet
-
-# Exécution
-railway run npm run recalculate:points
+railway deploy --detach
+railway logs -f
 ```
-
-#### Méthode C : Via Dashboard Railway
-
-1. Service backend → **Settings** → **Execute Command**
-2. Entrez : `npm run recalculate:points`
-3. Exécuter
 
 ---
 
@@ -63,18 +72,20 @@ railway run npm run recalculate:points
 
 ### ❌ ENOTFOUND postgres.railway.internal
 
-**Erreur** :
+**Erreur lors de `railway run` ou `railway shell`** :
 ```
-Error: getaddrinfo ENOTFOUND postgres.railway.internal
+📍 Database Type: POSTGRES
+🌐 Database Host: postgres.railway.internal
+
+❌ Error: getaddrinfo ENOTFOUND postgres.railway.internal
 ```
 
-**Cause** : Vous essayez de vous connecter à la base PostgreSQL Railway depuis votre machine locale.
+**Cause** : 
+- `railway run` et `railway shell` exécutent la commande **sur votre machine locale** avec les variables d'environnement Railway injectées
+- L'hostname `postgres.railway.internal` n'est résolvable que **depuis l'intérieur des containers Railway**
+- Votre machine locale ne peut pas accéder au réseau privé Railway
 
-**Solution** : Utilisez une des méthodes Railway ci-dessus :
-- `./scripts/recalculate-points-railway.sh` (le plus simple)
-- `railway run npm run recalculate:points`
-
-Le script détecte maintenant automatiquement SQLite en local pour éviter cette erreur.
+**Solution** : Utilisez le **Dashboard Railway** (Méthode A) pour exécuter la commande directement dans le container.
 
 ---
 
