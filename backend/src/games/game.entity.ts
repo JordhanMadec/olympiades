@@ -20,6 +20,9 @@ export class Game {
   @Column("text")
   description: string;
 
+  @Column("text")
+  rules: string;
+
   @Column({
     type: "varchar",
     enum: GameType,
