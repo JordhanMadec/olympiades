@@ -33,7 +33,7 @@ export class GamesService {
 
   async create(createGameDto: CreateGameDto): Promise<Game> {
     this.validateGameRules(createGameDto);
-    const game = this.gamesRepository.create({ ...createGameDto, rules: "" });
+    const game = this.gamesRepository.create(createGameDto);
     return this.gamesRepository.save(game);
   }
 
