@@ -11,25 +11,41 @@ import { GameFormat, ScoringDirection } from "../src/games/game.enums";
 // Load environment variables
 config();
 
+// Determine if we should use PostgreSQL or SQLite
+const usePostgres = process.env.DATABASE_TYPE === "postgres" && process.env.DATABASE_HOST;
+const databaseType = usePostgres ? "postgres" : "sqlite";
+
+console.log(`📍 Database Type: ${databaseType.toUpperCase()}`);
+if (databaseType === "sqlite") {
+  console.log(`📁 Database File: olympiades.sqlite`);
+} else {
+  console.log(`🌐 Database Host: ${process.env.DATABASE_HOST}`);
+}
+console.log();
+
 // Create DataSource
-const AppDataSource = new DataSource({
-  type: process.env.DATABASE_TYPE === "postgres" ? "postgres" : "sqlite",
-  host: process.env.DATABASE_HOST,
-  port: parseInt(process.env.DATABASE_PORT || "5432"),
-  username: process.env.DATABASE_USER,
-  password: process.env.DATABASE_PASSWORD,
-  database:
-    process.env.DATABASE_TYPE === "postgres"
-      ? process.env.DATABASE_NAME
-      : "olympiades.sqlite",
-  entities: [Team, Game, Match, MatchTeam, TeamMatchHistory],
-  synchronize: false,
-  logging: false,
-  ssl:
-    process.env.DATABASE_SSL === "true"
-      ? { rejectUnauthorized: false }
-      : false,
-} as any);
+const AppDataSource = new DataSource(
+  databaseType === "postgres"
+    ? {
+        type: "postgres",
+        host: process.env.DATABASE_HOST,
+        port: parseInt(process.env.DATABASE_PORT || "5432"),
+        username: process.env.DATABASE_USER,
+        password: process.env.DATABASE_PASSWORD,
+        database: process.env.DATABASE_NAME,
+        entities: [Team, Game, Match, MatchTeam, TeamMatchHistory],
+        synchronize: false,
+        logging: false,
+        ssl: process.env.DATABASE_SSL === "true" ? { rejectUnauthorized: false } : false,
+      }
+    : {
+        type: "sqlite",
+        database: "olympiades.sqlite",
+        entities: [Team, Game, Match, MatchTeam, TeamMatchHistory],
+        synchronize: false,
+        logging: false,
+      }
+);
 
 interface PointsChange {
   matchId: number;

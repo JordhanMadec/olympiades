@@ -12,12 +12,21 @@ if [ ! -f "package.json" ]; then
 fi
 
 # Afficher l'environnement
-if [ "$DATABASE_TYPE" = "postgres" ]; then
+if [ -n "$DATABASE_HOST" ] && [ "$DATABASE_TYPE" = "postgres" ]; then
     echo "📍 Environnement: Production (PostgreSQL)"
     echo "🌐 Base de données: $DATABASE_HOST"
+    echo ""
+    echo "⚠️  ATTENTION: Vous êtes sur le point de modifier la base de production!"
+    echo "   Assurez-vous d'avoir un backup avant de continuer."
 else
     echo "📍 Environnement: Local (SQLite)"
     echo "🗄️  Base de données: olympiades.sqlite"
+    if [ -f "olympiades.sqlite" ]; then
+        echo "✅ Fichier trouvé"
+    else
+        echo "❌ Fichier olympiades.sqlite introuvable!"
+        exit 1
+    fi
 fi
 
 echo ""

@@ -15,61 +15,66 @@ Ce script recalcule automatiquement les points de **tous les matchs complétés*
 
 ## 🚀 Utilisation
 
-### Option 1 : NPM Script (Recommandé)
+### Option 1 : Local (SQLite) - Recommandé pour Test
 
 ```bash
 cd backend
 npm run recalculate:points
 ```
 
-### Option 2 : Script Shell
+Le script détecte automatiquement SQLite en local.
+
+### Option 2 : Production Railway (PostgreSQL)
+
+#### Méthode A : Script Automatisé (Recommandé)
 
 ```bash
 cd backend
-./scripts/recalculate-points.sh
+./scripts/recalculate-points-railway.sh
 ```
 
-### Option 3 : Directement avec ts-node
+Le script :
+- Vérifie Railway CLI
+- Vous connecte au projet
+- Demande confirmation
+- Exécute le recalcul sur production
 
-```bash
-cd backend
-npx ts-node -r tsconfig-paths/register scripts/recalculate-points.ts
-```
-
----
-
-## 🌍 Environnements
-
-### En Local (SQLite)
-
-```bash
-# Se connecte automatiquement à olympiades.sqlite
-cd backend
-npm run recalculate:points
-```
-
-### En Production (Railway PostgreSQL)
-
-#### Méthode A : Via Railway CLI
+#### Méthode B : Railway CLI Direct
 
 ```bash
 # Installation Railway CLI (une fois)
 npm install -g @railway/cli
 railway login
+railway link  # Sélectionner le projet
 
 # Exécution
-cd backend
-railway link  # Sélectionner le projet
 railway run npm run recalculate:points
 ```
 
-#### Méthode B : Via SSH/Exec sur Railway
+#### Méthode C : Via Dashboard Railway
 
-```bash
-# Dans le dashboard Railway
-# Service backend → Settings → Execute Command
-npm run recalculate:points
+1. Service backend → **Settings** → **Execute Command**
+2. Entrez : `npm run recalculate:points`
+3. Exécuter
+
+---
+
+## ⚠️ Erreur Courante
+
+### ❌ ENOTFOUND postgres.railway.internal
+
+**Erreur** :
 ```
+Error: getaddrinfo ENOTFOUND postgres.railway.internal
+```
+
+**Cause** : Vous essayez de vous connecter à la base PostgreSQL Railway depuis votre machine locale.
+
+**Solution** : Utilisez une des méthodes Railway ci-dessus :
+- `./scripts/recalculate-points-railway.sh` (le plus simple)
+- `railway run npm run recalculate:points`
+
+Le script détecte maintenant automatiquement SQLite en local pour éviter cette erreur.
 
 ---
 
