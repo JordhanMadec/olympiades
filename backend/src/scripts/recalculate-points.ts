@@ -2,7 +2,7 @@ import { DataSource } from 'typeorm';
 import { Match } from '../matches/match.entity';
 import { MatchTeam } from '../matches/match-team.entity';
 import { Game } from '../games/game.entity';
-import { GameFormat, GameType } from '../games/game.enums';
+import { GameFormat, GameType, ScoringDirection } from '../games/game.enums';
 import { Team } from '../teams/team.entity';
 import { MatchStatus } from '../matches/match.enums';
 
@@ -76,99 +76,165 @@ async function recalculatePoints() {
     await AppDataSource.initialize();
     console.log('✅ Database connection established\n');
 
+    const gameRepository = AppDataSource.getRepository(Game);
     const matchRepository = AppDataSource.getRepository(Match);
     const matchTeamRepository = AppDataSource.getRepository(MatchTeam);
 
-    // Load all completed matches with relations
-    const completedMatches = await matchRepository.find({
-      where: { status: MatchStatus.COMPLETED },
-      relations: ['game', 'matchTeams', 'matchTeams.team'],
-      order: { id: 'ASC' },
-    });
+    // Get all games
+    const games = await gameRepository.find();
+    
+    console.log(`📊 Found ${games.length} games\n`);
 
-    console.log(`📊 Found ${completedMatches.length} completed matches\n`);
-
-    if (completedMatches.length === 0) {
-      console.log('ℹ️  No completed matches to recalculate\n');
-      await AppDataSource.destroy();
-      return;
-    }
-
-    let totalMatchesUpdated = 0;
+    let totalGamesProcessed = 0;
     let totalTeamsUpdated = 0;
     const changes: any[] = [];
 
-    // Process each match
-    for (const match of completedMatches) {
-      let matchHasChanges = false;
-      const matchChanges: any = {
-        matchId: match.id,
-        gameName: match.game.name,
-        gameFormat: match.game.gameFormat,
-        gameType: match.game.gameType,
+    // Process each game
+    for (const game of games) {
+      // Get all completed matches for this game
+      const completedMatches = await matchRepository.find({
+        where: { gameId: game.id, status: MatchStatus.COMPLETED },
+        relations: ['matchTeams', 'matchTeams.team'],
+        order: { id: 'ASC' },
+      });
+
+      if (completedMatches.length === 0) continue;
+
+      const gameChanges: any = {
+        gameId: game.id,
+        gameName: game.name,
+        gameFormat: game.gameFormat,
+        gameType: game.gameType,
+        matchesCount: completedMatches.length,
         teams: [],
       };
 
-      // Sort teams by rank (already calculated and saved)
-      const sortedTeams = [...match.matchTeams].sort((a, b) => a.rank - b.rank);
+      if (game.gameFormat === GameFormat.ROUND_ROBIN) {
+        // ROUND ROBIN: Calculate points based on GLOBAL ranking
+        const allPerformances: Array<{
+          matchTeamId: number;
+          teamId: number;
+          teamName: string;
+          rawScore: number;
+          currentPoints: number;
+        }> = [];
 
-      // Recalculate points for each team
-      for (const matchTeam of sortedTeams) {
-        const oldPoints = matchTeam.points;
-        const newPoints = calculatePoints(
-          matchTeam.rank,
-          match.game,
-          sortedTeams.length
-        );
+        // Collect all performances across all matches
+        for (const match of completedMatches) {
+          for (const matchTeam of match.matchTeams) {
+            if (matchTeam.rawScore !== null && matchTeam.rawScore !== undefined) {
+              allPerformances.push({
+                matchTeamId: matchTeam.id,
+                teamId: matchTeam.teamId,
+                teamName: matchTeam.team.name,
+                rawScore: matchTeam.rawScore,
+                currentPoints: matchTeam.points,
+              });
+            }
+          }
+        }
 
-        // Always add to changes for diagnostic
-        matchChanges.teams.push({
-          teamName: matchTeam.team.name,
-          rank: matchTeam.rank,
-          rawScore: matchTeam.rawScore,
-          currentPoints: oldPoints,
-          calculatedPoints: newPoints,
-          needsUpdate: oldPoints !== newPoints,
-        });
+        if (allPerformances.length > 0) {
+          // Sort globally based on scoring direction
+          const sortedPerformances = allPerformances.sort((a, b) => {
+            if (game.scoringDirection === 'ASC') {
+              return a.rawScore - b.rawScore; // Lower is better (TIME)
+            } else {
+              return b.rawScore - a.rawScore; // Higher is better (SCORE/POINTS)
+            }
+          });
 
-        if (oldPoints !== newPoints) {
-          matchHasChanges = true;
-          totalTeamsUpdated++;
+          // Assign global ranks and points
+          const pointsMap = [10, 8, 6, 5, 4, 3, 2, 1];
+          for (let i = 0; i < sortedPerformances.length; i++) {
+            const perf = sortedPerformances[i];
+            const globalRank = i + 1;
+            const newPoints = pointsMap[i] || 0;
 
-          // Update the points
-          matchTeam.points = newPoints;
-          await matchTeamRepository.save(matchTeam);
+            gameChanges.teams.push({
+              teamName: perf.teamName,
+              globalRank,
+              rawScore: perf.rawScore,
+              currentPoints: perf.currentPoints,
+              calculatedPoints: newPoints,
+              needsUpdate: perf.currentPoints !== newPoints,
+            });
+
+            if (perf.currentPoints !== newPoints) {
+              totalTeamsUpdated++;
+              await matchTeamRepository.update(
+                { id: perf.matchTeamId },
+                { points: newPoints }
+              );
+            }
+          }
+          totalGamesProcessed++;
+        }
+      } else {
+        // ELIMINATION: Points are match-by-match
+        for (const match of completedMatches) {
+          const sortedTeams = [...match.matchTeams].sort((a, b) => a.rank - b.rank);
+
+          for (const matchTeam of sortedTeams) {
+            const oldPoints = matchTeam.points;
+            const newPoints = calculatePoints(matchTeam.rank, game, sortedTeams.length);
+
+            gameChanges.teams.push({
+              teamName: matchTeam.team.name,
+              rank: matchTeam.rank,
+              rawScore: matchTeam.rawScore,
+              currentPoints: oldPoints,
+              calculatedPoints: newPoints,
+              needsUpdate: oldPoints !== newPoints,
+            });
+
+            if (oldPoints !== newPoints) {
+              totalTeamsUpdated++;
+              matchTeam.points = newPoints;
+              await matchTeamRepository.save(matchTeam);
+            }
+          }
+        }
+        if (gameChanges.teams.length > 0) {
+          totalGamesProcessed++;
         }
       }
 
-      if (matchHasChanges) {
-        totalMatchesUpdated++;
+      if (gameChanges.teams.length > 0) {
+        changes.push(gameChanges);
       }
-      // Always add to changes for diagnostic
-      changes.push(matchChanges);
     }
 
     // Display summary
     console.log('════════════════════════════════════════════════════════════════════════════════');
     console.log('📈 RECALCULATION SUMMARY');
     console.log('════════════════════════════════════════════════════════════════════════════════');
-    console.log(`Total matches analyzed: ${completedMatches.length}`);
-    console.log(`Matches updated: ${totalMatchesUpdated}`);
+    console.log(`Total games processed: ${totalGamesProcessed}`);
     console.log(`Teams updated: ${totalTeamsUpdated}`);
     console.log('════════════════════════════════════════════════════════════════════════════════');
 
     // Always show diagnostic details
-    console.log('\n📋 DIAGNOSTIC DETAILS (All Matches):\n');
+    console.log('\n📋 DIAGNOSTIC DETAILS (By Game):\n');
     for (const change of changes) {
       const hasUpdates = change.teams.some(t => t.needsUpdate);
       const symbol = hasUpdates ? '🔄' : '✅';
-      console.log(`\n${symbol} Match #${change.matchId} - ${change.gameName}`);
+      console.log(`\n${symbol} ${change.gameName}`);
       console.log(`   Format: ${change.gameFormat}, Type: ${change.gameType}`);
+      console.log(`   Matches: ${change.matchesCount}`);
       console.log('   ────────────────────────────────────────────────────────────');
+      
+      if (change.gameFormat === 'ROUND_ROBIN') {
+        console.log('   📊 GLOBAL RANKING (all matches combined):');
+      }
+      
       for (const team of change.teams) {
         const status = team.needsUpdate ? '🔄 UPDATED' : '✅ OK';
         console.log(`   ${status} ${team.teamName}`);
-        console.log(`     Rank: #${team.rank} | Score: ${team.rawScore}`);
+        if (change.gameFormat === 'ROUND_ROBIN') {
+          console.log(`     Global Rank: #${team.globalRank} | Score: ${team.rawScore}`);
+        } else {
+          console.log(`     Match Rank: #${team.rank} | Score: ${team.rawScore}`);
+        }
         if (team.needsUpdate) {
           console.log(`     Points: ${team.currentPoints} → ${team.calculatedPoints} (${team.calculatedPoints > team.currentPoints ? '+' : ''}${team.calculatedPoints - team.currentPoints})`);
         } else {
@@ -178,7 +244,7 @@ async function recalculatePoints() {
     }
     console.log('\n════════════════════════════════════════════════════════════════════════════════\n');
 
-    if (totalMatchesUpdated > 0) {
+    if (totalTeamsUpdated > 0) {
       console.log('✅ Points recalculation completed successfully!');
     } else {
       console.log('✅ No changes needed - all points are already correct!');

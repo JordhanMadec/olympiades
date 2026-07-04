@@ -156,12 +156,11 @@ export class MatchesService {
     // Calculate points based on game format
     let scoresWithPoints;
     if (game.gameFormat === GameFormat.ROUND_ROBIN) {
-      // For ROUND_ROBIN games: always use Olympic points system
-      // 1st = 10, 2nd = 8, 3rd = 6, 4th = 5, 5th = 4, 6th = 3, 7th = 2, 8th = 1
-      const pointsMap = [10, 8, 6, 5, 4, 3, 2, 1];
+      // For ROUND_ROBIN: Don't assign points match-by-match
+      // Points will be calculated globally after all matches are saved
       scoresWithPoints = rankedScores.map((score) => ({
         ...score,
-        points: pointsMap[score.rank - 1] || 0,
+        points: 0, // Temporary, will be recalculated globally
       }));
     } else if (game.gameFormat === GameFormat.ELIMINATION) {
       // For ELIMINATION games: winner advances, use winPoints or default
@@ -204,6 +203,11 @@ export class MatchesService {
     // Mark match as completed
     match.status = MatchStatus.COMPLETED;
     await this.matchesRepository.save(match);
+
+    // If this is a round robin game, recalculate points globally
+    if (game.gameFormat === GameFormat.ROUND_ROBIN) {
+      await this.recalculateRoundRobinPoints(game.id);
+    }
 
     // If this is an elimination bracket, advance winners
     if (game.gameFormat === GameFormat.ELIMINATION) {
@@ -427,6 +431,74 @@ export class MatchesService {
         teamId: winner.teamId,
       });
       await this.matchTeamsRepository.save(newMatchTeam);
+    }
+  }
+
+  /**
+   * Recalculate points for all teams in a round robin game
+   * Points are assigned based on GLOBAL ranking across all matches
+   */
+  private async recalculateRoundRobinPoints(gameId: number): Promise<void> {
+    // Get game to know scoring direction
+    const game = await this.gamesRepository.findOne({ where: { id: gameId } });
+    if (!game) return;
+
+    // Get all completed matches for this game
+    const matches = await this.matchesRepository.find({
+      where: { gameId, status: MatchStatus.COMPLETED },
+      relations: ['matchTeams', 'matchTeams.team'],
+    });
+
+    if (matches.length === 0) return;
+
+    // Collect all performances across all matches
+    const allPerformances: Array<{
+      matchTeamId: number;
+      teamId: number;
+      teamName: string;
+      rawScore: number;
+    }> = [];
+
+    for (const match of matches) {
+      for (const matchTeam of match.matchTeams) {
+        if (matchTeam.rawScore !== null && matchTeam.rawScore !== undefined) {
+          allPerformances.push({
+            matchTeamId: matchTeam.id,
+            teamId: matchTeam.teamId,
+            teamName: matchTeam.team.name,
+            rawScore: matchTeam.rawScore,
+          });
+        }
+      }
+    }
+
+    if (allPerformances.length === 0) return;
+
+    // Sort performances globally based on scoring direction
+    const sortedPerformances = allPerformances.sort((a, b) => {
+      if (game.scoringDirection === ScoringDirection.ASC) {
+        // Lower is better (TIME games)
+        return a.rawScore - b.rawScore;
+      } else {
+        // Higher is better (SCORE/POINTS games)
+        return b.rawScore - a.rawScore;
+      }
+    });
+
+    // Assign global ranks and points
+    const pointsMap = [10, 8, 6, 5, 4, 3, 2, 1];
+    const performancesWithPoints = sortedPerformances.map((perf, index) => ({
+      ...perf,
+      globalRank: index + 1,
+      points: pointsMap[index] || 0,
+    }));
+
+    // Update all match teams with new points
+    for (const perf of performancesWithPoints) {
+      await this.matchTeamsRepository.update(
+        { id: perf.matchTeamId },
+        { points: perf.points },
+      );
     }
   }
 }
