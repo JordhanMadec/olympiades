@@ -19,16 +19,22 @@ Ce script recalcule automatiquement les points de **tous les matchs complétés*
 
 ```bash
 cd backend
+npm run build           # Compiler le projet (obligatoire)
 npm run recalculate:points
+```
+
+**En développement** (sans build) :
+```bash
+npm run recalculate:points:dev
 ```
 
 Le script détecte automatiquement SQLite en local.
 
 ### Option 2 : Production Railway (PostgreSQL)
 
-⚠️ **IMPORTANT** : La commande doit s'exécuter **DANS** le container Railway, pas localement !
+⚠️ **IMPORTANT** : Le script est maintenant **compilé en JavaScript** et inclus dans le build Docker.
 
-#### Méthode A : Via Dashboard Railway (⭐ Recommandé)
+#### Méthode : Via Dashboard Railway (⭐ Recommandé)
 
 1. Aller sur https://railway.app
 2. Sélectionner le projet **olympiades**
@@ -40,39 +46,38 @@ Le script détecte automatiquement SQLite en local.
 8. Entrer la commande : `npm run recalculate:points`
 9. Cliquer sur **Run**
 
-Vous verrez le script s'exécuter en direct dans les logs.
-
-#### Méthode B : Railway CLI avec Service
-
-```bash
-# Se connecter au service (ouvre un shell LOCAL avec les vars Railway)
-railway link
-railway shell -s backend
-
-# Dans le shell qui s'ouvre, exécuter :
-npm run recalculate:points
-```
-
-⚠️ **Note** : `railway shell` ouvre un shell **local** avec les variables d'environnement Railway. Cela ne fonctionnera **PAS** car `postgres.railway.internal` n'est pas accessible depuis votre machine.
-
-**→ Utilisez la Méthode A (Dashboard) à la place.**
-
-#### Méthode C : API Railway (Avancé)
-
-Si vous avez besoin d'automatiser :
-
-```bash
-railway deploy --detach
-railway logs -f
-```
+✅ Le script est maintenant **disponible dans le container** après chaque build !
 
 ---
 
 ## ⚠️ Erreur Courante
 
-### ❌ ENOTFOUND postgres.railway.internal
+### ❌ Cannot find module './recalculate-points.ts'
 
-**Erreur lors de `railway run` ou `railway shell`** :
+**Erreur dans Railway** :
+```
+Error: Cannot find module './recalculate-points.ts'
+```
+
+**Cause** : Le script n'était pas compilé et inclus dans le build Docker.
+
+**✅ Solution Appliquée** : 
+- Le script est maintenant dans `src/scripts/` (et non plus dans `scripts/` à la racine)
+- Il est compilé avec `npm run build` → `dist/scripts/recalculate-points.js`
+- La commande `npm run recalculate:points` utilise maintenant le fichier JavaScript compilé
+- Le Dockerfile copie automatiquement tout le dossier `dist/`
+
+**Vérification** :
+```bash
+# Après build, le script compilé doit exister :
+ls dist/scripts/recalculate-points.js
+```
+
+---
+
+### ❌ ENOTFOUND postgres.railway.internal (Deprecated)
+
+**Erreur lors de `railway run`** :
 ```
 📍 Database Type: POSTGRES
 🌐 Database Host: postgres.railway.internal
@@ -81,11 +86,10 @@ railway logs -f
 ```
 
 **Cause** : 
-- `railway run` et `railway shell` exécutent la commande **sur votre machine locale** avec les variables d'environnement Railway injectées
+- `railway run` exécute la commande **sur votre machine locale** avec les variables d'environnement Railway injectées
 - L'hostname `postgres.railway.internal` n'est résolvable que **depuis l'intérieur des containers Railway**
-- Votre machine locale ne peut pas accéder au réseau privé Railway
 
-**Solution** : Utilisez le **Dashboard Railway** (Méthode A) pour exécuter la commande directement dans le container.
+**✅ Solution** : Utilisez le **Dashboard Railway** pour exécuter la commande directement dans le container (voir méthode ci-dessus).
 
 ---
 
